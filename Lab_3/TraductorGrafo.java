@@ -15,8 +15,6 @@ public abstract class TraductorGrafo{
 	public abstract void agregarArco(int verticeInicial, int verticeFinal);
 
 	/**Imprime el grafo en el formato de destino.
-	 * @return un <code>String</code> mostrando el grafo en la representaci&oacute;n
-	 *         deseada
 	 */
-	public abstract String imprimirGrafoTraducido();
+	public abstract void imprimirGrafoTraducido();
 }

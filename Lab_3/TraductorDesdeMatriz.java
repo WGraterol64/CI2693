@@ -22,7 +22,7 @@ public class TraductorDesdeMatriz extends TraductorGrafo{
 	}
 	
 	/**{@inheritDoc}**/
-	public String imprimirGrafoTraducido(){
+	public void imprimirGrafoTraducido(){
 		throw new UnsupportedOperationException("Este metodo aun no ha sido "
 				+"implementado");
 	}

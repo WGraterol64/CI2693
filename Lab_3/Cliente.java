@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Vector;
 
 /**<p>Programa para convertir archivos Lista de Adyacencia a archivos Matriz de
  * Adyacencia.</p>
@@ -70,9 +71,28 @@ public class Cliente{
 	 */
 	private static void cargarLista(String linea, TraductorDesdeLista grafo)
 			throws IllegalArgumentException
-	{
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+	{	
+		String[] split = linea.split(":");
+		int v;
+		try{
+			v = Integer.parseInt(split[0].trim());
+		}
+		catch(NumberFormatException e){
+			throw new UnsupportedOperationException("Lista no valida");
+		}
+		int index = grafo.agregarVertice(v);
+		String[] vecinos = split[0].trim().split(" ");
+		for(int i = 0; i<vecinos.length; i++){
+			int u; 
+			try{
+				u = Integer.parseInt(vecinos[i]);
+			}
+			catch(NumberFormatException e){
+				throw new UnsupportedOperationException("Lista no valida");
+			}
+			grafo.agregarArco(index,u);
+		}
+
 	}
 	
 	/**Carga la <code>linea</code> de un archivo Matriz de Adyacencias dada
@@ -100,20 +120,17 @@ public class Cliente{
 	private static int detectarVertices(String linea)
 			throws IllegalArgumentException
 	{
-		try{
+		linea = linea.trim();
+		String[] numbersString = linea.split(" ");
+		int size = numbersString.length;
+		return size;
+	}
 
-			linea = linea.trim();
-			String[] numbersString = linea.split(" ");
-			int size = numbersString.length;
-			int max = 0;
-			for(int i = 0; i<size; i++){
-				int x = Integer.parseInt(numbersString[i]);
-				max = Integer.max(x,max);
-			}
-			return max + 1;
-		}catch(NumberFormatException e){
-			throw new UnsupportedOperationException("Entrada no valida");
-		}
+	/**Arma la version final del grafo
+	**/
+	private static void armarGrafo(TraductorDesdeLista grafo)
+	{
+		grafo.fillArray();
 	}
 	
 	/**Carga un grafo desde un archivo y lo almacena en un
@@ -143,9 +160,11 @@ public class Cliente{
 				cargarLista(linea, (TraductorDesdeLista)salida);
 				linea = Lector.readLine();
 			}while(linea != null);
+			armarGrafo((TraductorDesdeLista)salida);
 		}else{
 			salida = new TraductorDesdeMatriz(detectarVertices(linea));
 			do{
+				if(linea.charAt(0)=='-') linea = Lector.readLine();
 				cargarMatriz(linea, (TraductorDesdeMatriz)salida);
 				linea = Lector.readLine();
 			}while(linea != null);
@@ -170,10 +189,9 @@ public class Cliente{
 			System.err.println("Uso: java Cliente <nombreArchivo>");
 			return;
 		}
-		
 
 		TraductorGrafo g = cargarGrafo(args[0]);
-		
-		//System.out.println(g.imprimirGrafoTraducido());
+
+		//g.imprimirGrafoTraducido();
 	}
 }
