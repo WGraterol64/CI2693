@@ -46,9 +46,18 @@ public class Cliente{
 	 */
 	static boolean esLista(String linea)
 			throws IllegalArgumentException
-	{
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+	{	
+		// Extraemos el primer caracter
+		char c = linea.charAt(0);
+		// Verificamos si es un espacio en blanco, en cuyo caso el grafo es una matriz
+		if(Character.isWhitespace(c)) 
+			return false;
+		// Verificamos si es un digito, en cuyo caso el grafo es una lista
+		else if(Character.isDigit(c)) 
+			return true;
+		// En cualquier otro caso, existe un error en la entrada.
+		else
+			throw new UnsupportedOperationException("Entrada no valida");
 	}
 	
 	/**Carga la <code>linea</code> de un archivo Lista de Adyacencias dada
@@ -91,8 +100,20 @@ public class Cliente{
 	private static int detectarVertices(String linea)
 			throws IllegalArgumentException
 	{
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
+		try{
+
+			linea = linea.trim();
+			String[] numbersString = linea.split(" ");
+			int size = numbersString.length;
+			int max = 0;
+			for(int i = 0; i<size; i++){
+				int x = Integer.parseInt(numbersString[i]);
+				max = Integer.max(x,max);
+			}
+			return max + 1;
+		}catch(NumberFormatException e){
+			throw new UnsupportedOperationException("Entrada no valida");
+		}
 	}
 	
 	/**Carga un grafo desde un archivo y lo almacena en un
@@ -115,18 +136,18 @@ public class Cliente{
 				new FileReader(nombreArchivo));
 		
 		String linea = Lector.readLine();
-		
+			
 		if(esLista(linea)){
 			salida = new TraductorDesdeLista();
 			do{
 				cargarLista(linea, (TraductorDesdeLista)salida);
-				Lector.readLine();
+				linea = Lector.readLine();
 			}while(linea != null);
 		}else{
 			salida = new TraductorDesdeMatriz(detectarVertices(linea));
 			do{
 				cargarMatriz(linea, (TraductorDesdeMatriz)salida);
-				Lector.readLine();
+				linea = Lector.readLine();
 			}while(linea != null);
 		}
 		
@@ -150,8 +171,9 @@ public class Cliente{
 			return;
 		}
 		
+
 		TraductorGrafo g = cargarGrafo(args[0]);
 		
-		System.out.println(g.imprimirGrafoTraducido());
+		//System.out.println(g.imprimirGrafoTraducido());
 	}
 }
