@@ -1,12 +1,12 @@
 import java.util.ArrayList
 
-public class vertex{
+public class Vertex{
 	
 	// Arreglo de adyacencias de un vertice
 	public ArrayList<Integer> adj;
 
 	// Constructor de la clase
-	public void vertex(){
+	public void Vertex(){
 
 		this.adj = new ArrayList<Integer>();
 	}
@@ -19,7 +19,7 @@ public class vertex{
 		for(int u : this.adj) 
 			if(u == v)
 				throw new UnsupportedOperationException("Aristas repetidas");
-			
+
       	this.adj.add(v);
 	}
 }

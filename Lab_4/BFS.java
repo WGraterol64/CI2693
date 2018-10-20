@@ -38,29 +38,36 @@ public class BFS{
 	public void bfs(int s, Graph graph){
 
 		// Anadimos la fuente a la cola
-		elements.add(s);
+		this.elements.add(s);
 		// Inicializamos el arreglo de distancias
 		Arrays.fill(distance,-1);
 		// La distancia de la fuente a ella misma es 0
-		distance[s] = 0;
+		this.distance[s] = 0;
 		// Guardaremos el camino en las posiciones almacenadas por pos
 		pos = 0;
+		// Imprimimos un mensaje que anuncia que buscaremos un camino desde s
+		System.out.print("Recorrido desde "+s+": \n");
 
 		while(!elements.isEmpty()){
 
 			// Retiramos un elemento de la cola
-			int u = elements.poll();
+			int u = this.elements.poll();
 			// Revisamos todos los vecinos de u
 			for( v : graph[u].adj){ 
 				// Si no ha sido visitado, lo visito
 				if(d[v] == -1){
+					// Imprimimos el nodo que visitamos
+					System.out.print(u+"-"+v+"\n");
 					// Almaceno el nodo en el camino y aumento el valor de pos
-					path[pos++] = v;
+					this.path[pos++] = v;
 					// Guardo la distancia del nodo a la fuente
-					distance[v] = distance[u] + 1;
+					this.distance[v] = distance[u] + 1;
 					// Encolamos el nodo
-					elements.add(v);		
-				}	
+					this.elements.add(v);		
+				}
+				else{
+					System.out.print(u+"-"+v+" Ya visitado\n");
+				}
 			}		
 		}
 	}
