@@ -16,10 +16,10 @@ public class vertex{
 	public void addVertex(int v) throws IllegalArgumentException{
 		
 		// Verificamos si el vertice ya esta en la lista de adjacencias
-		for(int i=0; i<this.adj.size(); i++){
-     	 	int u = adj.get(i);
-      		if(u == v) throw new UnsupportedOperationException("Aristas repetidas");
-      	} 
-		this.adj.add(v);
+		for(int u : this.adj) 
+			if(u == v)
+				throw new UnsupportedOperationException("Aristas repetidas");
+			
+      	this.adj.add(v);
 	}
 }
