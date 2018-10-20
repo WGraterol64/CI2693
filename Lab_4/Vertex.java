@@ -1,4 +1,5 @@
-import java.util.ArrayList
+import java.util.ArrayList;
+import java.lang.Exception;
 
 public class Vertex{
 	
@@ -6,7 +7,7 @@ public class Vertex{
 	public ArrayList<Integer> adj;
 
 	// Constructor de la clase
-	public void Vertex(){
+	public Vertex(){
 
 		this.adj = new ArrayList<Integer>();
 	}

@@ -1,4 +1,5 @@
-import java.util.*
+import java.util.*;
+import java.lang.Exception;
 
 // Clase para buscar caminos hamiltonianos con BFS.
 // Almacena el camino y parametros utiles para el algoritmo.
@@ -10,12 +11,12 @@ public class BFS{
 	public int pos; // Entero que recorre las posiciones del arreglo donde se almacena el camino
 
 	// Constructor de la clase
-	public void BFS(int n){
+	public BFS(int n){
 
 		this.elements = new Queue<Integer>();
 		this.path = new int[n];
 		this.distance = new int[n];
-		this,pos = 0;
+		this.pos = 0;
 	}
 
 	// Metodo que verifica si el camino recorrido desde el nodo s,
@@ -30,12 +31,12 @@ public class BFS{
 		// Si existe una bifurcacion en el camino, el camino no es hamiltoniano
 		for(int i = 0; i<pos-1; i++)
 			if(distance[i] == distance[i+1]) 
-				return false
+				return false;
 		
 		return true;
 	}
 
-	public void bfs(int s, Graph graph){
+	static private void bfs(int s, Graph graph){
 
 		// Anadimos la fuente a la cola
 		this.elements.add(s);
@@ -53,7 +54,7 @@ public class BFS{
 			// Retiramos un elemento de la cola
 			int u = this.elements.poll();
 			// Revisamos todos los vecinos de u
-			for( v : graph[u].adj){ 
+			for( int v : graph.list[u].adj){ 
 				// Si no ha sido visitado, lo visito
 				if(d[v] == -1){
 					// Imprimimos el nodo que visitamos

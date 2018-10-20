@@ -1,14 +1,19 @@
+import java.lang.Exception;
+
 // Clase de grafo, se implementa como un arreglo que contiene una instancia de
 // la clase Vertex en cada casilla.
 public class Graph{
 
   public int size;
-  public Vertex [] graph;
+  public Vertex [] list;
 
   // Crea el arreglo donde se guardaran los n vertices
-  public void Graph(int n){
+  public Graph(int n){
     this.size = n;
-    this.graph = new Vertex [n];
+    this.list = new Vertex[n];
+    for(int i = 0; i<n; i++){
+      list[i] = new Vertex();
+    }
   }
 
   // Agrega una adyacencia a un vertice
@@ -16,8 +21,8 @@ public class Graph{
   { 
     try{
       // Intenta anadir una nueva arista
-      this.graph[x].adj.addVertex(y);
-      this.graph[y].adj.addVertex(x);
+      this.list[x].adj.addVertex(y);
+      this.list[y].adj.addVertex(x);
     }catch(UnsupportedOperationException e){
       // La arista ya existe
       throw new UnsupportedOperationException("Lista no valida");
