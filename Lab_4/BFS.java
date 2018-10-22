@@ -13,7 +13,7 @@ public class BFS{
 	// Constructor de la clase
 	public BFS(int n){
 
-		this.elements = new Queue<Integer>();
+		this.elements = new LinkedList<>();
 		this.path = new int[n];
 		this.distance = new int[n];
 		this.pos = 0;
@@ -36,7 +36,7 @@ public class BFS{
 		return true;
 	}
 
-	static private void bfs(int s, Graph graph){
+	private void bfs(int s, Graph graph){
 
 		// Anadimos la fuente a la cola
 		this.elements.add(s);
@@ -56,7 +56,7 @@ public class BFS{
 			// Revisamos todos los vecinos de u
 			for( int v : graph.list[u].adj){ 
 				// Si no ha sido visitado, lo visito
-				if(d[v] == -1){
+				if(distance[v] == -1){
 					// Imprimimos el nodo que visitamos
 					System.out.print(u+"-"+v+"\n");
 					// Almaceno el nodo en el camino y aumento el valor de pos

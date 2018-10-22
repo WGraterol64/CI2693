@@ -21,8 +21,8 @@ public class Graph{
   { 
     try{
       // Intenta anadir una nueva arista
-      this.list[x].adj.addVertex(y);
-      this.list[y].adj.addVertex(x);
+      this.list[x].addVertex(y);
+      this.list[y].addVertex(x);
     }catch(UnsupportedOperationException e){
       // La arista ya existe
       throw new UnsupportedOperationException("Lista no valida");

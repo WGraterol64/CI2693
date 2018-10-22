@@ -1,13 +1,11 @@
-import java.io.Exception;
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
 public class Hamilton{
 
-	public Graph graph;
-
-	public Graph loadGraph(String fileName)
-		throws UnsupportedOperationException
+	public static Graph loadGraph(String fileName)
+		throws IOException, IllegalArgumentException
 	{	
 		// Variables que utilizaremos para crear el grafo
 		int n, m, x, y;
@@ -17,15 +15,15 @@ public class Hamilton{
 		String line = reader.readLine().trim();
 		try{
 			n = Integer.parseInt(line);
-		}catch(ParseException e){
-			throw new UnsupportedOperationException("Entrada no valida");
+		}catch(NumberFormatException e){
+			throw new IllegalArgumentException("Entrada no valida");
 		}
 		// Leemos la segunda linea, que almacena el entero m
 		line = reader.readLine().trim();
 		try{
 			m = Integer.parseInt(line);
-		}catch(ParseException e){
-			throw new UnsupportedOperationException("Entrada no valida");
+		}catch(NumberFormatException e){
+			throw new IllegalArgumentException("Entrada no valida");
 		}
 		// Declaramos el grafo
 		Graph returnGraph = new Graph(n);
@@ -36,44 +34,45 @@ public class Hamilton{
 			try{
 				x = Integer.parseInt(input[0]);
 				y = Integer.parseInt(input[1]);
-			}catch(ParseException e){
-				throw new UnsupportedOperationException("Entrada no valida");
+			}catch(NumberFormatException e){
+				throw new IllegalArgumentException("Entrada no valida");
 			}
 			try{
 				returnGraph.addAdj(x,y);
 			}catch(UnsupportedOperationException e){
-				throw new UnsUnsupUnsupportedOperationException("Entrada no valida");
+				throw new IllegalArgumentException("Entrada no valida");
 			}
 		}
 
 		return returnGraph;
 	}
 
-	public static void main(String[] args)
-		throws UnsupportedOperationException;
-	{	
-		// Debemos recibir al menos dos argumento
-		if(args.length < 2){
-			System.err.println("Uso: java Hamilton <nombreArchivo> <BFS/DFS>");
-			return;
-		}
+	public static void hamiltonianDFS(Graph graph){
 
-		// Intentamos cargar el grafo
-		try{
-			this.graph = loadGraph(args[0]);
-		}catch(UnsupportedOperationException e){
-			System.err.println("El grafo leido no es valido");
-		}
+		DFS dfsPath = new DFS(graph.size);
+			boolean found = false;
+			// Buscamos un camino desde cada nodo
+			for(int u = 0; u < graph.size && !found; u++){
+				found = dfsPath.findPath(u,graph);
+				// Si el camino encontrado es hamiltoniano
+				if(found){
+					// Imprimimos el camino
+					System.out.print("Camino hamiltoniano encontrado: ");
+					for(int v : dfsPath.path){
+						System.out.print(v+" ");
+					}
+					System.out.print("\n");
+				}
+			}
+			// Si ninguno de los caminos es hamiltonianos, terminamos la busqueda
+			if(!found){
+				System.out.println("Ninguno de los caminos recorridos es hamiltoniano");
+			}
+	}
 
+	public static void hamiltonianBFS(Graph graph){
 
-		// Buscamos los caminos segun el algoritmo solicitado
-		if(args[1]=="DFS"){
-
-			DFS dfsPath = new DFS
-
-		}else if(args[1]=="BFS"){
-
-			// Creamos una instancia de la clase BFS
+		// Creamos una instancia de la clase BFS
 			BFS bfsPath = new BFS(graph.size);
 			boolean found = false;
 			// Buscamos un camino desde cada nodo
@@ -82,23 +81,42 @@ public class Hamilton{
 				// Si el camino encontrado es hamiltoniano
 				if(found){
 					// Imprimimos el camino
-					System.out.print("Camino hamiltoniano encontrado: ")
-					for(int i=0; i < graph.size - 1 ; i++){
-						int s = bfsPath.path[i];
-						int d = bfsPath.path[i+1];
-						System.out.print(s+' '+d)
+					System.out.print("Camino hamiltoniano encontrado: ");
+					for(int v : bfsPath.path){
+						System.out.print(v+" ");
 					}
-					System,out.print("\n");
+					System.out.print("\n");
 				}
 			}
 			// Si ninguno de los caminos es hamiltonianos, terminamos la busqueda
 			if(!found){
-				System.out.println("Ninguno de los caminos recorridos es hamiltoniano")
+				System.out.println("Ninguno de los caminos recorridos es hamiltoniano");
 			}
+	}
 
-		}else
+	public static void main(String[] args)
+		throws IOException, IllegalArgumentException
+	{	
+		// Debemos recibir al menos dos argumento
+		if(args.length < 2){
 			System.err.println("Uso: java Hamilton <nombreArchivo> <BFS/DFS>");
+			return;
+		}
 
+		// Intentamos cargar el grafo
+		Graph graph;
+		try{
+			graph = loadGraph(args[0]);
+			// Buscamos los caminos segun el algoritmo solicitado
+			if(args[1].equals("DFS")){
+				hamiltonianDFS(graph);
+			}else if(args[1].equals("BFS")){
+				hamiltonianBFS(graph);
+			}else
+			System.err.println("Uso: java Hamilton <nombreArchivo> <BFS/DFS>");
+		}catch(UnsupportedOperationException e){
+			System.err.println("El grafo leido no es valido");
+		}
 
 	}
 }
