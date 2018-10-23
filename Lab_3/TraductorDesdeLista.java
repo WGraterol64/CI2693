@@ -45,15 +45,49 @@ public class TraductorDesdeLista extends TraductorGrafo{
 	}
 	
 	/**{@inheritDoc}**/
-	public void imprimirGrafoTraducido(){
-		for(int i = 0; i<2; i++)
-			for(int j = 0; j<2; j++)
-				System.out.print(this.grafo[i][j]);
+	public String imprimirGrafoTraducido(){
+
+		int s = vertices.size();
+		System.out.print("   ");
+		for(int i=0; i<s; i++)
+			System.out.print(i+" ");
+		System.out.print("\n");
+		for(int i=0; i<2*s+2; i++)
+			System.out.print("-");
+		System.out.print("\n");
+		for(int i=0; i<s; i++){
+			System.out.print(i+" | ");
+			for(int j=0; j<s; j++)
+				System.out.print(this.grafo[i][j]+" ");
+			System.out.print("\n");
+		}
+		if(grafoNoDirigido()){
+				return "El grafo es no dirigido!";
+		}else{
+			return "El grafo es dirigido...";
+		}
 	}
 
-	public void fillArray(){
+	public boolean grafoNoDirigido(){
 		int s = vertices.size();
-		Arrays.fill(grafo,0);
+		for(int i=0; i<s; i++){
+			for(int j=0; j<s; j++){
+				if(this.grafo[i][j] != this.grafo[j][i]){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public void fillArray(){ 
+
+		int s = vertices.size();
+		this.grafo = new int[s][s];		
+		for(int i = 0; i<s; i++)
+			for(int j = 0; j<s; j++)
+				this.grafo[i][j] = 0;
+
 		for(int i = 0; i<s; i++){
 			int x = vertices.get(i);
 			Vector<Integer> row = list.get(i);

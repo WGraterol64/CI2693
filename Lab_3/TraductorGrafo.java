@@ -16,5 +16,5 @@ public abstract class TraductorGrafo{
 
 	/**Imprime el grafo en el formato de destino.
 	 */
-	public abstract void imprimirGrafoTraducido();
+	public abstract String imprimirGrafoTraducido();
 }

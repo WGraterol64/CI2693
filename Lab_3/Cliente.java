@@ -81,7 +81,7 @@ public class Cliente{
 			throw new UnsupportedOperationException("Lista no valida");
 		}
 		int index = grafo.agregarVertice(v);
-		String[] vecinos = split[0].trim().split(" ");
+		String[] vecinos = split[1].trim().split(" ");
 		for(int i = 0; i<vecinos.length; i++){
 			int u; 
 			try{
@@ -103,28 +103,28 @@ public class Cliente{
 	 *              modifica directamente.
 	 * @throws IllegalArgumentException si el formato de la l&iacute;nea no es v&aacute;lido
 	 */
-	private static void cargarMatriz(String linea, TraductorDesdeMatriz grafo)
-			throws IllegalArgumentException
-	{
-		throw new UnsupportedOperationException("Este metodo aun no ha sido "
-				+"implementado");
-	}
-	
-	/**Detecta el n&uacute;mero de v&eacute;rtices en un archivo Matriz de Adyacencias 
-	 * basado en una muestra de una l&iacute;nea tomada del archivo.
-	 * 
-	 * @param  linea  La l&iacute;nea del archivo que se desea cargar.
-	 * @return        el n&uacute;mero de v&eacute;rtices detectado
-	 * @throws IllegalArgumentException si el formato de la l&iacute;nea no es v&aacute;lido
-	 */
-	private static int detectarVertices(String linea)
-			throws IllegalArgumentException
-	{
-		linea = linea.trim();
-		String[] numbersString = linea.split(" ");
-		int size = numbersString.length;
-		return size;
-	}
+	 private static void cargarMatriz(String linea, TraductorDesdeMatriz grafo)
+ 			throws IllegalArgumentException{
+				// Si la linea que se recibe es la primera
+ 			  if(linea.	startsWith("   ")){
+ 				    linea = linea.trim();
+ 						String[] numbersString = linea.split(" ");
+ 						int size = numbersString.length;
+ 						for(int i = 0; i<size; i++){
+ 							int x = Integer.parseInt(numbersString[i]);
+ 							grafo.addpos(x);
+ 						}
+ 			    } else{
+ 						 linea = linea.trim();
+ 						 String[] numbersString = linea.split(" ");
+ 						 int size = numbersString.length;
+ 						 int f = Integer.parseInt(numbersString[0]);
+ 						 for(int i=2; i<size; i++){
+ 							 int x = Integer.parseInt(numbersString[i]);
+ 							 grafo.agregarArco(f, grafo.getpos(i-2));
+ 						 }
+ 					}
+ 	 }
 
 	/**Arma la version final del grafo
 	**/
@@ -192,6 +192,6 @@ public class Cliente{
 
 		TraductorGrafo g = cargarGrafo(args[0]);
 
-		//g.imprimirGrafoTraducido();
+		System.out.println(g.imprimirGrafoTraducido());
 	}
 }
