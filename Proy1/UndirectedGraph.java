@@ -1,8 +1,16 @@
 public class UndirectedGraph<V,E> implements Graph{
 
+	public String id;
 	public int numOfNodes;
 	public int numOfEdges;
-	public Lis<Node> nodeList = new ArrayList<>();
+	public List<Node> nodeList;
+	public List<Edge> edgeList;
+
+
+
+
+
+	/////// Para el constructor ///////
 	private Map<String,Node> namesToNodes = new HashMap<>();
 	private Map<String,Edge> namesToEdges = new HashMap<>();
 
@@ -23,9 +31,11 @@ public class UndirectedGraph<V,E> implements Graph{
 	public boolean addNode(Node<V> node){
 
 		String id = node.getId();
+
 		if(namesToNodes.get(id) != null)
 			return false;
 		
+		node.setIndex(numOfNodes);
 		this.nodeList.add(node);
 		this.numOfNodes++;		
 	}
@@ -35,17 +45,45 @@ public class UndirectedGraph<V,E> implements Graph{
 		if(namesToNodes.get(id) != null)
 			return false;
 
-		Node node = new Node<V>(id,data,weight);
+		Node node = new Node<V>(id,data,weight,numOfNodes);
+		this.nodeList.add(node);
+		this.numOfNodes++;
 
 	}
 
-	public Node getNode(String id);
+	public Node getNode(String id) throws RuntimeException{
 
-	public boolean isNode(String id);
+		Node node = namesToNodes.get(id);
+		if(node == null)
+			throw new NoSuchElementException("No existe un nodo con identificador "+id);
+		
+		return node;
 
-	public boolean isEdge(String u, String v);
+	}
 
-	public boolean removeNode(String id);
+	public boolean isNode(String id){
+		return (this.namesToNodes.get(id) == null)
+	}
+
+	public boolean isEdge(String u, String v){
+
+		if(!this.isNode(u) || !this.isNode(v)) 
+			return false;
+
+		Node nodeU = nodeList.get(u);
+		for(int i = 0; i<nodeU.adj.size; i++){
+			nodeV = nodeU.adj.get(i);
+			if(nodeV.getId().equals(v))
+				return true;
+		}
+
+		return false;
+	}
+
+	public boolean removeNode(String id){
+
+
+	}
 
 	public ArrayList<Node> nodeList(String id);
 
