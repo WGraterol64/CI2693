@@ -7,6 +7,14 @@ public class Arc<E> extends GraphEdges{
 	private Node initNode;
 	private Node endNode;
 
+	public Arc(String id, E data, double weight, Node initNode, Node, endNode){
+		this.id = id;
+		this.data = data;
+		this.weight = weight;
+		this.index = index;
+		this.initNode = initNode;
+		this.endNode = endNode;
+	}
 
 	public double getWeight(){
 		return this.weight;
@@ -21,7 +29,14 @@ public class Arc<E> extends GraphEdges{
 	}
 
 	public void toString(){
-		...
+		
+		String edge = " ";
+		edge += "Id del arco: "+this.getId()+"\n";
+		edge += "Dato: "+String.valueOf(this.getData()) + "\n";
+		edge += "Peso: "+String.valueOf(this.getWeight()) + "\n";
+		edge += "Este arco conecta los siguientes vertices:\n";
+		edge += "Inicial: \n"+this.getInitNode().toString();
+		edge += "Final: \n"+this.getEndNode().toString();
 	}
 
 	public getInitNode(){

@@ -1,5 +1,5 @@
 public abstract class GraphEdges<E>{
-
+	
 	private String id; 
 	private E data;
 	private double weight;

@@ -1,16 +1,43 @@
 public class UndirectedGraph<V,E> implements Graph{
 
-	public UndirectedGraph();
+	public int numOfNodes;
+	public int numOfEdges;
+	public Lis<Node> nodeList = new ArrayList<>();
+	private Map<String,Node> namesToNodes = new HashMap<>();
+	private Map<String,Edge> namesToEdges = new HashMap<>();
 
+
+	public UndirectedGraph(){ 
+	}
+	
 	public boolean loadGraph(String fileName);
 
-	public int numOfNodes();
+	public int numOfNodes(){
+		return this.numOfNodes;
+	}
 
-	public int numOfEdges();
+	public int numOfEdges(){
+		return this.numOfEdges;
+	}
 
-	public boolean addNode(Node<V> node);
+	public boolean addNode(Node<V> node){
 
-	public boolean addNode(String id, V dato, double weight);
+		String id = node.getId();
+		if(namesToNodes.get(id) != null)
+			return false;
+		
+		this.nodeList.add(node);
+		this.numOfNodes++;		
+	}
+
+	public boolean addNode(String id, V data, double weight){
+
+		if(namesToNodes.get(id) != null)
+			return false;
+
+		Node node = new Node<V>(id,data,weight);
+
+	}
 
 	public Node getNode(String id);
 
@@ -34,7 +61,19 @@ public class UndirectedGraph<V,E> implements Graph{
 
 	public String toString();
 
-	public boolean addEdge(Edge<E> edge) 
+	public boolean addEdge(Edge<E> edge){
+
+		String newId = edge.getId();
+		boolean is = this.set.contains(newId);
+
+		if(is)
+			return false;
+		
+		Node u = edge.getFNode();
+		Node v = edge.getSNode();
+
+		if()
+	}
 
 	public boolean addEdge(String id, E data, double weight, String u, String v) 
 
