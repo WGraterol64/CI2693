@@ -129,19 +129,13 @@ public class UndirectedGraph<V,E> implements Graph{
 		return list;
 	}
 
-	public int degree(String id){
+	public int degree(String id)  throws RuntimeException{
 		
-		if(numOfNodes == 0)
-			return 0;
-
-		int deg = -1;
-		for(Node v : nodeSet){
-			if(deg == -1)
-				deg = v.indegree;
-			deg = min(deg, v.indegree);
-		}
-
-		return deg;
+		if(!isNode(id))
+			throw new NoSuchElementException("No existe un nodo con identificador "+id);
+		
+		Node v = namesToNodes.get(id);
+		return v.indegree;
 	}	
 
 	public ArrayList<Node> adjacency(String id) throws RuntimeException{

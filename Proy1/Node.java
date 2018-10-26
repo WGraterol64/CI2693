@@ -5,27 +5,19 @@ public class Node<V>{
 	private double weight;
 	public int indegree;
 	public int outdegree;
-	public int index;
 	public List<Node> adj;
+	public List<Node> inc;
+
 
 	public Node(String id, V data, double weight){
 		this.id = id;
 		this.data = data;
 		this.weight = weight;
 		this.adj = new ArrayList<Node>();
+		this.inc = new ArrayList<Node>();
 		this.indegree = 0;
 		this.outdegree = 0;
 	}
-
-	public Node(String id, V data, double weight, int index){
-		this.id = id;
-		this.data = data;
-		this.weight = weight;
-		this.adj = new ArrayList<Node>();
-		this.index = index;
-		this.indegree = 0;
-		this.outdegree = 0;
-	}	
 
 	public double getWeight(){
 		return this.weight;
