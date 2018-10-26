@@ -3,8 +3,8 @@ public class Node<V>{
 	private String id; 
 	private E data;
 	private double weight;
-	private int indegree;
-	private int outdegree;
+	public int indegree;
+	public int outdegree;
 	public int index;
 	public List<Node> adj;
 
@@ -13,6 +13,8 @@ public class Node<V>{
 		this.data = data;
 		this.weight = weight;
 		this.adj = new ArrayList<Node>();
+		this.indegree = 0;
+		this.outdegree = 0;
 	}
 
 	public Node(String id, V data, double weight, int index){
@@ -21,6 +23,8 @@ public class Node<V>{
 		this.weight = weight;
 		this.adj = new ArrayList<Node>();
 		this.index = index;
+		this.indegree = 0;
+		this.outdegree = 0;
 	}	
 
 	public double getWeight(){
@@ -38,6 +42,12 @@ public class Node<V>{
 	public void setIndex(int i){
 		this.index = i;
 	}
+
+	public int getIndex(){
+		return this.index;
+	}
+
+
 
 	public String toString(){
 		

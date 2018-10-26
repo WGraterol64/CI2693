@@ -1,24 +1,24 @@
 public class UndirectedGraph<V,E> implements Graph{
 
-	public String id;
 	public int numOfNodes;
 	public int numOfEdges;
-	public List<Node> nodeList;
-	public List<Edge> edgeList;
-
-
-
-
-
-	/////// Para el constructor ///////
-	private Map<String,Node> namesToNodes = new HashMap<>();
-	private Map<String,Edge> namesToEdges = new HashMap<>();
-
+	public Set<Node> nodeSet;
+	public Set<Edge> edgeSet;
+	private Map<String,Node> namesToNodes;
+	private Map<String,Edge> namesToEdges;
 
 	public UndirectedGraph(){ 
+		private Map<String,Node> namesToNodes = new HashMap<>();
+		private Map<String,Edge> namesToEdges = new HashMap<>();
+		public Set<Node> nodeSet = new HashSet<>();
+		public Set<Edge> nodeEdge = new HashSet<>();
+		public numOfNodes = 0;
+		public numOfEdges = 0;
 	}
 	
-	public boolean loadGraph(String fileName);
+	public boolean loadGraph(String fileName){
+
+	}
 
 	public int numOfNodes(){
 		return this.numOfNodes;
@@ -36,8 +36,8 @@ public class UndirectedGraph<V,E> implements Graph{
 			return false;
 		
 		node.setIndex(numOfNodes);
-		this.nodeList.add(node);
-		this.numOfNodes++;		
+		this.nodeSet.add(node);
+		this.numOfNodes++;
 	}
 
 	public boolean addNode(String id, V data, double weight){
@@ -46,7 +46,7 @@ public class UndirectedGraph<V,E> implements Graph{
 			return false;
 
 		Node node = new Node<V>(id,data,weight,numOfNodes);
-		this.nodeList.add(node);
+		this.nodeSet.add(node);
 		this.numOfNodes++;
 
 	}
@@ -65,14 +65,17 @@ public class UndirectedGraph<V,E> implements Graph{
 		return (this.namesToNodes.get(id) == null)
 	}
 
+	public boolean isEdge(String id){
+		return (this.namesToEdges.get(id) == null)
+	}
+
 	public boolean isEdge(String u, String v){
 
 		if(!this.isNode(u) || !this.isNode(v)) 
 			return false;
 
-		Node nodeU = nodeList.get(u);
-		for(int i = 0; i<nodeU.adj.size; i++){
-			nodeV = nodeU.adj.get(i);
+		Node nodeU = getNode(id); 
+		for( Node nodeV : nodeU.adj ){
 			if(nodeV.getId().equals(v))
 				return true;
 		}
@@ -80,20 +83,83 @@ public class UndirectedGraph<V,E> implements Graph{
 		return false;
 	}
 
-	public boolean removeNode(String id){
+	public boolean removeNode(String id) {
 
+		if(!isNode(id))
+			return false;
 
+		Node nodeU = this.getNode(id);
+			
+		for( Node nodeV : nodeU.adj )
+			while(nodeV.adj.contains(nodeU))
+				nodeV.adj.remove(NoClassDefFoundError);
+		
+
+		this.nodeSet.remove(nodeU);
+		this.numOfNodes--;
+		this.namesToNodes.remove(id);
+
+		Stack toRemove = new Stack<Edge>();
+		for( Edge e : edgeSet){
+			if(e.getFNode().getId().equals(id) || e.getSNode().getId().equals(id))
+				toRemove.push(e);
+		}
+		
+		while(!toRemove.empty()){
+			Edge e = toRemove.pop();
+			String id = e.getId();
+			this.namesToEdges.remove(id);
+			edgeSet.remove(e);
+		}
 	}
 
-	public ArrayList<Node> nodeList(String id);
+	public ArrayList<Node> nodeList(){
+		
+		List <Node> list = new ArrayList<>(numOfNodes);
+		for( Node v : this.nodeSet)
+			list.add(v);
+		return list;
+	}
 
-	public ArrayList<Node> edgeList(String id);
+	public ArrayList<Edge> edgeList(){
+		
+		List <Edge> list = new ArrayList<>(numOfEdges);
+		for( Edge e : this.edgeSet)
+			list.add(e);
+		return list;
+	}
 
-	public int degree(String id);
+	public int degree(String id){
+		
+		if(numOfNodes == 0)
+			return 0;
 
-	public ArrayList<Node> adjacency(String id);
+		int deg = -1;
+		for(Node v : nodeSet){
+			if(deg == -1)
+				deg = v.indegree;
+			deg = min(deg, v.indegree);
+		}
 
-	public ArrayList<Node> incident(String id);
+		return deg;
+	}	
+
+	public ArrayList<Node> adjacency(String id) throws RuntimeException{
+
+		if(!isNode(id))
+			throw new NoSuchElementException("No existe un nodo con identificador "+id);
+
+		Node node = this.namesToNodes.get(id);
+		return node.adj;
+	}
+
+	public ArrayList<Node> incident(String id) throws RuntimeException{
+
+		if(!isNode(id))
+			throw new NoSuchElementException("No existe un nodo con identificador "+id);
+
+		return this.adjacency(id);
+	}
 
 	public Graph clone();
 
@@ -101,22 +167,58 @@ public class UndirectedGraph<V,E> implements Graph{
 
 	public boolean addEdge(Edge<E> edge){
 
-		String newId = edge.getId();
-		boolean is = this.set.contains(newId);
-
-		if(is)
-			return false;
+		String id = edge.getId();
 		
+		if(this.isEdge(id))
+			return false;
+
+		edgeSet.add(edge);
+		numOfEdges++;
 		Node u = edge.getFNode();
 		Node v = edge.getSNode();
-
-		if()
+		u.adj.add(v);
+		v.adj.add(u);
+		u.indegree++;
+		v.indegree++;
+		u.outdegree++;
+		v.outdegree++;
+		return true;
 	}
 
-	public boolean addEdge(String id, E data, double weight, String u, String v) 
+	public boolean addEdge(String id, E data, double weight, String u, String v){
+		
+		Node<V> nodeA = this.namesToNodes.get(u);
+		Node<V> nodeB = this.namesToNodes.get(v);
+		Edge<E> e = new Edge<>(id,data,weight,nodeA,nodeB);
+		return  addEdge(e);
+	}
 
-	public boolean removeEdge(String id)
+	public boolean removeEdge(String id){
 
-	public Edge<E> getEdge(String id)
+		if(!isEdge(id))
+			return false;
 
+		Edge<E> e = getEdge(id);
+		Node<V> nodeA = e.getFNode();
+		Node<V> nodeB = e.getSNode();
+
+		edgeSet.remove(e);
+		numOfEdges--;
+		v.adj.remove(u);
+		u.adj.remove(v);
+		u.indegree--;
+		v.indegree--;
+		u.outdegree--;
+		v.outdegree--;
+		return true;
+
+	}
+
+	public Edge<E> getEdge(String id){
+
+		Edge<E> edge = this.namesToEdges.get(id);
+		if(edge == null)
+			return false;
+		return edge;
+	}
 }
