@@ -3,12 +3,9 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileReader;
-import Graph;
-import DirectedGraph;
-import UndirectedGraph;
 
 public class ClienteGrafo{
-  public Graph graph;
+  public Graph<V,L> graph;
   public int type; // El tipo del grafo sera 0 si es digrafo y sera 1 si es no orientado
   public String vType;
   public String eType;
@@ -27,14 +24,14 @@ public class ClienteGrafo{
       // Excepciones de formato everywheeeereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
       String line = read.readLine();
       if(i==0){
-        String this.vType = line.trim();
+        this.vType = line.trim();
       }else if(i==1){
-        String this.eType = line.trim();
+        this.eType = line.trim();
       }else if(i==2){
         if(line == "D"){
-          int this.type = 0;
+          this.type = 0;
         }else if(line == "N"){
-          int this.type = 1;
+          this.type = 1;
         }
       }else if(i==3){
         int n = Integer.parseInt(line.trim());
@@ -48,30 +45,8 @@ public class ClienteGrafo{
     }
   }
 
-
-
-
-		if(esLista(linea)){
-			salida = new TraductorDesdeLista();
-			do{
-				cargarLista(linea, (TraductorDesdeLista)salida);
-				linea = Lector.readLine();
-			}while(linea != null);
-			armarGrafo((TraductorDesdeLista)salida);
-		}else{
-			salida = new TraductorDesdeMatriz(detectarVertices(linea));
-			do{
-				if(linea.charAt(0)=='-') linea = Lector.readLine();
-				cargarMatriz(linea, (TraductorDesdeMatriz)salida);
-				linea = Lector.readLine();
-			}while(linea != null);
-		}
-
-		return salida;
-	}
-
   public void crearGrafoNoDirigido(){
-    int this.type = 1;
+    this.type = 1;
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el tipo de dato de los vertices: (B, D o S)");
     String v = br.readLine();
@@ -80,29 +55,29 @@ public class ClienteGrafo{
     String l = br.readLine();
     this.eType = l.trim();
     if(this.vType == "B" && this.eType =="B"){
-      UndirectedGraph<boolean,boolean> this.graph = new UndirectedGraph();
+      this.graph = new UndirectedGraph<boolean,boolean>();
     }else if(this.vType == "B" && this.eType =="D"){
-      UndirectedGraph<boolean, double> this.graph = new UndirectedGraph();
+      this.graph = new UndirectedGraph<boolean, double>();
     }else if(this.vType == "B" && this.eType =="S"){
-      UndirectedGraph<boolean,String> this.graph = new UndirectedGraph();
+      this.graph = new UndirectedGraph<boolean,String> ();
     }else if(this.vType == "D" && this.eType =="B"){
-      UndirectedGraph<double,boolean> this.graph = new UndirectedGraph();
+      this.graph = new UndirectedGraph<double,boolean> ();
     }else if(this.vType == "D" && this.eType =="D"){
-      UndirectedGraph<double,double> this.graph = new UndirectedGraph();
+      this.graph = new UndirectedGraph<double,double>();
     }else if(this.vType == "D" && this.eType =="S"){
-      UndirectedGraph<double,String> this.graph = new UndirectedGraph();
+      this.graph = new UndirectedGraph<double,String>();
     }else if(this.vType == "S" && this.eType =="B"){
-      UndirectedGraph<String,>boolean this.graph = new UndirectedGraph();
+      this.graph = new UndirectedGraph<String, boolean>();
     }else if(this.vType == "S" && this.eType =="D"){
-      UndirectedGraph<String,double> this.graph = new UndirectedGraph();
+      this.graph = new UndirectedGraph<String,double>();
     }else if(this.vType == "S" && this.eType =="S"){
-      UndirectedGraph<String,String> this.graph = new UndirectedGraph();
+      this.graph = new UndirectedGraph<String,String>();
     }
     System.out.println("Se ha creado el grafo exitosamente");
   }
 
   public void crearDigrafo(){
-    int this.type = 0;
+    this.type = 0;
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el tipo de dato de los vertices: (B, D o S)");
     String v = br.readLine();
@@ -111,23 +86,23 @@ public class ClienteGrafo{
     String l = br.readLine();
     this.eType = l.trim();
     if(this.vType == "B" && this.eType =="B"){
-      DirectedGraph<boolean,boolean> this.graph = new DirectedGraph();
+      this.graph = new DirectedGraph<boolean,boolean>();
     }else if(this.vType == "B" && this.eType =="D"){
-      DirectedGraph<boolean, double> this.graph = new DirectedGraph();
+      this.graph = new DirectedGraph<boolean, double>();
     }else if(this.vType == "B" && this.eType =="S"){
-      DirectedGraph<boolean,String> this.graph = new DirectedGraph();
+      this.graph = new DirectedGraph<boolean,String>();
     }else if(this.vType == "D" && this.eType =="B"){
-      DirectedGraph<double,boolean> this.graph = new DirectedGraph();
+      this.graph = new DirectedGraph<double,boolean>();
     }else if(this.vType == "D" && this.eType =="D"){
-      DirectedGraph<double,double> this.graph = new DirectedGraph();
+      this.graph = new DirectedGraph<double,double>();
     }else if(this.vType == "D" && this.eType =="S"){
-      DirectedGraph<double,String> this.graph = new DirectedGraph();
+      this.graph = new DirectedGraph<double,String> ();
     }else if(this.vType == "S" && this.eType =="B"){
-      DirectedGraph<String,>boolean this.graph = new DirectedGraph();
+      this.graph = new DirectedGraph<String, boolean>();
     }else if(this.vType == "S" && this.eType =="D"){
-      DirectedGraph<String,double> this.graph = new DirectedGraph();
+      this.graph = new DirectedGraph<String,double>();
     }else if(this.vType == "S" && this.eType =="S"){
-      DirectedGraph<String,String> this.graph = new DirectedGraph();
+      this.graph = new DirectedGraph<String,String>();
     }
     System.out.println("Se ha creado el grafo exitosamente");
   }
@@ -237,7 +212,7 @@ public class ClienteGrafo{
   }
 
   public Node obtenerVertice(){
-    try{
+    //try{
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
       System.out.println("Introduzca el id del vertice: ");
       String id = br.readLine();
@@ -245,9 +220,9 @@ public class ClienteGrafo{
       Node v = this.graph.getNode(id);
       System.out.println("Se obtuvo el vertice exitosamente ");
       return v;
-    }catch(NoSuchElementException){
+    //}catch(NoSuchElementException){
       //blaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    }
+  //  }
   }
 
   public void buscarVertice(){
@@ -276,7 +251,7 @@ public class ClienteGrafo{
     }
   }
 
-  public eliminarVertice(){
+  public void eliminarVertice(){
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
     String id = br.readLine();
@@ -351,7 +326,7 @@ public class ClienteGrafo{
   public void gradoInterior(){
     if(this.type!=0){
       System.out.println("Grado interior no esta definido para grafos no dirigidos");
-      return
+      return;
     }
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
@@ -366,7 +341,7 @@ public class ClienteGrafo{
   public void gradoExterior(){
     if(this.type!=0){
       System.out.println("Grado exterior no esta definido para grafos no dirigidos");
-      return
+      return;
     }
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
@@ -378,7 +353,7 @@ public class ClienteGrafo{
     System.out.print("\n");
   }
 
-  public salir(){
+  public void salir(){
     System.out.println("Hasta luego!");
     System.exit(0);
   }
@@ -461,6 +436,10 @@ public class ClienteGrafo{
   }
 
   public static void main(String[] args){
+    if(args.length > 0){
+			cargarGrafo(args);
+			return;
+		}
     while(true){
       this.menu();
     }
