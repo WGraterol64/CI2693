@@ -9,7 +9,7 @@ public class ClienteGrafo{
   public int type; // El tipo del grafo sera 0 si es digrafo y sera 1 si es no orientado
   public String vType;
   public String eType;
-
+  
   public void crearGrafoArchivo(){
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el nombre del archivo donde esta el grafo: ");
@@ -40,8 +40,275 @@ public class ClienteGrafo{
       }
     }
     // aqui tendrian que ir los dos ciclos pero aja, los tipos de dato joden
-    for(i=0; i<n; i++){
-
+    if(this.vType == "B" && this.eType =="B"){
+      for(i=0;i<n;i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] node = line.split(" ");
+        boolean result = this.graph.addNode(node[0], Boolean.parseBoolean(node[1]),
+                                            Double.parseDouble(node[2]));
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+      for(i=0; i<m; i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] edge = line.split(" ");
+        if(this.type == 0){
+          result = this.graph.addArc(edge[0], Boolean.parseBoolean(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else if(this.type == 1){
+          result = this.graph.addEdge(edge[0], Boolean.parseBoolean(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else{
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+    }else if(this.vType == "B" && this.eType =="D"){
+      for(i=0;i<n;i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] node = line.split(" ");
+        boolean result = this.graph.addNode(node[0], Boolean.parseBoolean(node[1]),
+                                            Double.parseDouble(node[2]));
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+      for(i=0; i<m; i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] edge = line.split(" ");
+        if(this.type == 0){
+          result = this.graph.addArc(edge[0], Double.parseDouble(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else if(this.type == 1){
+          result = this.graph.addEdge(edge[0],Double.parseDouble(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else{
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+    }else if(this.vType == "B" && this.eType =="S"){
+      for(i=0;i<n;i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] node = line.split(" ");
+        boolean result = this.graph.addNode(node[0], Boolean.parseBoolean(node[1]),
+                                            Double.parseDouble(node[2]));
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+      for(i=0; i<m; i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] edge = line.split(" ");
+        if(this.type == 0){
+          result = this.graph.addArc(edge[0], edge[1], Double.parseDouble(edge[2]),
+                                     edge[3], edge[4]);
+        }else if(this.type == 1){
+          result = this.graph.addEdge(edge[0], edge[1], Double.parseDouble(edge[2]),
+                                      edge[3], edge[4]);
+        }else{
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+    }else if(this.vType == "D" && this.eType =="B"){
+      for(i=0;i<n;i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] node = line.split(" ");
+        boolean result = this.graph.addNode(node[0], Double.parseDouble(node[1]),
+                                            Double.parseDouble(node[2]));
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+      for(i=0; i<m; i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] edge = line.split(" ");
+        if(this.type == 0){
+          result = this.graph.addArc(edge[0], Boolean.parseBoolean(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else if(this.type == 1){
+          result = this.graph.addEdge(edge[0], Boolean.parseBoolean(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else{
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+    }else if(this.vType == "D" && this.eType =="D"){
+      for(i=0;i<n;i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] node = line.split(" ");
+        boolean result = this.graph.addNode(node[0], Double.parseDouble(node[1]),
+                                            Double.parseDouble(node[2]));
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+      for(i=0; i<m; i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] edge = line.split(" ");
+        if(this.type == 0){
+          result = this.graph.addArc(edge[0], Double.parseDouble(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else if(this.type == 1){
+          result = this.graph.addEdge(edge[0], Double.parseDouble(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else{
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+    }else if(this.vType == "D" && this.eType =="S"){
+      for(i=0;i<n;i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] node = line.split(" ");
+        boolean result = this.graph.addNode(node[0], Double.parseDouble(node[1]),
+                                            Double.parseDouble(node[2]));
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+      for(i=0; i<m; i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] edge = line.split(" ");
+        if(this.type == 0){
+          result = this.graph.addArc(edge[0], edge[1], Double.parseDouble(edge[2]),
+                                     edge[3], edge[4]);
+        }else if(this.type == 1){
+          result = this.graph.addEdge(edge[0], edge[1], Double.parseDouble(edge[2]),
+                                     edge[3], edge[4]);
+        }else{
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+    }else if(this.vType == "S" && this.eType =="B"){
+      for(i=0;i<n;i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] node = line.split(" ");
+        boolean result = this.graph.addNode(node[0], node[1], Double.parseDouble(node[2]));
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+      for(i=0; i<m; i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] edge = line.split(" ");
+        if(this.type == 0){
+          result = this.graph.addArc(edge[0], Boolean.parseBoolean(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else if(this.type == 1){
+          result = this.graph.addEdge(edge[0], Boolean.parseBoolean(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else{
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+    }else if(this.vType == "S" && this.eType =="D"){
+      for(i=0;i<n;i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] node = line.split(" ");
+        boolean result = this.graph.addNode(node[0], node[1], Double.parseDouble(node[2]));
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+      for(i=0; i<m; i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] edge = line.split(" ");
+        if(this.type == 0){
+          result = this.graph.addArc(edge[0], Double.parseDouble(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else if(this.type == 1){
+          result = this.graph.addEdge(edge[0], Double.parseDouble(edge[1]),
+                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
+        }else{
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+    }else if(this.vType == "S" && this.eType =="S"){
+      for(i=0;i<n;i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] node = line.split(" ");
+        boolean result = this.graph.addNode(node[0], node[1], Double.parseDouble(node[2]));
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+      for(i=0; i<m; i++){
+        line = read.readLine();
+        line = line.trim();
+        String[] edge = line.split(" ");
+        if(this.type == 0){
+          result = this.graph.addArc(edge[0], edge[1], Double.parseDouble(edge[2]),
+                                     edge[3], edge[4]);
+        }else if(this.type == 1){
+          result = this.graph.addEdge(edge[0], edge[1], Double.parseDouble(edge[2]),
+                                      edge[3], edge[4]);
+        }else{
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+        if(!result){
+          return;
+          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
+        }
+      }
+    }
+    System.out.println("Se ha creado el grafo exitosamente");
     }
   }
 
@@ -431,15 +698,12 @@ public class ClienteGrafo{
               break;
       case 20: this.salir();
               break;
-
      }
   }
 
   public static void main(String[] args){
-    if(args.length > 0){
+    if(args.length > 0)
 			cargarGrafo(args);
-			return;
-		}
     while(true){
       this.menu();
     }
