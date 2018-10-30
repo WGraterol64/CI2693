@@ -4,12 +4,22 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileReader;
 
+/**
+* Clase que le permite al usuario tener acceso a la estructura de grafo y todas
+* sus operaciones elementales
+*
+*/
 public class ClienteGrafo{
-  public Graph<V,L> graph;
-  public int type; // El tipo del grafo sera 0 si es digrafo y sera 1 si es no orientado
-  public String vType;
-  public String eType;
-  
+  public UndirectedGraph Ugraph; // Se utilza para implementar el grafo no dirigido
+  public DirectedGraph Dgraph;  // Se utilza para implementar el digrafo
+  private int type; // El tipo del grafo sera 0 si es digrafo y sera 1 si es no dirigido
+  private Transformer transV; // Parseador que nos permitira agregar datos genericos de vertices
+  private Transformer transE; // Parseador que nos permitira agregar datos genericos de lados
+
+  /**
+  * Inicializa la creacion de un grafo desde un archivo
+  * Le solicita al usuario el nombre del archivo donde esta el grafo.
+  */
   public void crearGrafoArchivo(){
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el nombre del archivo donde esta el grafo: ");
@@ -18,363 +28,218 @@ public class ClienteGrafo{
     this.cargarGrafo(archivo);
   }
 
-  public void cargarGrafo(String archivo){
+  /**
+  * Metodo ue se encarga de crear un grafo que este en un archivo de texto.
+  *
+  * @param archivo es el archivo en el que se guarda la informacion del grafo
+  *
+  * @throws IllegalArgumentException si el formato del archivo no es valido
+  */
+  public void cargarGrafo(String archivo)
+  throws IllegalArgumentException{
+    // Lazo que extrae la informacion necesaria para inicializar el grafo
 		BufferedReader read = new BufferedReader(new FileReader(archivo));
-    for(i=0; i<5; i++){
-      // Excepciones de formato everywheeeereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+    for(int i=0; i<5; i++){
       String line = read.readLine();
       if(i==0){
-        this.vType = line.trim();
+        String vType = line.trim();
       }else if(i==1){
-        this.eType = line.trim();
+        String eType = line.trim();
       }else if(i==2){
         if(line == "D"){
           this.type = 0;
         }else if(line == "N"){
           this.type = 1;
+        }else{
+          throw new IllegalArgumentException("Formato no valido");
+          return;
         }
-      }else if(i==3){
-        int n = Integer.parseInt(line.trim());
-      }else{
-        int m = Integer.parseInt(line.trim());
       }
     }
-    // aqui tendrian que ir los dos ciclos pero aja, los tipos de dato joden
-    if(this.vType == "B" && this.eType =="B"){
-      for(i=0;i<n;i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] node = line.split(" ");
-        boolean result = this.graph.addNode(node[0], Boolean.parseBoolean(node[1]),
-                                            Double.parseDouble(node[2]));
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
+    try{
+      if(this.type == 0){
+        // Inizializacion si es un digrafo
+        this.crearDigrafoVacio(vType, eType);
+        this.Dgraph.loadGraph(archivo);
+      }else if(this.type == 1){
+        // Inizializacion si es un grafo no dirigido
+        this.crearGrafoNoDirigidoVacio(vType, eType);
+        this.Ugraph.loadGraph(archivo);
       }
-      for(i=0; i<m; i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] edge = line.split(" ");
-        if(this.type == 0){
-          result = this.graph.addArc(edge[0], Boolean.parseBoolean(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else if(this.type == 1){
-          result = this.graph.addEdge(edge[0], Boolean.parseBoolean(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else{
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-    }else if(this.vType == "B" && this.eType =="D"){
-      for(i=0;i<n;i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] node = line.split(" ");
-        boolean result = this.graph.addNode(node[0], Boolean.parseBoolean(node[1]),
-                                            Double.parseDouble(node[2]));
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-      for(i=0; i<m; i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] edge = line.split(" ");
-        if(this.type == 0){
-          result = this.graph.addArc(edge[0], Double.parseDouble(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else if(this.type == 1){
-          result = this.graph.addEdge(edge[0],Double.parseDouble(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else{
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-    }else if(this.vType == "B" && this.eType =="S"){
-      for(i=0;i<n;i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] node = line.split(" ");
-        boolean result = this.graph.addNode(node[0], Boolean.parseBoolean(node[1]),
-                                            Double.parseDouble(node[2]));
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-      for(i=0; i<m; i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] edge = line.split(" ");
-        if(this.type == 0){
-          result = this.graph.addArc(edge[0], edge[1], Double.parseDouble(edge[2]),
-                                     edge[3], edge[4]);
-        }else if(this.type == 1){
-          result = this.graph.addEdge(edge[0], edge[1], Double.parseDouble(edge[2]),
-                                      edge[3], edge[4]);
-        }else{
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-    }else if(this.vType == "D" && this.eType =="B"){
-      for(i=0;i<n;i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] node = line.split(" ");
-        boolean result = this.graph.addNode(node[0], Double.parseDouble(node[1]),
-                                            Double.parseDouble(node[2]));
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-      for(i=0; i<m; i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] edge = line.split(" ");
-        if(this.type == 0){
-          result = this.graph.addArc(edge[0], Boolean.parseBoolean(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else if(this.type == 1){
-          result = this.graph.addEdge(edge[0], Boolean.parseBoolean(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else{
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-    }else if(this.vType == "D" && this.eType =="D"){
-      for(i=0;i<n;i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] node = line.split(" ");
-        boolean result = this.graph.addNode(node[0], Double.parseDouble(node[1]),
-                                            Double.parseDouble(node[2]));
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-      for(i=0; i<m; i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] edge = line.split(" ");
-        if(this.type == 0){
-          result = this.graph.addArc(edge[0], Double.parseDouble(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else if(this.type == 1){
-          result = this.graph.addEdge(edge[0], Double.parseDouble(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else{
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-    }else if(this.vType == "D" && this.eType =="S"){
-      for(i=0;i<n;i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] node = line.split(" ");
-        boolean result = this.graph.addNode(node[0], Double.parseDouble(node[1]),
-                                            Double.parseDouble(node[2]));
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-      for(i=0; i<m; i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] edge = line.split(" ");
-        if(this.type == 0){
-          result = this.graph.addArc(edge[0], edge[1], Double.parseDouble(edge[2]),
-                                     edge[3], edge[4]);
-        }else if(this.type == 1){
-          result = this.graph.addEdge(edge[0], edge[1], Double.parseDouble(edge[2]),
-                                     edge[3], edge[4]);
-        }else{
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-    }else if(this.vType == "S" && this.eType =="B"){
-      for(i=0;i<n;i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] node = line.split(" ");
-        boolean result = this.graph.addNode(node[0], node[1], Double.parseDouble(node[2]));
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-      for(i=0; i<m; i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] edge = line.split(" ");
-        if(this.type == 0){
-          result = this.graph.addArc(edge[0], Boolean.parseBoolean(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else if(this.type == 1){
-          result = this.graph.addEdge(edge[0], Boolean.parseBoolean(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else{
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-    }else if(this.vType == "S" && this.eType =="D"){
-      for(i=0;i<n;i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] node = line.split(" ");
-        boolean result = this.graph.addNode(node[0], node[1], Double.parseDouble(node[2]));
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-      for(i=0; i<m; i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] edge = line.split(" ");
-        if(this.type == 0){
-          result = this.graph.addArc(edge[0], Double.parseDouble(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else if(this.type == 1){
-          result = this.graph.addEdge(edge[0], Double.parseDouble(edge[1]),
-                                     Double.parseDouble(edge[2]), edge[3], edge[4]);
-        }else{
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-    }else if(this.vType == "S" && this.eType =="S"){
-      for(i=0;i<n;i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] node = line.split(" ");
-        boolean result = this.graph.addNode(node[0], node[1], Double.parseDouble(node[2]));
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
-      for(i=0; i<m; i++){
-        line = read.readLine();
-        line = line.trim();
-        String[] edge = line.split(" ");
-        if(this.type == 0){
-          result = this.graph.addArc(edge[0], edge[1], Double.parseDouble(edge[2]),
-                                     edge[3], edge[4]);
-        }else if(this.type == 1){
-          result = this.graph.addEdge(edge[0], edge[1], Double.parseDouble(edge[2]),
-                                      edge[3], edge[4]);
-        }else{
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-        if(!result){
-          return;
-          //ERROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOR
-        }
-      }
+    }catch(IllegalArgumentException | UnsupportedOperationException e){
+      throw new IllegalArgumentException("No se pudo cargar el grafo");
+      return;
     }
     System.out.println("Se ha creado el grafo exitosamente");
-    }
   }
 
+  /**
+  * Crea un grafo no dirigido vacio que se mantendra como el atributo Ugraph
+  * de la clase. El metodo recibe del usuario los datos necesarios para la creacion
+  * del grafo.
+  *
+  * @throws IllegalArgumentException si los daros que da el usuario no son validos
+  */
   public void crearGrafoNoDirigido(){
     this.type = 1;
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el tipo de dato de los vertices: (B, D o S)");
     String v = br.readLine();
-    this.vType = v.trim();
+    String vType = v.trim();
     System.out.println("Introduzca el tipo de dato de las aristas: (B, D o S)");
     String l = br.readLine();
-    this.eType = l.trim();
-    if(this.vType == "B" && this.eType =="B"){
-      this.graph = new UndirectedGraph<boolean,boolean>();
-    }else if(this.vType == "B" && this.eType =="D"){
-      this.graph = new UndirectedGraph<boolean, double>();
-    }else if(this.vType == "B" && this.eType =="S"){
-      this.graph = new UndirectedGraph<boolean,String> ();
-    }else if(this.vType == "D" && this.eType =="B"){
-      this.graph = new UndirectedGraph<double,boolean> ();
-    }else if(this.vType == "D" && this.eType =="D"){
-      this.graph = new UndirectedGraph<double,double>();
-    }else if(this.vType == "D" && this.eType =="S"){
-      this.graph = new UndirectedGraph<double,String>();
-    }else if(this.vType == "S" && this.eType =="B"){
-      this.graph = new UndirectedGraph<String, boolean>();
-    }else if(this.vType == "S" && this.eType =="D"){
-      this.graph = new UndirectedGraph<String,double>();
-    }else if(this.vType == "S" && this.eType =="S"){
-      this.graph = new UndirectedGraph<String,String>();
+    String eType = l.trim();
+    try{
+      this.crearGrafoNoDirigidoVacio(vType, eType);
+    }catch(IllegalArgumentException i){
+      throw new IllegalArgumentException("No se creo el grafo no dirigido");
+      return;
     }
+
     System.out.println("Se ha creado el grafo exitosamente");
   }
 
-  public void crearDigrafo(){
+  /**
+  * Inicializa el grafo no dirigido de esta clase
+  *
+  * @param vType es el tipo de dato de los vertices
+  *
+  * @param eType es el tipo de dato de los lados
+  *
+  * @throws IllegalArgumentException si el formato de los argumentos no es el esperado
+  */
+  public void crearGrafoNoDirigidoVacio(String vType, String eType)
+  throws IllegalArgumentException{
+    if(vType == "B" && eType =="B"){
+      this.Ugraph = new UndirectedGraph<Boolean,Boolean>();
+      this.transV = new BooleanTransformer();
+      this.transE = new BooleanTransformer();
+    }else if(vType == "B" && eType =="D"){
+      this.Ugraph = new UndirectedGraph<Boolean, Double>();
+      this.transV = new BooleanTransformer();
+      this.transE = new DoubleTransformer();
+    }else if(vType == "B" && eType =="S"){
+      this.Ugraph = new UndirectedGraph<Boolean,String> ();
+      this.transV = new BooleanTransformer();
+      this.transE = new StringTransformer();
+    }else if(vType == "D" && eType =="B"){
+      this.Ugraph = new UndirectedGraph<Double,Boolean> ();
+      this.transV = new DoubleTransformer();
+      this.transE = new BooleanTransformer();
+    }else if(vType == "D" && eType =="D"){
+      this.Ugraph = new UndirectedGraph<Double,Double>();
+      this.transV = new DoubleTransformer();
+      this.transE = new DoubleTransformer();
+    }else if(vType == "D" && eType =="S"){
+      this.Ugraph = new UndirectedGraph<Double,String>();
+      this.transV = new DoubleTransformer();
+      this.transE = new StringTransformer();
+    }else if(vType == "S" && eType =="B"){
+      this.Ugraph = new UndirectedGraph<String, Boolean>();
+      this.transV = new StringTransformer();
+      this.transE = new BooleanTransformer();
+    }else if(vType == "S" && eType =="D"){
+      this.Ugraph = new UndirectedGraph<String,Double>();
+      this.transV = new StringTransformer();
+      this.transE = new DoubleTransformer();
+    }else if(vType == "S" && eType =="S"){
+      this.Ugraph = new UndirectedGraph<String,String>();
+      this.transV = new StringTransformer();
+      this.transE = new StringTransformer();
+    }else{
+      throw new IllegalArgumentException("Tipos de datos no validos");
+      return;
+    }
+  }
+
+  /**
+  * Crea un grafo no dirigido vacio que se mantendra como el atributo Ugraph
+  * de la clase. El metodo recibe del usuario los datos necesarios para la creacion
+  * del grafo.
+  *
+  * @throws IllegalArgumentException si los datos que da el usuario no son validos
+  */
+  public void crearDigrafo()
+    throws IllegalArgumentException{
     this.type = 0;
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el tipo de dato de los vertices: (B, D o S)");
     String v = br.readLine();
-    this.vType = v.trim();
+    String vType = v.trim();
     System.out.println("Introduzca el tipo de dato de los arcos: (B, D o S)");
     String l = br.readLine();
-    this.eType = l.trim();
-    if(this.vType == "B" && this.eType =="B"){
-      this.graph = new DirectedGraph<boolean,boolean>();
-    }else if(this.vType == "B" && this.eType =="D"){
-      this.graph = new DirectedGraph<boolean, double>();
-    }else if(this.vType == "B" && this.eType =="S"){
-      this.graph = new DirectedGraph<boolean,String>();
-    }else if(this.vType == "D" && this.eType =="B"){
-      this.graph = new DirectedGraph<double,boolean>();
-    }else if(this.vType == "D" && this.eType =="D"){
-      this.graph = new DirectedGraph<double,double>();
-    }else if(this.vType == "D" && this.eType =="S"){
-      this.graph = new DirectedGraph<double,String> ();
-    }else if(this.vType == "S" && this.eType =="B"){
-      this.graph = new DirectedGraph<String, boolean>();
-    }else if(this.vType == "S" && this.eType =="D"){
-      this.graph = new DirectedGraph<String,double>();
-    }else if(this.vType == "S" && this.eType =="S"){
-      this.graph = new DirectedGraph<String,String>();
+    String eType = l.trim();
+    try{
+      this.crearDigrafoVacio(vType, eType);
+    }catch(IllegalArgumentException i){
+      throw new IllegalArgumentException("No se creo el digrafo");
     }
+
     System.out.println("Se ha creado el grafo exitosamente");
   }
 
-  public void agregarVertice(){
+  /**
+  * Inicializa el Digrafo de esta clase
+  *
+  * @param vType es el tipo de dato de los vertices
+  *
+  * @param eType es el tipo de dato de los lados
+  *
+  * @throws IllegalArgumentException si el formato de los argumentos no es el esperado
+  */
+  public void crearDigrafoVacio(String vType, String eType)
+  throws IllegalArgumentException{
+    if(vType == "B" && eType =="B"){
+      this.Dgraph = new DirectedGraph<Boolean,Boolean>();
+      this.transV = new BooleanTransformer();
+      this.transE = new BooleanTransformer();
+    }else if(vType == "B" && eType =="D"){
+      this.Dgraph = new DirectedGraph<Boolean, Double>();
+      this.transV = new BooleanTransformer();
+      this.transE = new DoubleTransformer();
+    }else if(vType == "B" && eType =="S"){
+      this.Dgraph = new DirectedGraph<Boolean,String>();
+      this.transV = new BooleanTransformer();
+      this.transE = new StringTransformer();
+    }else if(vType == "D" && eType =="B"){
+      this.Dgraph = new DirectedGraph<Double,Boolean>();
+      this.transV = new DoubleTransformer();
+      this.transE = new BooleanTransformer();
+    }else if(vType == "D" && eType =="D"){
+      this.Dgraph = new DirectedGraph<Double,Double>();
+      this.transV = new DoubleTransformer();
+      this.transE = new DoubleTransformer();
+    }else if(vType == "D" && eType =="S"){
+      this.Dgraph = new DirectedGraph<Double,String> ();
+      this.transV = new DoubleTransformer();
+      this.transE = new StringTransformer();
+    }else if(vType == "S" && eType =="B"){
+      this.Dgraph = new DirectedGraph<String, Boolean>();
+      this.transV = new StringTransformer();
+      this.transE = new BooleanTransformer();
+    }else if(vType == "S" && eType =="D"){
+      this.Dgraph = new DirectedGraph<String,Double>();
+      this.transV = new StringTransformer();
+      this.transE = new DoubleTransformer();
+    }else if(vType == "S" && eType =="S"){
+      this.Dgraph = new DirectedGraph<String,String>();
+      this.transV = new StringTransformer();
+      this.transE = new StringTransformer();
+    }else{
+      throw new IllegalArgumentException("Tipos de datos no validos");
+      return;
+    }
+  }
+
+  /**
+  * Agrega un nodo en el grafo en el que se este usando. Todos los datos son
+  * solicitados internamente al usuario.
+  *
+  * @throws IllegalArgumentException si los datos que da el usuario no son validos
+  *                                  o si hay algun vertice con el mismo id.
+  */
+  public void agregarNodo()
+  throws IllegalArgumentException{
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
     String id = br.readLine();
@@ -382,17 +247,25 @@ public class ClienteGrafo{
     System.out.println("Introduzca el dato del vertice: ");
     String data = br.readLine();
     data = data.trim();
-    if(this.vType == "B"){
-      boolean dato = Boolean.parseBoolean(data);
-    }else if(this.vType == "D"){
-      double dato = Double.parseDouble(data);
-    }else if(this.vType == "S"){
-      String dato = data;
-    }
     System.out.println("Introduzca el peso: ");
     String s = br.readLine();
-    double p = Double.parseDouble(s.trim());
-    boolean result = this.graph.addNode(id, dato, p);
+    s = s.trim();
+    if(data.length() < 1 || s.length() < 1 ){
+      throw new IllegalArgumentException("No se pueden sar datos vacios");
+      return;
+    }
+    double p = Double.parseDouble(s);
+    try{
+      if(this.type == 0){
+        boolean result = this.Dgraph.addNode(id, this.transV.Transform(data), p);
+      }else if(this.type == 1){
+        boolean result = this.Ugraph.addNode(id, this.transV.Transform(data), p);
+      }
+    }catch(IllegalArgumentException i){
+      throw new IllegalArgumentException("No se pudo agregar el vertice ");
+      return;
+    }
+
     if(result){
       System.out.println("Se ha agregado exitosamente el vertice. ");
     }else{
@@ -400,24 +273,28 @@ public class ClienteGrafo{
     }
   }
 
-  public void agregarLado(){
-    if(this.type==0){
+  /**
+  * Agrega un lado en el grafo en el que se este usando. Todos los datos son
+  * solicitados internamente al usuario.
+  *
+  * @throws IllegalArgumentException si los datos que da el usuario no son validos
+  */
+  public void agregarLado()
+  throws IllegalArgumentException{
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-      System.out.println("Introduzca el id del arco: ");
-      String id = br.readLine();
+      System.out.println("Introduzca el id del lado: ");
+      String id = br.readLine();ClienteGrafo
       id = id.trim();
-      System.out.println("Introduzca el dato del arco: ");
+      System.out.println("Introduzca el dato del lado: ");
       String data = br.readLine();
       data = data.trim();
-      if(this.eType == "B"){
-        boolean dato = Boolean.parseBoolean(data);
-      }else if(this.eType == "D"){
-        double dato = Double.parseDouble(data);
-      }else if(this.eType == "S"){
-        String dato = data;
-      }
       System.out.println("Introduzca el peso: ");
       String s = br.readLine();
+      s = s.trim();
+      if(data.length() < 1 || s.length() < 1 ){
+        throw new IllegalArgumentException("No se pueden sar datos vacios");
+        return;
+      }
       double p = Double.parseDouble(s.trim());
       System.out.println("Introduzca el id del vertice inicial: ");
       String vInicial = br.readLine();
@@ -425,79 +302,67 @@ public class ClienteGrafo{
       System.out.println("Introduzca el id del vertice final: ");
       String vFinal = br.readLine();
       vFinal = vFinal.trim();
-      boolean result = this.graph.addArc(id, dato, p, vInicial, vFinal);
+      try{
+        if(this.type == 0){
+          boolean result = this.Dgraph.addEdge(id, this.transE.Transform(data.trim()), p, vInicial, vFinal);
+        }else if(this.type == 1){
+          boolean result = this.Ugraph.addEdge(id, this.transE.Transform(data.trim()), p, vInicial, vFinal);
+        }
+      }catch(IllegalArgumentException i){
+        throw new IllegalArgumentException("No se pudo agregar el lado ");
+        return;
+      }
       if(result){
         System.out.println("Se ha agregado exitosamente el arco. ");
       }else{
-        System.out.println("Ya existe un arco con ese id. ");
+        System.out.println("Ya existe un lado con ese id. ");
       }
-    }else{
-      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-      System.out.println("Introduzca el id de la arista: ");
-      String id = br.readLine();
-      id = id.trim();
-      System.out.println("Introduzca el dato de la arista: ");
-      String data = br.readLine();
-      data = data.trim();
-      if(this.eType == "B"){
-        boolean dato = Boolean.parseBoolean(data);
-      }else if(this.eType == "D"){
-        double dato = Double.parseDouble(data);
-      }else if(this.eType == "S"){
-        String dato = data;
-      }
-      System.out.println("Introduzca el peso: ");
-      String s = br.readLine();
-      double p = Double.parseDouble(s.trim());
-      System.out.println("Introduzca el id del vertice 1: ");
-      String u = br.readLine();
-      u = u.trim();
-      System.out.println("Introduzca el id del vertice 2: ");
-      String v = br.readLine();
-      v = v.trim();
-      boolean result = this.graph.addArc(id, dato, p, u, v);
-      if(result){
-        System.out.println("Se ha agregado exitosamente la arista. ");
-      }else{
-        System.out.println("Ya existe una arista con ese id. ");
-      }
-    }
   }
 
+  /**
+  * Imrpime en pantalla el numero de vertices que hay en el grafo. Le solicita
+  * al usuario el id del nodo para poder realizar la operacion.
+  */
   public void obtenerNumVertices(){
-    int n = this.graph.numOfNodes();
+    if(this.type == 0){
+      int n = this.Dgraph.numOfNodes();
+    }else if(this.type == 1){
+      int n = this.Ugraph.numOfNodes();
+    }
     System.out.print("El numero de vertices en el grafo es: ");
     System.out.print(n);
     System.out.print("\n");
   }
 
+  /**
+  * Imrpime en pantalla el numero de lados que hay en el grafo. Le solicita
+  * al usuario el id del lado para poder realizar la operacion.
+  */
   public void obtenerNumLados(){
-    int n = this.graph.numOfEdges();
+    if(this.type == 0){
+      int n = this.Dgraph.numOfEdges();
+    }else if(this.type == 1){
+      int n = this.Ugraph.numOfEdges();
+    }
     System.out.println("El numero de lados en el grafo es: ");
     System.out.print(n);
     System.out.print("\n");
   }
 
-  public Node obtenerVertice(){
-    //try{
-      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-      System.out.println("Introduzca el id del vertice: ");
-      String id = br.readLine();
-      id = id.trim();
-      Node v = this.graph.getNode(id);
-      System.out.println("Se obtuvo el vertice exitosamente ");
-      return v;
-    //}catch(NoSuchElementException){
-      //blaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-  //  }
-  }
-
+  /**
+  * Le solicita al usuario el id de un vertice e imprime en pantalla un mensaje
+  * indicando si ya esta en el grafo o no
+  */
   public void buscarVertice(){
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
     String id = br.readLine();
     id = id.trim();
-    boolean is = this.graph.isNode(id);
+    if(this.type == 0){
+      boolean is = this.Dgraph.isNode(id);
+    }else if(this.type == 1){
+      boolean is = this.Ugraph.isNode(id);
+    }
     if(is){
       System.out.println("El nodo esta en el grafo ");
     }else{
@@ -505,12 +370,20 @@ public class ClienteGrafo{
     }
   }
 
+  /**
+  * Le solicita al usuario el id de un lado e imprime en pantalla un mensaje
+  * indicando si ya esta en el grafo o no
+  */
   public void buscarLado(){
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del lado: ");
     String id = br.readLine();
     id = id.trim();
-    boolean is = this.graph.isEdge(id);
+    if(this.type == 0){
+      boolean is = this.Dgraph.isEdge(id);
+    }else if(this.type == 1){
+      boolean is = this.Ugraph.isEdge(id);
+    }
     if(is){
       System.out.println("El lado esta en el grafo ");
     }else{
@@ -518,12 +391,21 @@ public class ClienteGrafo{
     }
   }
 
+  /**
+  * Le solicita al usuario el id de un vertice y
+  * Si esta, lo elimina e imprime un mensaje idicando que fue eliminado
+  * Si no esta, imprime un mensaje indicando que no esta en el grafo
+  */
   public void eliminarVertice(){
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
     String id = br.readLine();
     id = id.trim();
-    boolean result = this.graph.removeNode(id);
+    if(this.type == 0){
+          boolean result = this.Dgraph.removeNode(id);
+    }else if(this.type == 1){
+          boolean result = this.Ugraph.removeNode(id);
+    }
     if(result){
       System.out.println("Se ha eliminado el nodo exitosamente. ");
     }else{
@@ -531,107 +413,199 @@ public class ClienteGrafo{
     }
   }
 
+  /**
+  * Imprime en pantalla los id de todos los nodos del grafo
+  */
   public void imprimirVertices(){
-    ArrayList<Node> vertices = this.graph.nodeList();
+    if(this.type == 0){
+          ArrayList<Node> vertices = this.Dgraph.nodeList();
+    }else if(this.type == 1){
+          ArrayList<Node> vertices = this.Ugraph.nodeList();
+    }
     if(vertices.size() == 0){
       System.out.println("No hay nodos en el grafo. ");
     }else{
       System.out.println("Los nodos en el grafo son: ");
-      for(i=0; i<vertices.size(); i++){
+      for(int i=0; i<vertices.size(); i++){
         System.out.println(vertices.get(i).id);
       }
     }
   }
 
+  /**
+  * Imprime en pantalla los id de todos los lados del grafo
+  */
   public void imprimirLados(){
-    ArrayList<Node> lados = this.graph.edgeList();
+    if(this.type == 0){
+          ArrayList<Node> vertices = this.Dgraph.edgeList();
+    }else if(this.type == 1){
+          ArrayList<Node> vertices = this.Ugraph.edgeList();
+    }
     if(lados.size() == 0){
       System.out.println("No lados en este grafo. ");
     }else{
       System.out.println("Los lados en el grafo son: ");
-      for(i=0; i<lados.size(); i++){
+      for(int i=0; i<lados.size(); i++){
         System.out.println(lados.get(i).id);
       }
     }
   }
 
+  /**
+  * Imprime en pantalla los id de todos los vertices adyacentes a un vertice.
+  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
+  *
+  */
   public void imprimirAdyacentes(){
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
     String id = br.readLine();
     id = id.trim();
-    ArrayList adj = this.graph.adjacency(id);
+    try{
+      if(this.type == 0){
+            ArrayList adj = this.Dgraph.adjacency(id);
+      }else if(this.type == 1){
+            ArrayList adj = this.Ugraph.adjacency(id);
+      }
+    }catch(NoSuchElementException i){
+      System.out.println("No se puede realizar la operacion");
+      return;
+    }
     System.out.println("Los vertices adjacentes a " + id + "son: ");
-    for(i=0; i<adj.size(); i++){
+    for(int i=0; i<adj.size(); i++){
       System.out.println(adj.get(i).id);
     }
   }
 
+  /**
+  * Imprime en pantalla los id de todos los lados incidentes a un vertice.
+  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
+  */
   public void imprimirIncidentes(){
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
     String id = br.readLine();
     id = id.trim();
-    ArrayList inc = this.graph.incident(id);
+    try{
+      if(this.type == 0){
+            ArrayList adj = this.Dgraph.incident(id);
+      }else if(this.type == 1){
+            ArrayList adj = this.Ugraph.incident(id);
+      }
+    }catch(NoSuchElementException i){
+      System.out.println("No se pudo realizar la operacion");
+      return;
+    }
     System.out.println("Los lados adjacentes a " + id + "son: ");
-    for(i=0; i<inc.size(); i++){
+    for(int i=0; i<inc.size(); i++){
       System.out.println(inc.get(i).id);
     }
   }
 
+  /**
+  * Imprime en pantalla todos los vertices y lados del grafo
+  */
+  public void imprimirGrafo(){
+    imprimirVertices();
+    imprimirIncidentes();
+  }
+
+  /**
+  * Imprime en pantalla el grado de un vertice.
+  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
+  */
   public void grado(){
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
     String id = br.readLine();
     id = id.trim();
+    try{
+      if(this.type == 0){
+          int g = this.Dgraph.degree(id);
+      }else if(this.type == 1){
+        int g = this.Ugraph.degree(id);
+      }
+    }catch(NoSuchElementException i){
+      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
+      return;
+    }
+
     int g = this.graph.degree(id);
     System.out.print("El grado del vertice es: ");
     System.out.print(g);
     System.out.print("\n");
   }
 
-  public void gradoInterior(){
+  /**
+  * Imprime en pantalla el grado interior de un vertice.
+  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
+  *
+  * @throws UnsupportedOperationException si se intenta aplicar sobre un grafo no dirigido
+  */
+  public void gradoInterior()
+  throws UnsupportedOperationException{
     if(this.type!=0){
-      System.out.println("Grado interior no esta definido para grafos no dirigidos");
+      throw UnsupportedOperationException("Grado interior no esta definido para grafos no dirigidos");
       return;
     }
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
     String id = br.readLine();
     id = id.trim();
-    int g = this.graph.inDegree(id);
+    try{
+      int g = this.Dgraph.inDegree(id);
+    }catch(NoSuchElementException i){
+      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
+      return;
+    }
     System.out.print("El grado interior del vertice es: ");
     System.out.print(g);
     System.out.print("\n");
   }
 
-  public void gradoExterior(){
+  /**
+  * Imprime en pantalla el grado exterior de un vertice.
+  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
+  *
+  * @throws UnsupportedOperationException si se intenta aplicar sobre un grafo no dirigido
+  */
+  public void gradoExterior()
+  throws UnsupportedOperationException{
     if(this.type!=0){
-      System.out.println("Grado exterior no esta definido para grafos no dirigidos");
+      throw UnsupportedOperationException("Grado exterior no esta definido para grafos no dirigidos");
       return;
     }
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
     String id = br.readLine();
     id = id.trim();
-    int g = this.graph.outDegree(id);
+    try{
+      int g = this.Dgraph.outDegree(id);
+    }catch(NoSuchElementException i){
+      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
+      return;
+    }
     System.out.print("El grado exterior del vertice es: ");
     System.out.print(g);
     System.out.print("\n");
   }
 
+  /**
+  * Imprime en pantalla un mensaje de salida y termina la ejecucion del programa
+  */
   public void salir(){
     System.out.println("Hasta luego!");
     System.exit(0);
   }
 
-
-  // Como hacer imprimir grafo?????????????????????????????????????????
-
-
-
-
-  public void menu(){
+  /**
+  * Imprime en pantalla un menu que le da acceso al usuario a todas las operaciones del grafo.
+  * Solo se le permite mantener un grafo a la vez.
+  *
+  * @throws IOException si hubo algun error en la ejecucion de cualquiera de los subprogramas
+  */
+  public void menu()
+  throws IOException{
     System.out.println(new StringBuilder("Introduzca la operacion que desee realizar: \n")
                    .append("1.- Crear Grafo desde archivo \n")
                    .append("2.- Crear Grafo no dirigido vacio \n")
@@ -640,72 +614,93 @@ public class ClienteGrafo{
                    .append("5.- Agregar Lado \n")
                    .append("6.- Obtener numero de vertices \n")
                    .append("7.- Obtener numero de lados \n")
-                   .append("8.- Obtener un vertice \n")
-                   .append("9.- Ver si esta un vertice \n")
-                   .append("10.- Ver si esta lado \n")
-                   .append("11.- Eliminar vertice \n")
-                   .append("12.- Imprimir lista de vertices \n")
-                   .append("13.- Imprimir lista de lados \n")
-                   .append("14.- Imprimir lista de vertices adyacentes a un vertice \n") // recordar lanzar el NoSuchElementException
-                   .append("15.- Imprimir lista de lados incidentes a un vertice \n") // recordar lanzar el NoSuchElementException
-                   .append("16.- Imprimir Grafo \n") // Falta la funcion de clonar
-                   .append("17.- Calcular grado de un vertice \n")
-                   .append("18.- Calcular el grado interior de un vertice (solo para digrafos) \n")
-                   .append("19.- Calcular el grado externo de un vertice (solo para digrafos) \n")
-                   .append("20.- Salir \n")
+                   .append("8.- Ver si esta un vertice \n")
+                   .append("9.- Ver si esta lado \n")
+                   .append("10.- Eliminar vertice \n")
+                   .append("11.- Imprimir lista de vertices \n")
+                   .append("12.- Imprimir lista de lados \n")
+                   .append("13.- Imprimir lista de vertices adyacentes a un vertice \n")
+                   .append("14.- Imprimir lista de lados incidentes a un vertice \n")
+                   .append("15.- Imprimir Grafo \n")
+                   .append("16.- Calcular grado de un vertice \n")
+                   .append("17.- Calcular el grado interior de un vertice (solo para digrafos) \n")
+                   .append("18.- Calcular el grado externo de un vertice (solo para digrafos) \n")
+                   .append("0.- Salir \n")
                    .toString());
 
      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-     int n = Integer.parseInt(br.readLine());    // Verificar si aqui puede salir una excepcion
-     switch (n) {
-      case 1: this.crearGrafoArchivo();
-              break;
-      case 2: this.crearGrafoNoDirigido();
-              break;
-      case 3: this.crearDigrafo();
-              break;
-      case 4: this.agregarVertice();
-              break;
-      case 5: this.agregarLado();
-              break;
-      case 6: this.obtenerNumVertices();
-              break;
-      case 7: this.obtenerNumLados();
-              break;
-      case 8: this.obtenerVertice();
-              break;
-      case 9: this.buscarVertice();
-              break;
-      case 10: this.buscarLado();
-              break;
-      case 11: this.eliminarVertice();
-              break;
-      case 12: this.imprimirVertces();
-              break;
-      case 13: this.imprimirLados();
-              break;
-      case 14: this.imprimirAdyacentes();
-              break;
-      case 15: this.imprimirIncidentes();
-              break;
-      case 16: this.imprimirGrafo();
-              break;
-      case 17: this.grado();
-              break;
-      case 18: this.gradoInterior();
-              break;
-      case 19: this.gradoExterior();
-              break;
-      case 20: this.salir();
-              break;
+     try{
+       int n = Integer.parseInt(br.readLine());
+     }catch(NumberFormatException){
+       throw new IOException("Entrada no valida, debe ser un numero");
+     }
+     try{
+       switch (n) {
+         case 1: this.crearGrafoArchivo();
+         break;
+         case 2: this.crearGrafoNoDirigido();
+         break;
+         case 3: this.crearDigrafo();
+         break;
+         case 4: this.agregarNodo();
+         break;
+         case 5: this.agregarLado();
+         break;
+         case 6: this.obtenerNumVertices();
+         break;
+         case 7: this.obtenerNumLados();
+         break;
+         case 8: this.buscarVertice();
+         break;
+         case 9: this.buscarLado();
+         break;
+         case 10: this.eliminarVertice();
+         break;
+         case 11: this.imprimirVertces();
+         break;
+         case 12: this.imprimirLados();
+         break;
+         case 13: this.imprimirAdyacentes();
+         break;
+         case 14: this.imprimirIncidentes();
+         break;
+         case 15: this.imprimirGrafo();
+         break;
+         case 16: this.grado();
+         break;
+         case 17: this.gradoInterior();
+         break;
+         case 18: this.gradoExterior();
+         break;
+         case 0: this.salir();
+         break;
+       }
+     }catch(IllegalArgumentException | UnsupportedOperationException e){
+       throw new IOException("Hubieron errores en ejecucion por argumentos invalidos");
+       return;
      }
   }
 
-  public static void main(String[] args){
-    if(args.length > 0)
-			cargarGrafo(args);
-    while(true){
-      this.menu();
+  /**
+  * Metodo principal de la clase. Si el usuario desea cargar directamente el grafo
+  * un archivo, puede dar el nombre del archivo al ejecutar el programa, de lo contrario
+  * se le dirigira al menu de inmediato
+  *
+  * @param args es el nombre del archivo desde el que se quiere cargar el grafo
+  *
+  * @throws IOException si hubieron errores en la ejecucion y sale del programa
+  */
+  public static void main(String[] args)
+  throws IOException{
+    try{
+      if(args.length > 0)
+        cargarGrafo(args);
+      while(true){
+        this.menu();
+      }
+    }catch(IllegalArgumentException | IOException e){
+      System.out.println("Errores en la ejecucion: Saliendo...");
+      System.exit(1);
     }
 	}
 }
