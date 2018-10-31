@@ -96,14 +96,16 @@ public class UndirectedGraph<V,E> implements Graph{
 		for( Node<V>  nodeV : nodeU.sucNodes ){ 
 			if(nodeV.getId().equals(id)) 
 				continue;
-			while(nodeV.sucNodes.contains(nodeU))
+			while(nodeV.sucNodes.contains(nodeU)){
 				nodeV.sucNodes.remove(nodeU);
+				nodeV.outdegree--;
+			}
 
 			Stack toRemove = new Stack<Edge<E> >();
 			for(Edge<E> edge : nodeV.outEdges)
 				if(edge.getFNode().getId().equals(id) 
 					|| edge.getSNode().getId().equals(id))
-						edge.push(edge);
+						toRemove.push(edge);
 
 			while(!toRemove.empty()){
 				Edge<E> e = toRemove.pop();
@@ -125,8 +127,6 @@ public class UndirectedGraph<V,E> implements Graph{
 		this.nodeSet.remove(nodeU);
 		this.numOfNodes--;
 		this.namesToNodes.remove(id);
-
-	
 	}
 
 	public ArrayList<Node<V> > nodeList(){
@@ -137,7 +137,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		return list;
 	}
 
-	public ArrayList<Edge<E>> edgeList(){
+	public ArrayList<Edge<E> > edgeList(){
 		
 		List <Edge<E> > list = new ArrayList<>(numOfEdges);
 		for( Edge<E> e : this.edgeSet)
@@ -151,7 +151,7 @@ public class UndirectedGraph<V,E> implements Graph{
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
 		
 		Node<V>  v = namesToNodes.get(id);
-		return v.indegree;
+		return v.outdegree;
 	}	
 
 	public ArrayList<Node<V> > adjacency(String id) throws RuntimeException{
@@ -171,9 +171,34 @@ public class UndirectedGraph<V,E> implements Graph{
 		return node.outEdges;
 	}
 
-	public Graph clone();
+	public UndirectedGraph<V,E> clone(){
 
-	public String toString();
+		Graph newGraph = new UndirectedGraph();
+		newGraph.numOfArcs = this.numOfArcs;
+		newGraph.numOfNodes = this.numOfNodes;
+		newGraph.setOfNodes = (HashSet)this.setOfNodes.clone();
+		newGraph.namesToNodes = (HashMap)this.namesToNodes.clone();
+		newGraph.setOfArcs = (HashSet)this.setOfArcs.clone();
+		newGraph.namesToArcs = (HashMap)this.namesToArcs.clone();
+		return newGraph;
+
+	}
+
+	public String toString(){
+
+		System.out.print("Este es un grafo no dirigido.\n");
+		System.out.print("Este grafo contiene "+numOfNodes+" nodos: \n");
+		for(Node<V> node : this.nodeSet){
+			String s = node.toString();
+			System.out.print(s+"\n");
+		}
+		System.out.print("Este grafo contiene "+numOfEdges+" aristas: \n");
+		for(Edges<E> edge : this.edgeSet){
+			String s = edge.toString();
+			System.out.print(s+"\n");
+		}
+	
+	}
 
 	public boolean addEdge(Edge<E> edge){
 
@@ -191,8 +216,8 @@ public class UndirectedGraph<V,E> implements Graph{
 		nodeB.sucNodes.add(nodeA);
 		nodeA.outEdges.add(edge);
 		nodeB.outEdges.add(edge);
-		nodeA.indegree++;
-		nodeB.indegree++;
+		nodeA.outdegree++;
+		nodeB.outdegree++;
 		return true;
 	}
 
@@ -213,6 +238,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		nodeA.indegree++;
 		nodeB.indegree++;
 		numOfEdges++;
+		return true;
 	}
 
 	public boolean removeEdge(String id){

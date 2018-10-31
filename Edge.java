@@ -32,7 +32,7 @@ public class Edge<E> extends GraphEdges{
 		return this.data;
 	}
 
-	public void toString(){
+	public String toString(){
 		
 		String edge = " ";
 		edge += "Id de la arista: "+this.getId()+"\n";
@@ -41,6 +41,7 @@ public class Edge<E> extends GraphEdges{
 		edge += "Esta arista conecta los siguientes vertices:\n";
 		edge += this.getFNode().toString();
 		edge += this.getSNode().toString();
+		return edge;
 	}
 
 	public getFNode(){

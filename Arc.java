@@ -1,3 +1,7 @@
+import java.util.*;
+/**
+* 
+**/
 public class Arc<E> extends GraphEdges{
 
 
@@ -28,7 +32,7 @@ public class Arc<E> extends GraphEdges{
 		return this.data;
 	}
 
-	public void toString(){
+	public String toString(){
 		
 		String edge = " ";
 		edge += "Id del arco: "+this.getId()+"\n";
@@ -37,6 +41,7 @@ public class Arc<E> extends GraphEdges{
 		edge += "Este arco conecta los siguientes vertices:\n";
 		edge += "Inicial: \n"+this.getInitNode().toString();
 		edge += "Final: \n"+this.getEndNode().toString();
+		return edge;
 	}
 
 	public getInitNode(){
