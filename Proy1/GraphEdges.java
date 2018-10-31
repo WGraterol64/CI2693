@@ -1,4 +1,5 @@
-public abstract class GraphEdges<E>{
+import java.util.*;
+public abstract class GraphEdges<V,E>{
 	
 	private String id; 
 	private E data;
@@ -10,6 +11,6 @@ public abstract class GraphEdges<E>{
 
 	public abstract E getData();
 
-	public abstract void toString();
+	public abstract String toString();
 
 }

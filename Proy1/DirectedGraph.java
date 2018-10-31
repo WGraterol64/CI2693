@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-
+import java.util.*;
 public class DirectedGraph<V,E> implements Graph{
 
 	public int numOfNodes;
@@ -12,24 +10,25 @@ public class DirectedGraph<V,E> implements Graph{
 	private Transformer transV;
 	private Transformer transE;
 
-	public DirectedGraph(){
-		private Map<String,Node> namesToNodes = new HashMap<>();
-		private Map<String,Arc> namesToArc = new HashMap<>();
-		public Set<Node> nodeSet = new HashSet<>();
-		public Set<Arc> nodeArc = new HashSet<>();
-		public numOfNodes = 0;
-		public numOfArcs = 0;
+	public DirectedGraph(){ 
+		
+		this.namesToNodes = new HashMap<>();
+		this.namesToArc = new HashMap<>();
+		this.nodeSet = new HashSet<>();
+		this.nodeArc = new HashSet<>();
+		this.numOfNodes = 0;
+		this.numOfArcs = 0;
 	}
 
 	/**
-  * Carga el grafo desde un archivo de texto.
+  	* Carga el grafo desde un archivo de texto.
 	*
 	* @param fileName Archivo desde el que se desea cargar e grafo
 	*
 	* @throws IllegalArgumentException si el formato del archivo no es valido
 	*
 	* @throws UnsupportedOperationException si ocurre algun error parseando datos del archivo
-	*/
+	**/
 	public boolean loadGraph(String fileName)
       throws IllegalArgumentException, UnsupportedOperationException{
 		BufferedReader read = new BufferedReader(new FileReader(fileName));
@@ -46,7 +45,7 @@ public class DirectedGraph<V,E> implements Graph{
 				}else{
 					int m = Integer.parseInt(line.trim());
 				}
-			}catch(NumberFormatException){
+			}catch(NumberFormatException e){
 				throw new UnsupportedOperationException("Formato no valido");
 			}
 		}
@@ -103,24 +102,26 @@ public class DirectedGraph<V,E> implements Graph{
 		}
 	}
 
+
 	public int numOfNodes(){
 		return this.numOfNodes;
 	}
 
-	public int numOfArcs(){
+	public int numOfEdges(){
 		return this.numOfArcs;
 	}
 
-	public boolean addNode(Node<V> node){
+	public boolean addNode(Node<V,E> node){
 
 		String id = node.getId();
 
 		if(namesToNodes.get(id) != null)
 			return false;
 
-		node.setIndex(numOfNodes);
+		this.namesToNodes.put(id,node);
 		this.nodeSet.add(node);
 		this.numOfNodes++;
+
 	}
 
 	public boolean addNode(String id, V data, double weight){
@@ -128,7 +129,8 @@ public class DirectedGraph<V,E> implements Graph{
 		if(namesToNodes.get(id) != null)
 			return false;
 
-		Node node = new Node<V>(id,data,weight,numOfNodes);
+		Node<V,E> node = new Node<V,E>(id,data,weight);
+		this.namesToNodes.put(id,node);
 		this.nodeSet.add(node);
 		this.numOfNodes++;
 
@@ -139,130 +141,258 @@ public class DirectedGraph<V,E> implements Graph{
 		Node node = namesToNodes.get(id);
 		if(node == null)
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-
+		
 		return node;
 
 	}
 
 	public boolean isNode(String id){
-		return (this.namesToNodes.get(id) == null)
+		return (this.namesToNodes.get(id) == null);
 	}
 
-	public boolean isArc(String id){
-		return (this.namesToArcs.get(id) == null)
+	public boolean isEdge(String id){
+		return (this.namesToArcs.get(id) == null);
 	}
 
-	public boolean isArc(String u, String v){
+	public boolean isEdge(String u, String v){
 
-		if(!this.isNode(u) || !this.isNode(v))
+		if(!this.isNode(u) || !this.isNode(v)) 
 			return false;
 
-		Node nodeU = getNode(id);
-		for( Node nodeV : nodeU.adj ){
-			if(nodeV.getId().equals(v))
+		Node<V,E> nodeU = getNode(id); 
+		for( Arc<V,E> arc: nodeU.outEdges ){
+			if(arc.getEndNode().getId().equals(v)) 
 				return true;
 		}
 
 		return false;
 	}
 
-	public boolean removeNode(String id){
+
+	public boolean removeNode(String id) {
 
 		if(!isNode(id))
 			return false;
 
-		Node nodeU = this.getNode(id);
+		Node<V,E> nodeU = this.getNode(id);
+			
+		for( Node<V,E>  nodeV : nodeU.preNodes ){ 
+			if(nodeV.getId().equals(id)) 
+				continue;
+			while(nodeV.sucNodes.contains(nodeU)){
+				nodeV.outdegree--;
+				nodeV.sucNodes.remove(nodeU);
+			}
 
-		for( Node nodeV : nodeU.adj )
-			while(nodeV.inc.contains(nodeU))
-				nodeV.inc.remove(NoClassDefFoundError);
+			Stack toRemove = new Stack<Arc<V,E> >();
+			for(Arc<V,E> arc : nodeV.outEdges)
+				if(arc.getEndNode().getId().equals(id))
+					arc.push(arc);
 
-		for( Node nodeV : nodeU.inc )
-			while(nodeV.adj.contains(nodeU))
-				nodeV.adj.remove(NoClassDefFoundError);
+			while(!toRemove.empty()){
+				Arc<V,E> a = toRemove.pop();
+				nodeV.outEdges.remove(a);
+				this.namesToArcs.remove(a.getId());
+				this.arcSet.remove(a);
+			}
+		}
 
-
+		for(Arc<V,E> arc : nodeU.outEdges){
+			Node<V,E> nodeV = arc.getEndNode();
+			nodeV.indegree--;
+			this.arcSet.remove(arc);
+			this.namesToEdges.remove(arc.getId());
+		}
+		
 		this.nodeSet.remove(nodeU);
 		this.numOfNodes--;
-		this.namesToNodes.remove(id);
-
-		Stack toRemove = new Stack<Arc>();
-		for( Arc a : arcSet){
-			if(a.getInitNode().getId().equals(id) || a.getEndNode().getId().equals(id))
-				toRemove.push(a);
-		}
-
-		while(!toRemove.empty()){
-			Arc e = toRemove.pop();
-			String id = e.getId();
-			this.namesToArcs.remove(id);
-			arcSet.remove(e);
-		}
-
+		this.namesToNodes.remove(id);	
 	}
 
-	public ArrayList<Node> nodeList(){
-
-		List <Node> list = new ArrayList<>(numOfNodes);
-		for( Node v : this.nodeSet)
+	public ArrayList<Node<V,E> > nodeList(){
+		
+		List<Node<V,E> > list = new ArrayList<>(numOfNodes);
+		for( Node<V,E>  v : this.nodeSet)
 			list.add(v);
 		return list;
 	}
 
-	public ArrayList<Arc> arcList(){
-
-		List <Arc> list = new ArrayList<>(numOfArcs);
-		for( Arc a : this.arcSet)
+	public ArrayList<Arc<V,E> > edgeList(){
+		
+		List <Arc<V,E> > list = new ArrayList<>(numOfArcs);
+		for( Arc<V,E> a : this.arcSet)
 			list.add(a);
 		return list;
 	}
 
+
 	public int degree(String id)  throws RuntimeException{
+		
+		if(!isNode(id))
+			throw new NoSuchElementException("No existe un nodo con identificador "+id);
+		
+		Node v = namesToNodes.get(id);
+		return v.indegree + v.outdegree;
+	}	
+
+	public ArrayList<Node<V,E> > adjacency(String id) throws RuntimeException{
 
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-
-		Node v = namesToNodes.get(id);
-		return v.indegree + v.outdegree;
+		
+		Node<V,E>  node  = this.namesToNodes.get(id);
+		List<Node<V,E> > list = new ArrayList<Node<V,E> >(node.outegree);
+		for( Node<V,E> v : node.sucNodes )
+			list.add(v);
+		for( Node<V,E> v : node.preNodes )
+			list.add(v);
+		return list;
 	}
 
-	public ArrayList<Node> adjacency(String id) throws RuntimeException{
+	public ArrayList<Arc<V,E> > incident(String id) throws RuntimeException{
 
-		Node v = namesToNodes.get(id);
-		if(v == null)
+		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-
-		return v.adj;
+		Node<V,E>  node  = this.namesToNodes.get(id);
+		List<Arc<V,E> > list = new ArrayList<>(node.degree());
+		for( Arc<V,E> arc : node.outEdges)
+			list.add(arc);
+		for( Arc<V,E> arc : node.inEdges)
+			list.add(arc);
+		return list;
 	}
 
-	public ArrayList<Node> incident(String id) throws RuntimeException{
 
-		Node v = namesToNodes.get(id);
-		if(v == null)
+	public DirectedGraph<V,E> clone(){
+
+		Graph newGraph = new DirectedGraph<V,E>();
+		newGraph.numOfEdges = this.numOfEdges;
+		newGraph.numOfNodes = this.numOfNodes;
+		newGraph.setOfNodes = (HashSet)this.setOfNodes.clone();
+		newGraph.namesToNodes = (HashMap)this.namesToNodes.clone();
+		newGraph.setOfEdges = (HashSet)this.setOfEdges.clone();
+		newGraph.namesToEdges = (HashMap)this.namesToEdges.clone();
+		return newGraph;
+
+	}
+
+	public String toString(){
+
+		System.out.print("Este es un grafo dirigido.\n");
+		System.out.print("Este grafo contiene "+numOfNodes+" nodos: \n");
+		for(Node<V,E> node : this.nodeSet){
+			String s = node.toString();
+			System.out.print(s+"\n");
+		}
+		System.out.print("Este grafo contiene "+numOfArcs+" arcos: \n");
+		for(Arc<V,E> arc : this.arcSet){
+			String s = arc.toString();
+			System.out.print(s+"\n");
+		}
+	}
+
+	public boolean addArc(Arc<V,E> arc){
+		
+		String id = arc.getId();
+		
+		if(isEdge(id))
+			return false;
+
+		arcSet.add(arc);
+		namesToNodes.put(id,arc);
+		numOfArcs++;
+		Node<V,E>  nodeA = arc.getInitNode();
+		Node<V,E>  nodeB = arc.getENdNode();
+		nodeA.sucNodes.add(nodeB);
+		nodeB.preNodes.add(nodeA);
+		nodeA.outEdges.add(arc);
+		nodeB.inEdges.add(arc);
+		nodeA.outdegree++;
+		nodeB.indegree++;
+		return true;
+	}
+
+	public boolean addArc(String id, E data, double weight, String u, String v){
+
+		Node<V,E> nodeA = this.namesToNodes.get(u);
+		Node<V,E> nodeB = this.namesToNodes.get(v);
+		if(nodeA == null || nodeB == null || isEdge())
+			return false;
+		
+		Arc<V,E> arc = new Arc<V,E>(id,data,weight,nodeA,nodeB);
+		arcSet.add(arc);
+		namesToNodes.put(id,arc);
+		numOfArcs++;
+		nodeA.sucNodes.add(nodeB);
+		nodeB.preNodes.add(nodeA);
+		nodeA.outEdges.add(arc);
+		nodeB.inEdges.add(arc);
+		nodeA.outdegree++;
+		nodeB.indegree++;
+		return true;
+	}
+
+	public boolean removeArc(String id){
+		if(!isEdge(id))
+			return false;
+
+		Arc<V,E> arc = getArc(id);
+		Node<V,E> nodeA = arc.getFNode();
+		Node<V,E> nodeB = arc.getSNode();
+
+		arcSet.remove(arc);
+		namesToArcs.remove(id);
+		numOfEdges--;
+		nodeA.sucNodes.remove(nodeB);
+		nodeB.preNodes.remove(nodeA);
+		nodeA.outEdges.remove(arc);
+		nodeB.inEdges.remove(arc);
+		nodeA.outdegree--;
+		nodeB.indegree--;
+		return true;
+	}
+
+	public Arc<V,E> getArc(String id){
+		Arc<V,E> arc = this.namesToArcs.get(id);
+		if(edge == null)
+			throw new NoSuchElementException("No existe un edge con identificador"+id);
+		return arc;
+	}
+
+	public int inDegree(String id){
+		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-
-		return v.inc;
+		
+		Node v = namesToNodes.get(id);
+		return v.indegree;
 	}
 
+	public int outDegree(String id){
+		if(!isNode(id))
+			throw new NoSuchElementException("No existe un nodo con identificador "+id);
+		
+		Node v = namesToNodes.get(id);
+		return v.outdegree;
+	}
 
-	public Graph clone();
+	public ArrayList<Node<V,E>> successor(String id){
+		if(!isNode(id))
+			throw new NoSuchElementException("No existe un nodo con identificador "+id);
+		Node<V,E>  node  = this.namesToNodes.get(id);
+		List< Node<V,E> > list = new ArrayList<Node<V,E>>();
+		for( Node<V,E> v : node.sucNodes)
+			list.add(v);
+		return list;
+	}
 
-	public String toString();
-
-	public boolean addArc(Arc<E> arc)
-
-	public boolean addArc(String id, E data, double weight, String u, String v)
-
-	public boolean removeArc(String id)
-
-	public Edge<E> getArc(String id)
-
-	public int inDegree(String id) // debe poner un NoSuchElementException
-
-	public int outDegree(String id) // debe poner un NoSuchElementException 
-
-	public ArrayList<Node> successor(String id)
-
-	public ArrayList<Node> predecessor(String id)
+	public ArrayList<Node<V,E>> predecessor(String id){
+		if(!isNode(id))
+			throw new NoSuchElementException("No existe un nodo con identificador "+id);
+		Node<V,E>  node  = this.namesToNodes.get(id);
+		List< Node<V,E> > list = new ArrayList<Node<V,E>>();
+		for( Node<V,E> v : node.preNodes)
+			list.add(v);
+		return list;
+	}
 
 }

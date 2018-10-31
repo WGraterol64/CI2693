@@ -1,17 +1,21 @@
-public class Edge<E> extends GraphEdges{
+import java.util.*;
+import java.util.*;
+/**
+* 
+**/
+public class Edge<V,E> extends GraphEdges{
 
 
 	private String id; 
 	private E data;
 	private double weight;
-	private Node nodeA;
-	private Node nodeB;
+	private Node<V,E> nodeA;
+	private Node<V,E> nodeB;
 
-	public Edge(String id, E data, double weight, Node nodeA, Node, nodeB){
+	public Edge (String id, E data, double weight, Node<V,E> nodeA, Node<V,E> nodeB){
 		this.id = id;
 		this.data = data;
 		this.weight = weight;
-		this.index = index;
 		this.nodeA = nodeA;
 		this.nodeB = nodeB;
 	}
@@ -28,7 +32,7 @@ public class Edge<E> extends GraphEdges{
 		return this.data;
 	}
 
-	public void toString(){
+	public String toString(){
 		
 		String edge = " ";
 		edge += "Id de la arista: "+this.getId()+"\n";
@@ -37,13 +41,14 @@ public class Edge<E> extends GraphEdges{
 		edge += "Esta arista conecta los siguientes vertices:\n";
 		edge += this.getFNode().toString();
 		edge += this.getSNode().toString();
+		return edge;
 	}
 
-	public getFNode(){
+	public Node<V,E> getFNode(){
 		return this.nodeA;
 	}
 
-	public getSNode(){
+	public Node<V,E> getSNode(){
 		return this.nodeB;
 	}
 }

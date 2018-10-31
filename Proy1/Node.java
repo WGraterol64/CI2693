@@ -1,20 +1,30 @@
-public class Node<V>{
+import java.util.*;
+
+/**
+* Clase de Nodos
+**/
+public class Node<V,E>{
+
 
 	private String id; 
-	private E data;
+	private V data;
 	private double weight;
 	public int indegree;
 	public int outdegree;
-	public List<Node> adj;
-	public List<Node> inc;
+	public Set<Node<V,E> >  preNodes;
+	public Set<Node<V,E> >  sucNodes;
+	public List<Edge<V,E> > inEdges;
+	public List<Edge<V,E> > outEdges;
 
 
 	public Node(String id, V data, double weight){
 		this.id = id;
 		this.data = data;
 		this.weight = weight;
-		this.adj = new ArrayList<Node>();
-		this.inc = new ArrayList<Node>();
+		this.preNodes = new HashSet<Node<V,E> >();
+		this.sucNodes = new HashSet<Node<V,E> >();
+		this.inEdges = new ArrayList<Edge<V,E> >();
+		this.outEdges = new ArrayList<Edge<V,E> >();
 		this.indegree = 0;
 		this.outdegree = 0;
 	}
@@ -30,16 +40,6 @@ public class Node<V>{
 	public V getData(){
 		return this.data;
 	}
-
-	public void setIndex(int i){
-		this.index = i;
-	}
-
-	public int getIndex(){
-		return this.index;
-	}
-
-
 
 	public String toString(){
 		

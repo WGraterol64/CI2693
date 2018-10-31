@@ -1,6 +1,6 @@
+import java.util.*;
 public interface Graph<V,E>{
 
-	public Graph();
 
 	public boolean loadGraph(String fileName);
 
@@ -8,7 +8,7 @@ public interface Graph<V,E>{
 
 	public int numOfEdges();
 
-	public boolean addNode(Node node);
+	public boolean addNode(Node<V,E> node);
 
 	public boolean addNode(String id, V dato, double weight);
 
@@ -20,15 +20,15 @@ public interface Graph<V,E>{
 
 	public boolean removeNode(String id);
 
-	public ArrayList<Node> nodeList(String id);
+	public ArrayList<Node<V,E> > nodeList(String id);
 
-	public ArrayList<Node> edgeList(String id);
+	public ArrayList<Node<V,E> > edgeList(String id);
 
 	public int degree(String id);
 
-	public ArrayList<Node> adjacency(String id);
+	public ArrayList<Node<V,E>> adjacency(String id);
 
-	public ArrayList<Node> incident(String id);
+	public ArrayList<Node<V,E>> incident(String id);
 
 	public Graph clone();
 

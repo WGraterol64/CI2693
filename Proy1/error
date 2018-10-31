@@ -1,0 +1,596 @@
+ClienteGrafo.java:310: error: cannot find symbol
+          result = this.ugraph.addArc(id, this.transE.Transform(data.trim()), p, vInicial, vFinal);
+                              ^
+  symbol:   method addArc(String,Object,double,String,String)
+  location: variable ugraph of type UndirectedGraph
+ClienteGrafo.java:435: error: id has private access in Node
+        System.out.println(vertices.get(i).id);
+                                          ^
+ClienteGrafo.java:446: error: cannot find symbol
+        lados = this.dgraph.edgeList();
+        ^
+  symbol:   variable lados
+  location: class ClienteGrafo
+ClienteGrafo.java:448: error: cannot find symbol
+        lados = this.ugraph.edgeList();
+        ^
+  symbol:   variable lados
+  location: class ClienteGrafo
+ClienteGrafo.java:450: error: cannot find symbol
+    if(lados.size() == 0){
+       ^
+  symbol:   variable lados
+  location: class ClienteGrafo
+ClienteGrafo.java:454: error: cannot find symbol
+      for(int i=0; i<lados.size(); i++){
+                     ^
+  symbol:   variable lados
+  location: class ClienteGrafo
+ClienteGrafo.java:455: error: cannot find symbol
+        System.out.println(lados.get(i).id);
+                           ^
+  symbol:   variable lados
+  location: class ClienteGrafo
+ClienteGrafo.java:497: error: cannot find symbol
+            inc = this.dgraph.incident(id);
+            ^
+  symbol:   variable inc
+  location: class ClienteGrafo
+ClienteGrafo.java:499: error: cannot find symbol
+            inc = this.ugraph.incident(id);
+            ^
+  symbol:   variable inc
+  location: class ClienteGrafo
+ClienteGrafo.java:506: error: cannot find symbol
+        for(int i=0; i<inc.size(); i++){
+                       ^
+  symbol:   variable inc
+  location: class ClienteGrafo
+ClienteGrafo.java:507: error: cannot find symbol
+            System.out.println(inc.get(i).getId());
+                               ^
+  symbol:   variable inc
+  location: class ClienteGrafo
+ClienteGrafo.java:552: error: cannot find symbol
+      throw UnsupportedOperationException("Grado interior no esta definido para grafos no dirigidos");
+            ^
+  symbol:   method UnsupportedOperationException(String)
+  location: class ClienteGrafo
+ClienteGrafo.java:579: error: cannot find symbol
+      throw UnsupportedOperationException("Grado exterior no esta definido para grafos no dirigidos");
+            ^
+  symbol:   method UnsupportedOperationException(String)
+  location: class ClienteGrafo
+ClienteGrafo.java:593: error: cannot find symbol
+    System.out.print(g);
+                     ^
+  symbol:   variable g
+  location: class ClienteGrafo
+ClienteGrafo.java:642: error: cannot find symbol
+       switch (n) {
+               ^
+  symbol:   variable n
+  location: class ClienteGrafo
+ClienteGrafo.java:642: error: illegal start of type
+       switch (n) {
+              ^
+ClienteGrafo.java:663: error: cannot find symbol
+         case 11: this.imprimirVertces();
+                      ^
+  symbol: method imprimirVertces()
+ClienteGrafo.java:701: error: incompatible types: String[] cannot be converted to String
+        cargarGrafo(args);
+                    ^
+ClienteGrafo.java:703: error: non-static variable this cannot be referenced from a static context
+        this.menu();
+        ^
+UndirectedGraph.java:5: error: UndirectedGraph is not abstract and does not override abstract method edgeList(String) in Graph
+public class UndirectedGraph<V,E> implements Graph{
+       ^
+UndirectedGraph.java:21: error: cannot find symbol
+		this.nodeEdge = new HashSet<Edge<V,E> >();
+		    ^
+  symbol: variable nodeEdge
+UndirectedGraph.java:37: error: cannot find symbol
+		BufferedReader read = new BufferedReader(new FileReader(fileName));
+		^
+  symbol:   class BufferedReader
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:37: error: cannot find symbol
+		BufferedReader read = new BufferedReader(new FileReader(fileName));
+		                          ^
+  symbol:   class BufferedReader
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:37: error: cannot find symbol
+		BufferedReader read = new BufferedReader(new FileReader(fileName));
+		                                             ^
+  symbol:   class FileReader
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:57: error: cannot find symbol
+		if(vType == "B" && eType =="B"){
+		   ^
+  symbol:   variable vType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:57: error: cannot find symbol
+		if(vType == "B" && eType =="B"){
+		                   ^
+  symbol:   variable eType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:58: error: cannot find symbol
+			this.transV = new BooleanTransformer();
+			    ^
+  symbol: variable transV
+UndirectedGraph.java:59: error: cannot find symbol
+			this.transE = new BooleanTransformer();
+			    ^
+  symbol: variable transE
+UndirectedGraph.java:60: error: cannot find symbol
+		}else if(vType == "B" && eType =="D"){
+		         ^
+  symbol:   variable vType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:60: error: cannot find symbol
+		}else if(vType == "B" && eType =="D"){
+		                         ^
+  symbol:   variable eType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:61: error: cannot find symbol
+			this.transV = new BooleanTransformer();
+			    ^
+  symbol: variable transV
+UndirectedGraph.java:62: error: cannot find symbol
+			this.transE = new DoubleTransformer();
+			    ^
+  symbol: variable transE
+UndirectedGraph.java:63: error: cannot find symbol
+		}else if(vType == "B" && eType =="S"){
+		         ^
+  symbol:   variable vType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:63: error: cannot find symbol
+		}else if(vType == "B" && eType =="S"){
+		                         ^
+  symbol:   variable eType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:64: error: cannot find symbol
+			this.transV = new BooleanTransformer();
+			    ^
+  symbol: variable transV
+UndirectedGraph.java:65: error: cannot find symbol
+			this.transE = new StringTransformer();
+			    ^
+  symbol: variable transE
+UndirectedGraph.java:66: error: cannot find symbol
+		}else if(vType == "D" && eType =="B"){
+		         ^
+  symbol:   variable vType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:66: error: cannot find symbol
+		}else if(vType == "D" && eType =="B"){
+		                         ^
+  symbol:   variable eType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:67: error: cannot find symbol
+			this.transV = new DoubleTransformer();
+			    ^
+  symbol: variable transV
+UndirectedGraph.java:68: error: cannot find symbol
+			this.transE = new BooleanTransformer();
+			    ^
+  symbol: variable transE
+UndirectedGraph.java:69: error: cannot find symbol
+		}else if(vType == "D" && eType =="D"){
+		         ^
+  symbol:   variable vType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:69: error: cannot find symbol
+		}else if(vType == "D" && eType =="D"){
+		                         ^
+  symbol:   variable eType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:70: error: cannot find symbol
+			this.transV = new DoubleTransformer();
+			    ^
+  symbol: variable transV
+UndirectedGraph.java:71: error: cannot find symbol
+			this.transE = new DoubleTransformer();
+			    ^
+  symbol: variable transE
+UndirectedGraph.java:72: error: cannot find symbol
+		}else if(vType == "D" && eType =="S"){
+		         ^
+  symbol:   variable vType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:72: error: cannot find symbol
+		}else if(vType == "D" && eType =="S"){
+		                         ^
+  symbol:   variable eType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:73: error: cannot find symbol
+			this.transV = new DoubleTransformer();
+			    ^
+  symbol: variable transV
+UndirectedGraph.java:74: error: cannot find symbol
+			this.transE = new StringTransformer();
+			    ^
+  symbol: variable transE
+UndirectedGraph.java:75: error: cannot find symbol
+		}else if(vType == "S" && eType =="B"){
+		         ^
+  symbol:   variable vType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:75: error: cannot find symbol
+		}else if(vType == "S" && eType =="B"){
+		                         ^
+  symbol:   variable eType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:76: error: cannot find symbol
+			this.transV = new StringTransformer();
+			    ^
+  symbol: variable transV
+UndirectedGraph.java:77: error: cannot find symbol
+			this.transE = new BooleanTransformer();
+			    ^
+  symbol: variable transE
+UndirectedGraph.java:78: error: cannot find symbol
+		}else if(vType == "S" && eType =="D"){
+		         ^
+  symbol:   variable vType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:78: error: cannot find symbol
+		}else if(vType == "S" && eType =="D"){
+		                         ^
+  symbol:   variable eType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:79: error: cannot find symbol
+			this.transV = new StringTransformer();
+			    ^
+  symbol: variable transV
+UndirectedGraph.java:80: error: cannot find symbol
+			this.transE = new DoubleTransformer();
+			    ^
+  symbol: variable transE
+UndirectedGraph.java:81: error: cannot find symbol
+		}else if(vType == "S" && eType =="S"){
+		         ^
+  symbol:   variable vType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:81: error: cannot find symbol
+		}else if(vType == "S" && eType =="S"){
+		                         ^
+  symbol:   variable eType
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:82: error: cannot find symbol
+			this.transV = new StringTransformer();
+			    ^
+  symbol: variable transV
+UndirectedGraph.java:83: error: cannot find symbol
+			this.transE = new StringTransformer();
+			    ^
+  symbol: variable transE
+UndirectedGraph.java:86: error: cannot find symbol
+		for(int i=0;i<n;i++){
+		              ^
+  symbol:   variable n
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:87: error: cannot find symbol
+			line = read.readLine();
+			^
+  symbol:   variable line
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:88: error: cannot find symbol
+			line = line.trim();
+			^
+  symbol:   variable line
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:88: error: cannot find symbol
+			line = line.trim();
+			       ^
+  symbol:   variable line
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:89: error: cannot find symbol
+			String[] node = line.split(" ");
+			                ^
+  symbol:   variable line
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:90: error: cannot find symbol
+			boolean result = this.addNode(node[0], this.transV.Transform(node[1]),
+			                                           ^
+  symbol: variable transV
+UndirectedGraph.java:98: error: cannot find symbol
+		for(int i=0; i<m; i++){
+		               ^
+  symbol:   variable m
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:99: error: cannot find symbol
+			line = read.readLine();
+			^
+  symbol:   variable line
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:100: error: cannot find symbol
+			line = line.trim();
+			^
+  symbol:   variable line
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:100: error: cannot find symbol
+			line = line.trim();
+			       ^
+  symbol:   variable line
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:101: error: cannot find symbol
+			String[] edge = line.split(" ");
+			                ^
+  symbol:   variable line
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:102: error: cannot find symbol
+			result = this.addEdge(edge[0], this.transE.Transform(edge[1]),
+			^
+  symbol:   variable result
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:102: error: cannot find symbol
+			result = this.addEdge(edge[0], this.transE.Transform(edge[1]),
+			                                   ^
+  symbol: variable transE
+UndirectedGraph.java:104: error: cannot find symbol
+			 if(!result){
+			     ^
+  symbol:   variable result
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:135: error: name clash: addNode(Node<V#1,E#1>) in UndirectedGraph and addNode(Node<V#2,E#2>) in Graph have the same erasure, yet neither overrides the other
+	public boolean addNode(Node<V,E> node){
+	               ^
+  where V#1,E#1,V#2,E#2 are type-variables:
+    V#1 extends Object declared in class UndirectedGraph
+    E#1 extends Object declared in class UndirectedGraph
+    V#2 extends Object declared in interface Graph
+    E#2 extends Object declared in interface Graph
+UndirectedGraph.java:157: error: name clash: addNode(String,V#1,double) in UndirectedGraph and addNode(String,V#2,double) in Graph have the same erasure, yet neither overrides the other
+	public boolean addNode(String id, V data, double weight){
+	               ^
+  where V#1,V#2 are type-variables:
+    V#1 extends Object declared in class UndirectedGraph
+    V#2 extends Object declared in interface Graph
+UndirectedGraph.java:192: error: cannot find symbol
+		Node<V,E> nodeU = getNode(id); 
+		                          ^
+  symbol:   variable id
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:223: error: incompatible types: Object cannot be converted to Edge<V,E>
+				Edge<V,E> e = toRemove.pop();
+				                          ^
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:235: error: cannot find symbol
+					this.namesToEdges.remove(e.getId());
+					                         ^
+  symbol:   variable e
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:249: error: incompatible types: List<Node<V,E>> cannot be converted to ArrayList<Node<V,E>>
+		return list;
+		       ^
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:257: error: incompatible types: List<Edge<V,E>> cannot be converted to ArrayList<Edge<V,E>>
+		return list;
+		       ^
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:275: error: cannot find symbol
+		List<Node<V,E> > list = new ArrayList<Node<V,E> >(node.outegree);
+		                                                      ^
+  symbol:   variable outegree
+  location: variable node of type Node<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:278: error: incompatible types: List<Node<V,E>> cannot be converted to ArrayList<Node<V,E>>
+		return list;
+		       ^
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:286: error: incompatible types: List<Edge<V,E>> cannot be converted to ArrayList<Edge<V,E>>
+		return node.outEdges;
+		           ^
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:292: error: cannot find symbol
+		newGraph.numOfArcs = this.numOfArcs;
+		        ^
+  symbol:   variable numOfArcs
+  location: variable newGraph of type Graph
+UndirectedGraph.java:292: error: cannot find symbol
+		newGraph.numOfArcs = this.numOfArcs;
+		                         ^
+  symbol: variable numOfArcs
+UndirectedGraph.java:293: error: cannot find symbol
+		newGraph.numOfNodes = this.numOfNodes;
+		        ^
+  symbol:   variable numOfNodes
+  location: variable newGraph of type Graph
+UndirectedGraph.java:294: error: cannot find symbol
+		newGraph.setOfNodes = (HashSet)this.setOfNodes.clone();
+		        ^
+  symbol:   variable setOfNodes
+  location: variable newGraph of type Graph
+UndirectedGraph.java:294: error: cannot find symbol
+		newGraph.setOfNodes = (HashSet)this.setOfNodes.clone();
+		                                   ^
+  symbol: variable setOfNodes
+UndirectedGraph.java:295: error: cannot find symbol
+		newGraph.namesToNodes = (HashMap)this.namesToNodes.clone();
+		        ^
+  symbol:   variable namesToNodes
+  location: variable newGraph of type Graph
+UndirectedGraph.java:295: error: cannot find symbol
+		newGraph.namesToNodes = (HashMap)this.namesToNodes.clone();
+		                                                  ^
+  symbol:   method clone()
+  location: variable namesToNodes of type Map<String,Node<V,E>>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:296: error: cannot find symbol
+		newGraph.setOfArcs = (HashSet)this.setOfArcs.clone();
+		        ^
+  symbol:   variable setOfArcs
+  location: variable newGraph of type Graph
+UndirectedGraph.java:296: error: cannot find symbol
+		newGraph.setOfArcs = (HashSet)this.setOfArcs.clone();
+		                                  ^
+  symbol: variable setOfArcs
+UndirectedGraph.java:297: error: cannot find symbol
+		newGraph.namesToArcs = (HashMap)this.namesToArcs.clone();
+		        ^
+  symbol:   variable namesToArcs
+  location: variable newGraph of type Graph
+UndirectedGraph.java:297: error: cannot find symbol
+		newGraph.namesToArcs = (HashMap)this.namesToArcs.clone();
+		                                    ^
+  symbol: variable namesToArcs
+UndirectedGraph.java:298: error: incompatible types: Graph cannot be converted to UndirectedGraph<V,E>
+		return newGraph;
+		       ^
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:311: error: cannot find symbol
+		for(Edges<E> edge : this.edgeSet){
+		    ^
+  symbol:   class Edges
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:326: error: incompatible types: Edge<V,E> cannot be converted to Node<V,E>
+		namesToNodes.put(id,edge);
+		                    ^
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:343: error: no suitable method found for isEdge(no arguments)
+		if(nodeA == null || nodeB == null || isEdge())
+		                                     ^
+    method UndirectedGraph.isEdge(String) is not applicable
+      (actual and formal argument lists differ in length)
+    method UndirectedGraph.isEdge(String,String) is not applicable
+      (actual and formal argument lists differ in length)
+UndirectedGraph.java:348: error: incompatible types: Edge<V,E> cannot be converted to Node<V,E>
+		namesToNodes.put(id,edge);
+		                    ^
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+100 errors
