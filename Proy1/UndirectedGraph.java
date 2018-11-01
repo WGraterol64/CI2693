@@ -1,4 +1,10 @@
+import java.lang.StringBuilder;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.FileReader;
 import java.util.*;
+
 /** 
 * Implementacion de la clase grafo no dirigido
 **/
@@ -9,7 +15,9 @@ public class UndirectedGraph<V,E> implements Graph{
 	public Set<Node<V,E> > nodeSet; // Set de nodos
 	public Set<Edge<V,E>> edgeSet; // Set de aristas
 	private Map<String,Node<V,E> > namesToNodes; // Mapa Identificadores -> Nodos
-	private Map<String,Edge<V,E>> namesToEdges; // Mapa Identificadores -> ARistas
+	private Map<String,Edge<V,E>> namesToEdges; // Mapa Identificadores -> Aristas
+	private Transformer<V> transV;
+	private Transformer<E> transE;
 
 	/**
 	* Constructor de la clase
@@ -18,7 +26,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		this.namesToNodes = new HashMap<String,Node<V,E> > ();
 		this.namesToEdges = new HashMap<String,Edge<V,E> >();
 		this.nodeSet = new HashSet<Node<V,E> >();
-		this.nodeEdge = new HashSet<Edge<V,E> >();
+		this.edgeSet = new HashSet<Edge<V,E> >();
 		this.numOfNodes = 0;
 		this.numOfEdges = 0;
 	}
@@ -36,17 +44,20 @@ public class UndirectedGraph<V,E> implements Graph{
       throws IllegalArgumentException, UnsupportedOperationException{
 		BufferedReader read = new BufferedReader(new FileReader(fileName));
 		// Lazo que lee las primeros 5 lineas
+		String vType, eType, line;
+		int n,m;
+		boolean result;
 		for(int i=0; i<5; i++){
 			try{
-				String line = read.readLine();
+				line = read.readLine();
 				if(i==0){
-					String vType = line.trim();
+					vType = line.trim();
 				}else if(i==1){
-					String eType = line.trim();
+					eType = line.trim();
 				}else if(i==3){
-					int n = Integer.parseInt(line.trim());
+					n = Integer.parseInt(line.trim());
 				}else{
-					int m = Integer.parseInt(line.trim());
+					m = Integer.parseInt(line.trim());
 				}
 			}catch(NumberFormatException e){
 				throw new UnsupportedOperationException("Formato no valido");
@@ -87,7 +98,7 @@ public class UndirectedGraph<V,E> implements Graph{
 			line = read.readLine();
 			line = line.trim();
 			String[] node = line.split(" ");
-			boolean result = this.addNode(node[0], this.transV.Transform(node[1]),
+			result = this.addNode(node[0], this.transV.Transform(node[1]),
 			Double.parseDouble(node[2]));
 			if(!result){
 				throw new IllegalArgumentException("Entrada no valida: No se pueden agregar nodos");
@@ -96,11 +107,10 @@ public class UndirectedGraph<V,E> implements Graph{
 		}
 		// Lazo que agrega los lados
 		for(int i=0; i<m; i++){
-			line = read.readLine();
-			line = line.trim();
+			line = read.readLine().trim();
 			String[] edge = line.split(" ");
 			result = this.addEdge(edge[0], this.transE.Transform(edge[1]),
-																 Double.parseDouble(edge[2]), edge[3], edge[4]);
+			Double.parseDouble(edge[2]), edge[3], edge[4]);
 			 if(!result){
 					throw new IllegalArgumentException("Entrada no valida: No se pueden agregar lados");
 					return false;
@@ -189,7 +199,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		if(!this.isNode(u) || !this.isNode(v)) 
 			return false;
 
-		Node<V,E> nodeU = getNode(id); 
+		Node<V,E> nodeU = getNode(u); 
 		for( Edge<V,E> edge: nodeU.outEdges ){
 			if(edge.getFNode().getId().equals(v) || edge.getSNode().getId().equals(v)) 
 				return true;
