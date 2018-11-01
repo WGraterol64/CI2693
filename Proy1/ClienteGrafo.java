@@ -441,7 +441,7 @@ public class ClienteGrafo{
   * Imprime en pantalla los id de todos los lados del grafo
   */
   public void imprimirLados(){
-    ArrayList<Node> vertices;
+    ArrayList<Node> lados;
     if(this.type == 0){
         lados = this.dgraph.edgeList();
     }else if(this.type == 1){
@@ -452,7 +452,7 @@ public class ClienteGrafo{
     }else{
       System.out.println("Los lados en el grafo son: ");
       for(int i=0; i<lados.size(); i++){
-        System.out.println(lados.get(i).id);
+        System.out.println(lados.get(i).getId());
       }
     }
   }
@@ -491,7 +491,7 @@ public class ClienteGrafo{
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
     String id = br.readLine().trim();
-    ArrayList adj;
+    ArrayList<Edge> inc;
     try{
         if(this.type == 0){
             inc = this.dgraph.incident(id);
@@ -549,7 +549,7 @@ public class ClienteGrafo{
   public void gradoInterior()
   throws UnsupportedOperationException{
     if(this.type!=0){
-      throw UnsupportedOperationException("Grado interior no esta definido para grafos no dirigidos");
+      throw new UnsupportedOperationException("Grado interior no esta definido para grafos no dirigidos");
       return;
     }
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -576,15 +576,15 @@ public class ClienteGrafo{
   public void gradoExterior()
   throws UnsupportedOperationException{
     if(this.type!=0){
-      throw UnsupportedOperationException("Grado exterior no esta definido para grafos no dirigidos");
+      throw new UnsupportedOperationException("Grado exterior no esta definido para grafos no dirigidos");
       return;
     }
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     System.out.println("Introduzca el id del vertice: ");
-    String id = br.readLine();
-    id = id.trim();
+    String id = br.readLine().trim();
+    int g;
     try{
-      int g = this.dgraph.outDegree(id);
+       g = this.dgraph.outDegree(id);
     }catch(NoSuchElementException i){
       System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
       return;
@@ -633,8 +633,9 @@ public class ClienteGrafo{
                    .toString());
 
      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+     int n;
      try{
-       int n = Integer.parseInt(br.readLine());
+        n = Integer.parseInt(br.readLine());
      }catch(NumberFormatException e){
        throw new IOException("Entrada no valida, debe ser un numero");
      }
@@ -660,7 +661,7 @@ public class ClienteGrafo{
          break;
          case 10: this.eliminarVertice();
          break;
-         case 11: this.imprimirVertces();
+         case 11: this.imprimirVertices();
          break;
          case 12: this.imprimirLados();
          break;
@@ -698,7 +699,7 @@ public class ClienteGrafo{
   throws IOException{
     try{
       if(args.length > 0)
-        cargarGrafo(args);
+        cargarGrafo(args[0]);
       while(true){
         this.menu();
       }

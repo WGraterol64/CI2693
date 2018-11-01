@@ -3,85 +3,10 @@ ClienteGrafo.java:310: error: cannot find symbol
                               ^
   symbol:   method addArc(String,Object,double,String,String)
   location: variable ugraph of type UndirectedGraph
-ClienteGrafo.java:435: error: id has private access in Node
-        System.out.println(vertices.get(i).id);
-                                          ^
-ClienteGrafo.java:446: error: cannot find symbol
-        lados = this.dgraph.edgeList();
+ClienteGrafo.java:702: error: non-static method cargarGrafo(String) cannot be referenced from a static context
+        cargarGrafo(args[0]);
         ^
-  symbol:   variable lados
-  location: class ClienteGrafo
-ClienteGrafo.java:448: error: cannot find symbol
-        lados = this.ugraph.edgeList();
-        ^
-  symbol:   variable lados
-  location: class ClienteGrafo
-ClienteGrafo.java:450: error: cannot find symbol
-    if(lados.size() == 0){
-       ^
-  symbol:   variable lados
-  location: class ClienteGrafo
-ClienteGrafo.java:454: error: cannot find symbol
-      for(int i=0; i<lados.size(); i++){
-                     ^
-  symbol:   variable lados
-  location: class ClienteGrafo
-ClienteGrafo.java:455: error: cannot find symbol
-        System.out.println(lados.get(i).id);
-                           ^
-  symbol:   variable lados
-  location: class ClienteGrafo
-ClienteGrafo.java:497: error: cannot find symbol
-            inc = this.dgraph.incident(id);
-            ^
-  symbol:   variable inc
-  location: class ClienteGrafo
-ClienteGrafo.java:499: error: cannot find symbol
-            inc = this.ugraph.incident(id);
-            ^
-  symbol:   variable inc
-  location: class ClienteGrafo
-ClienteGrafo.java:506: error: cannot find symbol
-        for(int i=0; i<inc.size(); i++){
-                       ^
-  symbol:   variable inc
-  location: class ClienteGrafo
-ClienteGrafo.java:507: error: cannot find symbol
-            System.out.println(inc.get(i).getId());
-                               ^
-  symbol:   variable inc
-  location: class ClienteGrafo
-ClienteGrafo.java:552: error: cannot find symbol
-      throw UnsupportedOperationException("Grado interior no esta definido para grafos no dirigidos");
-            ^
-  symbol:   method UnsupportedOperationException(String)
-  location: class ClienteGrafo
-ClienteGrafo.java:579: error: cannot find symbol
-      throw UnsupportedOperationException("Grado exterior no esta definido para grafos no dirigidos");
-            ^
-  symbol:   method UnsupportedOperationException(String)
-  location: class ClienteGrafo
-ClienteGrafo.java:593: error: cannot find symbol
-    System.out.print(g);
-                     ^
-  symbol:   variable g
-  location: class ClienteGrafo
-ClienteGrafo.java:642: error: cannot find symbol
-       switch (n) {
-               ^
-  symbol:   variable n
-  location: class ClienteGrafo
-ClienteGrafo.java:642: error: illegal start of type
-       switch (n) {
-              ^
-ClienteGrafo.java:663: error: cannot find symbol
-         case 11: this.imprimirVertces();
-                      ^
-  symbol: method imprimirVertces()
-ClienteGrafo.java:701: error: incompatible types: String[] cannot be converted to String
-        cargarGrafo(args);
-                    ^
-ClienteGrafo.java:703: error: non-static variable this cannot be referenced from a static context
+ClienteGrafo.java:704: error: non-static variable this cannot be referenced from a static context
         this.menu();
         ^
 UndirectedGraph.java:5: error: UndirectedGraph is not abstract and does not override abstract method edgeList(String) in Graph
@@ -590,6 +515,121 @@ UndirectedGraph.java:348: error: incompatible types: Edge<V,E> cannot be convert
   where V,E are type-variables:
     V extends Object declared in class UndirectedGraph
     E extends Object declared in class UndirectedGraph
+UndirectedGraph.java:368: error: cannot find symbol
+		edgeSet.remove(e);
+		               ^
+  symbol:   variable e
+  location: class UndirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class UndirectedGraph
+    E extends Object declared in class UndirectedGraph
+DirectedGraph.java:2: error: DirectedGraph is not abstract and does not override abstract method edgeList(String) in Graph
+public class DirectedGraph<V,E> implements Graph{
+       ^
+DirectedGraph.java:16: error: cannot find symbol
+		this.namesToArc = new HashMap<>();
+		    ^
+  symbol: variable namesToArc
+DirectedGraph.java:18: error: cannot find symbol
+		this.nodeArc = new HashSet<>();
+		    ^
+  symbol: variable nodeArc
+DirectedGraph.java:34: error: cannot find symbol
+		BufferedReader read = new BufferedReader(new FileReader(fileName));
+		^
+  symbol:   class BufferedReader
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:34: error: cannot find symbol
+		BufferedReader read = new BufferedReader(new FileReader(fileName));
+		                          ^
+  symbol:   class BufferedReader
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:34: error: cannot find symbol
+		BufferedReader read = new BufferedReader(new FileReader(fileName));
+		                                             ^
+  symbol:   class FileReader
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:53: error: cannot find symbol
+		if(vType == "B" && eType =="B"){
+		   ^
+  symbol:   variable vType
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:53: error: cannot find symbol
+		if(vType == "B" && eType =="B"){
+		                   ^
+  symbol:   variable eType
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:56: error: cannot find symbol
+		}else if(vType == "B" && eType =="D"){
+		         ^
+  symbol:   variable vType
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:56: error: cannot find symbol
+		}else if(vType == "B" && eType =="D"){
+		                         ^
+  symbol:   variable eType
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:59: error: cannot find symbol
+		}else if(vType == "B" && eType =="S"){
+		         ^
+  symbol:   variable vType
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:59: error: cannot find symbol
+		}else if(vType == "B" && eType =="S"){
+		                         ^
+  symbol:   variable eType
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:62: error: cannot find symbol
+		}else if(vType == "D" && eType =="B"){
+		         ^
+  symbol:   variable vType
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:62: error: cannot find symbol
+		}else if(vType == "D" && eType =="B"){
+		                         ^
+  symbol:   variable eType
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
+DirectedGraph.java:65: error: cannot find symbol
+		}else if(vType == "D" && eType =="D"){
+		         ^
+  symbol:   variable vType
+  location: class DirectedGraph<V,E>
+  where V,E are type-variables:
+    V extends Object declared in class DirectedGraph
+    E extends Object declared in class DirectedGraph
 Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
