@@ -11,25 +11,26 @@ import java.util.*;
 *
 */
 public class ClienteGrafo{
-  
- 	public static UndirectedGraph ugraph; // Se utilza para implementar el grafo no dirigido
-  	public static DirectedGraph dgraph;  // Se utilza para implementar el digrafo
-  	private static int type; // El tipo del grafo sera 0 si es digrafo y sera 1 si es no dirigido
-  	private static Transformer transV; // Parseador que nos permitira agregar datos genericos de vertices
-  	private static Transformer transE; // Parseador que nos permitira agregar datos genericos de lados
 
- 
+  	private static int type; // El tipo del grafo sera 0 si es digrafo y sera 1 si es no dirigido
 
   	/**
   	* Inicializa la creacion de un grafo desde un archivo
   	* Le solicita al usuario el nombre del archivo donde esta el grafo.
   	*/
- 	public static void crearGrafoArchivo(){
-    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    	System.out.println("Introduzca el nombre del archivo donde esta el grafo: ");
-    	String archivo = br.readLine();
+ 	public static void crearGrafoArchivo(UndirectedGraph ugraph, DirectedGraph dgraph,
+                                       Transformer transV, Transformer transE)
+    throws IOException{
+     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+     System.out.println("Introduzca el nombre del archivo donde esta el grafo: ");
+     String archivo = "";
+     try{
+       archivo = br.readLine();
+     }catch(IOException i){
+      throw new IOException("Error en la entrada de datos");
+      }
     	archivo = archivo.trim();
-    	cargarGrafo(archivo);
+    	cargarGrafo(archivo, ugraph, dgraph, transV, transE);
   	}
 
 	/**
@@ -39,11 +40,12 @@ public class ClienteGrafo{
 	*
 	* @throws IllegalArgumentException si el formato del archivo no es valido
 	*/
-	public static void cargarGrafo(String archivo)
+	public static void cargarGrafo(String archivo, UndirectedGraph ugraph, DirectedGraph dgraph,
+                                       Transformer transV, Transformer transE)
 	  throws IllegalArgumentException{
-	// Lazo que extrae la informacion necesaria para inicializar el grafo
-	    BufferedReader read = new BufferedReader(new FileReader(archivo));
-	    String vType,eType;
+      BufferedReader read = new BufferedReader(new FileReader(archivo));
+	    String vType = "";
+      String eType = "";
 	    for(int i=0; i<5; i++){
 	        String line = read.readLine();
 	        if(i==0){
@@ -57,25 +59,25 @@ public class ClienteGrafo{
 	        		type = 1;
 	        }else{
 	         	throw new IllegalArgumentException("Formato no valido");
-	          	return;
+
 	       		}
-	      	}	
+	      	}
 	    }
 	    try{
 	      if(type == 0){
 	        // Inizializacion si es un digrafo
-	        crearDigrafoVacio(vType, eType);
+	        crearDigrafoVacio(vType, eType, dgraph, transV, transE);
 	        dgraph.loadGraph(archivo);
 	      }else if(type == 1){
 	        // Inizializacion si es un grafo no dirigido
-	        crearGrafoNoDirigidoVacio(vType, eType);
+	        crearGrafoNoDirigidoVacio(vType, eType, ugraph, transV, transE);
 	        ugraph.loadGraph(archivo);
 	      }
 	    }catch(IllegalArgumentException | UnsupportedOperationException e){
 	      throw new IllegalArgumentException("No se pudo cargar el grafo");
-	      return;
+
 	    }
-	    System.out.println("Se ha creado el grafo exitosamente");
+       System.out.println("Se ha creado el grafo exitosamente");
 	  }
 
 	  /**
@@ -85,20 +87,31 @@ public class ClienteGrafo{
 	  *
 	  * @throws IllegalArgumentException si los daros que da el usuario no son validos
 	  */
-	  public static void crearGrafoNoDirigido(){
-	    type = 1;
-	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	    System.out.println("Introduzca el tipo de dato de los vertices: (B, D o S)");
-	    String v = br.readLine();
-	    String vType = v.trim();
-	    System.out.println("Introduzca el tipo de dato de las aristas: (B, D o S)");
-	    String l = br.readLine();
-	    String eType = l.trim();
+	  public static void crearGrafoNoDirigido(UndirectedGraph ugraph, Transformer transV,
+                                            Transformer transE)
+      throws IOException{
+      type = 1;
+      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+      System.out.println("Introduzca el tipo de dato de los vertices: (B, D o S)");
+      String v = "";
+      try{
+        v = br.readLine();
+      }catch(IOException e){
+        throw new IOException("Entrada no valida");
+      }
+      String vType = v.trim();
+      System.out.println("Introduzca el tipo de dato de las aristas: (B, D o S)");
+      String l = "";
+      try{
+        l = br.readLine();
+      }catch(IOException e){
+        throw new IOException("Entrada no valida");
+      }
+      String eType = l.trim();
 	    try{
-	      crearGrafoNoDirigidoVacio(vType, eType);
+	      crearGrafoNoDirigidoVacio(vType, eType, ugraph, transV, transE);
 	    }catch(IllegalArgumentException i){
 	      throw new IllegalArgumentException("No se creo el grafo no dirigido");
-	      return;
 	    }
 
 	    System.out.println("Se ha creado el grafo exitosamente");
@@ -113,7 +126,8 @@ public class ClienteGrafo{
 	  *
 	  * @throws IllegalArgumentException si el formato de los argumentos no es el esperado
 	  */
-	  public static void crearGrafoNoDirigidoVacio(String vType, String eType)
+	  public static void crearGrafoNoDirigidoVacio(String vType, String eType,UndirectedGraph ugraph,
+                                         Transformer transV, Transformer transE)
 	  throws IllegalArgumentException{
 	    if(vType == "B" && eType =="B"){
 	      ugraph = new UndirectedGraph<Boolean,Boolean>();
@@ -153,7 +167,7 @@ public class ClienteGrafo{
 	      transE = new StringTransformer();
 	    }else{
 	      throw new IllegalArgumentException("Tipos de datos no validos");
-	      return;
+
 	    }
 	  }
 
@@ -164,18 +178,29 @@ public class ClienteGrafo{
 	  *
 	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
 	  */
-	  public static void crearDigrafo()
-	    throws IllegalArgumentException{
+	  public static void crearDigrafo(DirectedGraph dgraph, Transformer transV,
+                                    Transformer transE)
+	    throws IllegalArgumentException, IOException{
 	    type = 0;
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el tipo de dato de los vertices: (B, D o S)");
-	    String v = br.readLine();
-	    String vType = v.trim();
-	    System.out.println("Introduzca el tipo de dato de los arcos: (B, D o S)");
-	    String l = br.readLine();
-	    String eType = l.trim();
+      String v = "";
+      try{
+        v = br.readLine();
+      }catch(IOException e){
+        throw new IOException("Entrada no valida");
+      }
+      String vType = v.trim();
+      System.out.println("Introduzca el tipo de dato de las aristas: (B, D o S)");
+      String l = "";
+      try{
+        l = br.readLine();
+      }catch(IOException e){
+        throw new IOException("Entrada no valida");
+      }
+      String eType = l.trim();
 	    try{
-	      crearDigrafoVacio(vType, eType);
+	      crearDigrafoVacio(vType, eType, dgraph, transV, transE);
 	    }catch(IllegalArgumentException i){
 	      throw new IllegalArgumentException("No se creo el digrafo");
 	    }
@@ -192,7 +217,8 @@ public class ClienteGrafo{
 	  *
 	  * @throws IllegalArgumentException si el formato de los argumentos no es el esperado
 	  */
-	  public static void crearDigrafoVacio(String vType, String eType)
+	  public static void crearDigrafoVacio(String vType, String eType, DirectedGraph dgraph,
+                                         Transformer transV, Transformer transE)
 	  throws IllegalArgumentException{
 	    if(vType == "B" && eType =="B"){
 	      dgraph = new DirectedGraph<Boolean,Boolean>();
@@ -232,7 +258,6 @@ public class ClienteGrafo{
 	      transE = new StringTransformer();
 	    }else{
 	      throw new IllegalArgumentException("Tipos de datos no validos");
-	      return;
 	    }
 	  }
 
@@ -243,24 +268,39 @@ public class ClienteGrafo{
 	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
 	  *                                  o si hay algun vertice con el mismo id.
 	  */
-	  public static void agregarNodo()
-	  throws IllegalArgumentException{
+	  public static void agregarNodo(UndirectedGraph ugraph, DirectedGraph dgraph,
+                                         Transformer transV, Transformer transE)
+	  throws IllegalArgumentException, IOException{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del vertice: ");
-	    String id = br.readLine();
+	    String id = "";
+      try{
+        id = br.readLine();
+      }catch(IOException e){
+        throw new IOException("Entrada no valida");
+      }
 	    id = id.trim();
 	    System.out.println("Introduzca el dato del vertice: ");
-	    String data = br.readLine();
+	    String data = "";
+      try{
+        data = br.readLine();
+      }catch(IOException e){
+        throw new IOException("Entrada no valida");
+      }
 	    data = data.trim();
 	    System.out.println("Introduzca el peso: ");
-	    String s = br.readLine();
+      String s ="";
+      try{
+        s = br.readLine();
+      }catch(IOException e){
+        throw new IOException("Entrada no valida");
+      }
 	    s = s.trim();
 	    if(data.length() < 1 || s.length() < 1 ){
 	      throw new IllegalArgumentException("No se pueden sar datos vacios");
-	      return;
 	    }
 	    double p = Double.parseDouble(s);
-	    boolean result;
+	    boolean result = false;
 	    try{
 	      if(type == 0){
 	        result = dgraph.addNode(id, transV.Transform(data), p);
@@ -269,9 +309,7 @@ public class ClienteGrafo{
 	      }
 	    }catch(IllegalArgumentException i){
 	      throw new IllegalArgumentException("No se pudo agregar el vertice ");
-	      return;
 	    }
-
 	    if(result){
 	      System.out.println("Se ha agregado exitosamente el vertice. ");
 	    }else{
@@ -285,8 +323,9 @@ public class ClienteGrafo{
 	  *
 	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
 	  */
-	  public static void agregarLado()
-	  throws IllegalArgumentException{
+	  public static void agregarLado(UndirectedGraph ugraph, DirectedGraph dgraph,
+                                         Transformer transV, Transformer transE)
+	  throws IllegalArgumentException, IOException{
 	      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	      System.out.println("Introduzca el id del lado: ");
 	      String id = br.readLine().trim();
@@ -298,23 +337,23 @@ public class ClienteGrafo{
 	      s = s.trim();
 	      if(data.length() < 1 || s.length() < 1 ){
 	        throw new IllegalArgumentException("No se pueden sar datos vacios");
-	        return;
+
 	      }
 	      double p = Double.parseDouble(s.trim());
 	      System.out.println("Introduzca el id del vertice inicial: ");
 	      String vInicial = br.readLine().trim();
 	      System.out.println("Introduzca el id del vertice final: ");
 	      String vFinal = br.readLine().trim();
-	      boolean result;
+	      boolean result = false;
 	      try{
 	        if(type == 0){
 	          result = dgraph.addArc(id, transE.Transform(data.trim()), p, vInicial, vFinal);
 	        }else if(type == 1){
-	          result = ugraph.addArc(id, transE.Transform(data.trim()), p, vInicial, vFinal);
+	          result = ugraph.addEdge(id, transE.Transform(data.trim()), p, vInicial, vFinal);
 	        }
 	      }catch(IllegalArgumentException i){
 	        throw new IllegalArgumentException("No se pudo agregar el lado ");
-	        return;
+
 	      }
 	      if(result){
 	        System.out.println("Se ha agregado exitosamente el arco. ");
@@ -327,43 +366,47 @@ public class ClienteGrafo{
 	  * Imrpime en pantalla el numero de vertices que hay en el grafo. Le solicita
 	  * al usuario el id del nodo para poder realizar la operacion.
 	  */
-	  public static void obtenerNumVertices(){
-	    int n;
+	  public static void obtenerNumVertices(UndirectedGraph ugraph, DirectedGraph dgraph){
+	    int n = 0;
 	    if(type == 0){
 	      n = dgraph.numOfNodes();
 	    }else if(type == 1){
 	      n = ugraph.numOfNodes();
 	    }
-	    System.out.print("El numero de vertices en el grafo es: ");
-	    System.out.print(n);
-	    System.out.print("\n");
+	    System.out.println("El numero de vertices en el grafo es: ");
+	    System.out.println(n);
 	  }
 
 	  /**
 	  * Imrpime en pantalla el numero de lados que hay en el grafo. Le solicita
 	  * al usuario el id del lado para poder realizar la operacion.
 	  */
-	  public static void obtenerNumLados(){
-	    int n;  
+	  public static void obtenerNumLados(UndirectedGraph ugraph, DirectedGraph dgraph){
+	    int n = 0;
 	    if(type == 0){
 	      n = dgraph.numOfEdges();
 	    }else if(type == 1){
 	      n = ugraph.numOfEdges();
 	    }
 	    System.out.println("El numero de lados en el grafo es: ");
-	    System.out.print(n);
-	    System.out.print("\n");
+	    System.out.println(n);
 	  }
 
 	  /**
 	  * Le solicita al usuario el id de un vertice e imprime en pantalla un mensaje
 	  * indicando si ya esta en el grafo o no
 	  */
-	  public static void buscarVertice(){
+	  public static void buscarVertice(UndirectedGraph ugraph, DirectedGraph dgraph)
+    throws IOException{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del vertice: ");
-	    String id = br.readLine().trim();
-	    boolean is;
+	    String id = "";
+      try{
+        id = br.readLine().trim();
+      }catch(IOException e){
+        throw new IOException("Error de entrada");
+      }
+	    boolean is = false;
 	    if(type == 0){
 	      is = dgraph.isNode(id);
 	    }else if(type == 1){
@@ -380,11 +423,17 @@ public class ClienteGrafo{
 	  * Le solicita al usuario el id de un lado e imprime en pantalla un mensaje
 	  * indicando si ya esta en el grafo o no
 	  */
-	  public static void buscarLado(){
+	  public static void buscarLado(UndirectedGraph ugraph, DirectedGraph dgraph)
+    throws IOException{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del lado: ");
-	    String id = br.readLine().trim();
-	    boolean is;
+      String id = "";
+      try{
+        id = br.readLine().trim();
+      }catch(IOException e){
+        throw new IOException("Error de entrada");
+      }
+	    boolean is = false;
 	    if(type == 0){
 	      is = dgraph.isEdge(id);
 	    }else if(type == 1){
@@ -402,11 +451,17 @@ public class ClienteGrafo{
 	  * Si esta, lo elimina e imprime un mensaje idicando que fue eliminado
 	  * Si no esta, imprime un mensaje indicando que no esta en el grafo
 	  */
-	  public static void eliminarVertice(){
+	  public static void eliminarVertice(UndirectedGraph ugraph, DirectedGraph dgraph)
+    throws IOException{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del vertice: ");
-	    String id = br.readLine().trim();
-	    boolean result;
+      String id = "";
+      try{
+        id = br.readLine().trim();
+      }catch(IOException e){
+        throw new IOException("Error de entrada");
+      }
+	    boolean result = false;
 	    if(type == 0){
 	        result = dgraph.removeNode(id);
 	    }else if(type == 1){
@@ -421,10 +476,14 @@ public class ClienteGrafo{
 
 	  /**
 	  * Imprime en pantalla los id de todos los nodos del grafo
+    *
+    * @param ugraph grafo no dirigido que se usara
+    *
+    * @param dgraph drafo dirigido que se usara
 	  */
-	  public static void imprimirVertices(){
-	    
-	    ArrayList<Node<V,E>> vertices;
+	  public static void imprimirVertices(UndirectedGraph ugraph, DirectedGraph dgraph){
+
+      ArrayList<Node> vertices = new ArrayList();
 	    if(type == 0){
 	        vertices = dgraph.nodeList();
 	    }else if(type == 1){
@@ -443,8 +502,8 @@ public class ClienteGrafo{
 	  /**
 	  * Imprime en pantalla los id de todos los lados del grafo
 	  */
-	  public static void imprimirLados(){
-	    ArrayList<Node<V,E>> lados;
+	  public static void imprimirLados(UndirectedGraph ugraph, DirectedGraph dgraph){
+	    ArrayList<Node> lados = new ArrayList();
 	    if(type == 0){
 	        lados = dgraph.edgeList();
 	    }else if(type == 1){
@@ -465,11 +524,17 @@ public class ClienteGrafo{
 	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
 	  *
 	  */
-	  public static void imprimirAdyacentes(){
+	  public static void imprimirAdyacentes(UndirectedGraph ugraph, DirectedGraph dgraph)
+    throws IOException{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del vertice: ");
-	    String id = br.readLine().trim();
-	    ArrayList<Node<V,E> > adj;
+      String id = "";
+      try{
+        id = br.readLine().trim();
+      }catch(IOException e){
+        throw new IOException("Error de entrada");
+      }
+	    ArrayList<Node > adj = new ArrayList();
 	    try{
 	      if(type == 0){
 	            adj = dgraph.adjacency(id);
@@ -478,7 +543,7 @@ public class ClienteGrafo{
 	      }
 	    }catch(NoSuchElementException i){
 	      System.out.println("No se puede realizar la operacion");
-	      return;
+
 	    }
 	    System.out.println("Los vertices adjacentes a " + id + "son: ");
 	    for(int i=0; i<adj.size(); i++){
@@ -490,11 +555,17 @@ public class ClienteGrafo{
 	  * Imprime en pantalla los id de todos los lados incidentes a un vertice.
 	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
 	  */
-	  public static void imprimirIncidentes(){
+	  public static void imprimirIncidentes(UndirectedGraph ugraph, DirectedGraph dgraph)
+    throws IOException{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del vertice: ");
-	    String id = br.readLine().trim();
-	    ArrayList<Edge<V,E>> inc;
+      String id = "";
+      try{
+        id = br.readLine().trim();
+      }catch(IOException e){
+        throw new IOException("Error de entrada");
+      }
+	    ArrayList<Edge> inc = new ArrayList();
 	    try{
 	        if(type == 0){
 	            inc = dgraph.incident(id);
@@ -503,7 +574,7 @@ public class ClienteGrafo{
 	        }
 	        }catch(NoSuchElementException i){
 	            System.out.println("No se pudo realizar la operacion");
-	            return;
+
 	        }
 	        System.out.println("Los lados incidentes a " + id + "son: ");
 	        for(int i=0; i<inc.size(); i++){
@@ -513,21 +584,34 @@ public class ClienteGrafo{
 
 	  /**
 	  * Imprime en pantalla todos los vertices y lados del grafo
+    * @param ugraph grafo no dirigido que se imprimira
+    *
+    * @param dgraph drafo dirigido que se imprimira
 	  */
-	  public static void imprimirGrafo(){
-	    imprimirVertices();
-	    imprimirIncidentes();
+	  public static void imprimirGrafo(UndirectedGraph ugraph, DirectedGraph dgraph){
+	    imprimirVertices(ugraph, dgraph);
+	    imprimirLados(ugraph, dgraph);
 	  }
 
 	  /**
 	  * Imprime en pantalla el grado de un vertice.
 	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
+    *
+    * @param ugraph grafo no dirigido sobre el que estan los vertices
+    *
+    * @param dgraph drafo dirigido sobre el que estan los vertices
 	  */
-	  public static void grado(){
+	  public static void grado(UndirectedGraph ugraph, DirectedGraph dgraph)
+    throws IOException{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del vertice: ");
-	    String id = br.readLine().trim();
-	    int g;
+      String id = "";
+      try{
+        id = br.readLine().trim();
+      }catch(IOException e){
+        throw new IOException("Error de entrada");
+      }
+	    int g = 0;
 	    try{
 	      if(type == 0){
 	        g = dgraph.degree(id);
@@ -536,7 +620,7 @@ public class ClienteGrafo{
 	      }
 	    }catch(NoSuchElementException i){
 	      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
-	      return;
+
 	    }
 	    System.out.print("El grado del vertice es: ");
 	    System.out.print(g);
@@ -546,24 +630,31 @@ public class ClienteGrafo{
 	  /**
 	  * Imprime en pantalla el grado interior de un vertice.
 	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
-	  *
+    *
+    * @param dgraph drafo dirigido sobre el que estan los nodos
+    *
 	  * @throws UnsupportedOperationException si se intenta aplicar sobre un grafo no dirigido
 	  */
-	  public static void gradoInterior()
-	  throws UnsupportedOperationException{
+	  public static void gradoInterior(DirectedGraph dgraph)
+	  throws UnsupportedOperationException, IOException{
 	    if(type!=0){
 	      throw new UnsupportedOperationException("Grado interior no esta definido para grafos no dirigidos");
-	      return;
+
 	    }
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del vertice: ");
-	    String id = br.readLine().trim();
-	    int g;
+      String id = "";
+      try{
+        id = br.readLine().trim();
+      }catch(IOException e){
+        throw new IOException("Error de entrada");
+      }
+	    int g = 0;
 	    try{
 	      g = dgraph.inDegree(id);
 	    }catch(NoSuchElementException i){
 	      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
-	      return;
+
 	    }
 	    System.out.print("El grado interior del vertice es: ");
 	    System.out.print(g);
@@ -573,24 +664,31 @@ public class ClienteGrafo{
 	  /**
 	  * Imprime en pantalla el grado exterior de un vertice.
 	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
-	  *
+    *
+    * @param dgraph drafo dirigido sobre el que estan los nodos
+    *
 	  * @throws UnsupportedOperationException si se intenta aplicar sobre un grafo no dirigido
 	  */
-	  public static void gradoExterior()
-	  throws UnsupportedOperationException{
+	  public static void gradoExterior( DirectedGraph dgraph)
+	  throws UnsupportedOperationException, IOException{
 	    if(type!=0){
 	      throw new UnsupportedOperationException("Grado exterior no esta definido para grafos no dirigidos");
-	      return;
+
 	    }
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del vertice: ");
-	    String id = br.readLine().trim();
-	    int g;
+      String id = "";
+      try{
+        id = br.readLine().trim();
+      }catch(IOException e){
+        throw new IOException("Error de entrada");
+      }
+	    int g = 0;
 	    try{
 	       g = dgraph.outDegree(id);
 	    }catch(NoSuchElementException i){
 	      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
-	      return;
+
 	    }
 	    System.out.print("El grado exterior del vertice es: ");
 	    System.out.print(g);
@@ -611,7 +709,8 @@ public class ClienteGrafo{
 	  *
 	  * @throws IOException si hubo algun error en la ejecucion de cualquiera de los subprogramas
 	  */
-	  public static void menu()
+	  public static void menu(UndirectedGraph ugraph, DirectedGraph dgraph,
+                                         Transformer transV, Transformer transE)
 	  throws IOException{
 	    System.out.println(new StringBuilder("Introduzca la operacion que desee realizar: \n")
 	                   .append("1.- Crear Grafo desde archivo \n")
@@ -639,66 +738,70 @@ public class ClienteGrafo{
 	     int n;
 	     try{
 	        n = Integer.parseInt(br.readLine());
-	     }catch(NumberFormatException e){
+	     }catch(NumberFormatException | IOException e){
 	       throw new IOException("Entrada no valida, debe ser un numero");
 	     }
 	     try{
 	       switch (n) {
-	         case 1: crearGrafoArchivo();
+	         case 1: crearGrafoArchivo(ugraph, dgraph, transV, transE);
 	         break;
-	         case 2: crearGrafoNoDirigido();
+	         case 2: crearGrafoNoDirigido(ugraph, transV, transE);
 	         break;
-	         case 3: crearDigrafo();
+	         case 3: crearDigrafo(dgraph, transV, transE);
 	         break;
-	         case 4: agregarNodo();
+	         case 4: agregarNodo(ugraph, dgraph, transV, transE);
 	         break;
-	         case 5: agregarLado();
+	         case 5: agregarLado(ugraph, dgraph, transV, transE);
 	         break;
-	         case 6: obtenerNumVertices();
+	         case 6: obtenerNumVertices(ugraph, dgraph);
 	         break;
-	         case 7: obtenerNumLados();
+	         case 7: obtenerNumLados(ugraph, dgraph);
 	         break;
-	         case 8: buscarVertice();
+	         case 8: buscarVertice(ugraph, dgraph);
 	         break;
-	         case 9: buscarLado();
+	         case 9: buscarLado(ugraph, dgraph);
 	         break;
-	         case 10: eliminarVertice();
+	         case 10: eliminarVertice(ugraph, dgraph);
 	         break;
-	         case 11: imprimirVertices();
+	         case 11: imprimirVertices(ugraph, dgraph);
 	         break;
-	         case 12: imprimirLados();
+	         case 12: imprimirLados(ugraph, dgraph);
 	         break;
-	         case 13: imprimirAdyacentes();
+	         case 13: imprimirAdyacentes(ugraph, dgraph);
 	         break;
-	         case 14: imprimirIncidentes();
+	         case 14: imprimirIncidentes(ugraph, dgraph);
 	         break;
-	         case 15: imprimirGrafo();
+	         case 15: imprimirGrafo(ugraph, dgraph);
 	         break;
-	         case 16: grado();
+	         case 16: grado(ugraph, dgraph);
 	         break;
-	         case 17: gradoInterior();
+	         case 17: gradoInterior(dgraph);
 	         break;
-	         case 18: gradoExterior();
+	         case 18: gradoExterior(dgraph);
 	         break;
 	         case 0: salir();
 	         break;
 	       }
-	     }catch(IllegalArgumentException | UnsupportedOperationException e){
+	     }catch(IllegalArgumentException | UnsupportedOperationException | IOException e){
 	       throw new IOException("Hubieron errores en ejecucion por argumentos invalidos");
-	       return;
+
 	     }
 	  }
 
 	  /**
-	  * Metodo principal de la clase. 
+	  * Metodo principal de la clase.
 	  *
 	  * @throws IOException si hubieron errores en la ejecucion y sale del programa
 	  */
 	  	public static void main(String[] args)
 	  	throws IOException{
+        UndirectedGraph ugraph = new UndirectedGraph(); // Se utilza para implementar el grafo no dirigido
+        DirectedGraph dgraph = new DirectedGraph();  // Se utilza para implementar el digrafo
+        Transformer transV = new StringTransformer(); // Parseador que nos permitira agregar datos genericos de vertices
+        Transformer transE = new StringTransformer(); // Parseador que nos permitira agregar datos genericos de lados
 		    try{
 		        while(true)
-		            menu();
+		            menu(ugraph, dgraph, transV, transE);
 		    }catch(IllegalArgumentException | IOException e){
 		        System.out.println("Errores en la ejecucion: Saliendo...");
 		        System.exit(1);

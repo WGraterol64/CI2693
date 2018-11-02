@@ -1,7 +1,7 @@
 /**
 * Implementacion de parseador para double
 */
-public class DoubleTransformer implements Transformer<Double>{
+public class DoubleTransformer<V> implements Transformer<Double>{
 
   /**
   * Retona un double parseado

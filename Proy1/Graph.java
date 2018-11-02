@@ -26,9 +26,9 @@ public interface Graph<V,E>{
 
 	public boolean removeNode(String id);
 
-	public ArrayList<Node<V,E> > nodeList(String id);
+	public ArrayList<Node<V,E> > nodeList();
 
-	public ArrayList<Node<V,E> > edgeList(String id);
+	public ArrayList<Node<V,E> > edgeList();
 
 	public int degree(String id);
 

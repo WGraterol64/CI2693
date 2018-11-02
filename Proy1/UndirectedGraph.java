@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.io.FileReader;
 import java.util.*;
 
-/** 
+/**
 * Implementacion de la clase grafo no dirigido
 **/
 public class UndirectedGraph<V,E> implements Graph{
@@ -16,13 +16,11 @@ public class UndirectedGraph<V,E> implements Graph{
 	public Set<Edge<V,E>> edgeSet; // Set de aristas
 	private Map<String,Node<V,E> > namesToNodes; // Mapa Identificadores -> Nodos
 	private Map<String,Edge<V,E>> namesToEdges; // Mapa Identificadores -> Aristas
-	private Transformer<V> transV;
-	private Transformer<E> transE;
 
 	/**
 	* Constructor de la clase
 	**/
-	public UndirectedGraph(){ 
+	public UndirectedGraph(){
 		this.namesToNodes = new HashMap<String,Node<V,E> > ();
 		this.namesToEdges = new HashMap<String,Edge<V,E> >();
 		this.nodeSet = new HashSet<Node<V,E> >();
@@ -30,7 +28,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		this.numOfNodes = 0;
 		this.numOfEdges = 0;
 	}
-	
+
 	/**
   	* Carga el grafo desde un archivo de texto.
 	*
@@ -64,41 +62,43 @@ public class UndirectedGraph<V,E> implements Graph{
 				return false;
 			}
 		}
+		Transformer<V> transV;
+		Transformer<E> transE;
 		// Inicializacion de los transformadores
 		if(vType == "B" && eType =="B"){
-			this.transV = new BooleanTransformer();
-			this.transE = new BooleanTransformer();
+			transV = new BooleanTransformer();
+			transE = new BooleanTransformer();
 		}else if(vType == "B" && eType =="D"){
-			this.transV = new BooleanTransformer();
-			this.transE = new DoubleTransformer();
+			transV = new BooleanTransformer();
+			transE = new DoubleTransformer();
 		}else if(vType == "B" && eType =="S"){
-			this.transV = new BooleanTransformer();
-			this.transE = new StringTransformer();
+			transV = new BooleanTransformer();
+			transE = new StringTransformer();
 		}else if(vType == "D" && eType =="B"){
-			this.transV = new DoubleTransformer();
-			this.transE = new BooleanTransformer();
+			transV = new DoubleTransformer();
+			transE = new BooleanTransformer();
 		}else if(vType == "D" && eType =="D"){
-			this.transV = new DoubleTransformer();
-			this.transE = new DoubleTransformer();
+			transV = new DoubleTransformer();
+			transE = new DoubleTransformer();
 		}else if(vType == "D" && eType =="S"){
-			this.transV = new DoubleTransformer();
-			this.transE = new StringTransformer();
+			transV = new DoubleTransformer();
+			transE = new StringTransformer();
 		}else if(vType == "S" && eType =="B"){
-			this.transV = new StringTransformer();
-			this.transE = new BooleanTransformer();
+			transV = new StringTransformer();
+			transE = new BooleanTransformer();
 		}else if(vType == "S" && eType =="D"){
-			this.transV = new StringTransformer();
-			this.transE = new DoubleTransformer();
+			transV = new StringTransformer();
+			transE = new DoubleTransformer();
 		}else if(vType == "S" && eType =="S"){
-			this.transV = new StringTransformer();
-			this.transE = new StringTransformer();
+			transV = new StringTransformer();
+			transE = new StringTransformer();
 		}
 		// Lazo que agrega los nodos
 		for(int i=0;i<n;i++){
 			line = read.readLine();
 			line = line.trim();
 			String[] node = line.split(" ");
-			result = this.addNode(node[0], this.transV.Transform(node[1]),
+			result = this.addNode(node[0], transV.Transform(node[1]),
 			Double.parseDouble(node[2]));
 			if(!result){
 				throw new IllegalArgumentException("Entrada no valida: No se pueden agregar nodos");
@@ -109,7 +109,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		for(int i=0; i<m; i++){
 			line = read.readLine().trim();
 			String[] edge = line.split(" ");
-			result = this.addEdge(edge[0], this.transE.Transform(edge[1]),
+			result = this.addEdge(edge[0], transE.Transform(edge[1]),
 			Double.parseDouble(edge[2]), edge[3], edge[4]);
 			 if(!result){
 					throw new IllegalArgumentException("Entrada no valida: No se pueden agregar lados");
@@ -120,28 +120,28 @@ public class UndirectedGraph<V,E> implements Graph{
 		return true;
 	}
 
-	/** 
+	/**
 	* Metodo que devuelve el numero de nodos del grafo
-	**/ 
+	**/
 	public int numOfNodes(){
 		return this.numOfNodes;
 	}
 
-	/** 
+	/**
 	* Metodo que devuelve el numero de aristas del grafo
-	**/ 
+	**/
 	public int numOfEdges(){
 		return this.numOfEdges;
 	}
 
-	/** 
+	/**
 	* Metodo que agrega un nodo al set de nodos del grafo
 	*
 	* @return Un booleano que especifica si el nodo se agrego satisfactoriamente
 	*
 	* @param node El nodo a agregar
 	*
-	**/ 
+	**/
 	public boolean addNode(Node<V,E> node){
 
 		String id = node.getId();
@@ -181,7 +181,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		Node<V,E>  node = namesToNodes.get(id);
 		if(node == null)
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-		
+
 		return node;
 
 	}
@@ -196,12 +196,12 @@ public class UndirectedGraph<V,E> implements Graph{
 
 	public boolean isEdge(String u, String v){
 
-		if(!this.isNode(u) || !this.isNode(v)) 
+		if(!this.isNode(u) || !this.isNode(v))
 			return false;
 
-		Node<V,E> nodeU = getNode(u); 
+		Node<V,E> nodeU = getNode(u);
 		for( Edge<V,E> edge: nodeU.outEdges ){
-			if(edge.getFNode().getId().equals(v) || edge.getSNode().getId().equals(v)) 
+			if(edge.getFNode().getId().equals(v) || edge.getSNode().getId().equals(v))
 				return true;
 		}
 
@@ -214,9 +214,9 @@ public class UndirectedGraph<V,E> implements Graph{
 			return false;
 
 		Node<V,E> nodeU = this.getNode(id);
-			
-		for( Node<V,E>  nodeV : nodeU.sucNodes ){ 
-			if(nodeV.getId().equals(id)) 
+
+		for( Node<V,E>  nodeV : nodeU.sucNodes ){
+			if(nodeV.getId().equals(id))
 				continue;
 			while(nodeV.sucNodes.contains(nodeU)){
 				nodeV.sucNodes.remove(nodeU);
@@ -225,7 +225,7 @@ public class UndirectedGraph<V,E> implements Graph{
 
 			Stack toRemove = new Stack<Edge<V,E> >();
 			for(Edge<V,E> edge : nodeV.outEdges)
-				if(edge.getFNode().getId().equals(id) 
+				if(edge.getFNode().getId().equals(id)
 					|| edge.getSNode().getId().equals(id))
 						toRemove.push(edge);
 
@@ -238,21 +238,21 @@ public class UndirectedGraph<V,E> implements Graph{
 		}
 
 		for(Edge<V,E> edge : nodeU.outEdges){
-			if(edge.getFNode().getId().equals(id) 
+			if(edge.getFNode().getId().equals(id)
 				|| edge.getSNode().getId().equals(id)){
 
 					this.edgeSet.remove(edge);
 					this.namesToEdges.remove(e.getId());
 			}
 		}
-		
+
 		this.nodeSet.remove(nodeU);
 		this.numOfNodes--;
 		this.namesToNodes.remove(id);
 	}
 
 	public ArrayList<Node<V,E> > nodeList(){
-		
+
 		List<Node<V,E> > list = new ArrayList<>(numOfNodes);
 		for( Node<V,E>  v : this.nodeSet)
 			list.add(v);
@@ -260,7 +260,7 @@ public class UndirectedGraph<V,E> implements Graph{
 	}
 
 	public ArrayList<Edge<V,E> > edgeList(){
-		
+
 		List <Edge<V,E> > list = new ArrayList<>(numOfEdges);
 		for( Edge<V,E> e : this.edgeSet)
 			list.add(e);
@@ -268,13 +268,13 @@ public class UndirectedGraph<V,E> implements Graph{
 	}
 
 	public int degree(String id)  throws RuntimeException{
-		
+
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-		
+
 		Node<V,E>  v = namesToNodes.get(id);
 		return v.outdegree;
-	}	
+	}
 
 	public ArrayList<Node<V,E> > adjacency(String id) throws RuntimeException{
 
@@ -322,13 +322,13 @@ public class UndirectedGraph<V,E> implements Graph{
 			String s = edge.toString();
 			System.out.print(s+"\n");
 		}
-	
+
 	}
 
 	public boolean addEdge(Edge<V,E> edge){
 
 		String id = edge.getId();
-		
+
 		if(isEdge(id))
 			return false;
 
@@ -347,12 +347,12 @@ public class UndirectedGraph<V,E> implements Graph{
 	}
 
 	public boolean addEdge(String id, E data, double weight, String u, String v){
-		
+
 		Node<V,E> nodeA = this.namesToNodes.get(u);
 		Node<V,E> nodeB = this.namesToNodes.get(v);
 		if(nodeA == null || nodeB == null || isEdge())
 			return false;
-		
+
 		Edge<V,E> edge = new Edge<V,E>(id,data,weight,nodeA,nodeB);
 		edgeSet.add(edge);
 		namesToNodes.put(id,edge);

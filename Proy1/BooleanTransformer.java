@@ -1,7 +1,7 @@
 /**
 * Implementacion de parseador para boolean
 */
-public class BooleanTransformer implements Transformer<Boolean>{
+public class BooleanTransformer<V> implements Transformer<Boolean>{
   /**
   * Retorna un booleano parseado
   *

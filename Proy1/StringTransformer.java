@@ -1,7 +1,7 @@
 /**
 * Implementacion de parseador para strings
 */
-public class StringTransformer implements Transformer<String>{
+public class StringTransformer<V> implements Transformer<String>{
   /**
   * Retorna el string dado
   *
