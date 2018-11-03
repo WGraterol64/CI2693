@@ -1,10 +1,11 @@
+import java.lang.RuntimeException;
 /**
 * Implementacion de parseador para double
 */
 public class DoubleTransformer<V> implements Transformer<Double>{
 
   /**
-  * Retona un double parseado
+  * @return un double parseado
   *
   * @param dato es el double que se queria traducir
   *

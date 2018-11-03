@@ -1,19 +1,24 @@
 import java.util.*;
-
 /**
-* Clase de Nodos
+* Clase de Nodos para un grafo no dirigido
+* Extiende la clase abstacta Node
 **/
 public class UNode<V,E> extends Node{
 
 
-	private String id; 
-	private V data;
-	private double weight;
-	public int degree;
-	public HashSet<UNode<V,E>> adjNodes;
-	public ArrayList<Edge<V,E>> incEdges;
+	private String id; // Identificador del nodo
+	private V data; // Dato del nodo
+	private double weight; // Peso del nodo
+	public int degree; // Grado del nodo
+	public HashSet<UNode<V,E>> adjNodes; // Lista de los nodos adyacentes
+	public ArrayList<Edge<V,E>> incEdges; // Lista de los lados incidentes
 
-
+	/**
+	* Constructor de la clase
+	* @param id Identificador del nodo
+	* @param data Dato del nodo
+	* @param weight Peso del nodo
+	**/
 	public UNode(String id, V data, double weight){
 		this.id = id;
 		this.data = data;
@@ -23,18 +28,30 @@ public class UNode<V,E> extends Node{
 		this.degree = 0;
 	}
 
+	/**
+	* Metodo utilizado para obtener el peso del nodo
+	**/
 	public double getWeight(){
 		return this.weight;
 	}
 
+	/**
+	* Metodo utilizado para obtener el identificador del nodo
+	**/
 	public String getId(){
 		return this.id;
 	}
 
+	/**
+	* Metodo utilizado para obtener el dato del nodo
+	**/
 	public V getData(){
 		return this.data;
 	}
 
+	/**
+	* Metodo utilizado para obtener un string con informacion del nodo
+	**/
 	public String toString(){
 		
 		String vertex = "Identificador: "+this.getId()+"\n";

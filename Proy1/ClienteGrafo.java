@@ -27,7 +27,7 @@ public class ClienteGrafo{
      try{
        archivo = br.readLine();
      }catch(IOException i){
-      throw new IOException("Error en la entrada de datos");
+      throw new IOException(i);
       }
     	archivo = archivo.trim();
     	cargarGrafo(archivo, ugraph, dgraph, transV, transE);
@@ -60,9 +60,9 @@ public class ClienteGrafo{
 	        }else if(i==1){
 	            eType = line.trim();
 	        }else if(i==2){
-	            if(line == "D"){
+	            if(line.equals("D")){
 	          		type = 0;
-	        }else if(line == "N"){
+	        }else if(line.equals("N")){
 	        		type = 1;
 	        }else{
 	         	throw new IllegalArgumentException("Formato no valido");
@@ -73,6 +73,7 @@ public class ClienteGrafo{
 	    try{
 	      if(type == 0){
 	        // Inizializacion si es un digrafo
+	        System.out.println("Entre aqui"+vType+eType);
 	        crearDigrafoVacio(vType, eType, dgraph, transV, transE);
 	        dgraph.loadGraph(archivo);
 	      }else if(type == 1){
@@ -136,39 +137,39 @@ public class ClienteGrafo{
 	  public static void crearGrafoNoDirigidoVacio(String vType, String eType,UndirectedGraph ugraph,
                                          Transformer transV, Transformer transE)
 	  throws IllegalArgumentException{
-	    if(vType == "B" && eType =="B"){
+	    if(vType.equals("B") && eType.equals("B")){
 	      ugraph = new UndirectedGraph<Boolean,Boolean>();
 	      transV = new BooleanTransformer();
 	      transE = new BooleanTransformer();
-	    }else if(vType == "B" && eType =="D"){
+	    }else if(vType.equals("B") && eType.equals("D")){
 	      ugraph = new UndirectedGraph<Boolean, Double>();
 	      transV = new BooleanTransformer();
 	      transE = new DoubleTransformer();
-	    }else if(vType == "B" && eType =="S"){
+	    }else if(vType.equals("B")&& eType.equals("S")){
 	      ugraph = new UndirectedGraph<Boolean,String> ();
 	      transV = new BooleanTransformer();
 	      transE = new StringTransformer();
-	    }else if(vType == "D" && eType =="B"){
+	    }else if(vType.equals("D")&& eType.equals("B")){
 	      ugraph = new UndirectedGraph<Double,Boolean> ();
 	      transV = new DoubleTransformer();
 	      transE = new BooleanTransformer();
-	    }else if(vType == "D" && eType =="D"){
+	    }else if(vType.equals("D") && eType.equals("D")){
 	      ugraph = new UndirectedGraph<Double,Double>();
 	      transV = new DoubleTransformer();
 	      transE = new DoubleTransformer();
-	    }else if(vType == "D" && eType =="S"){
+	    }else if(vType.equals("D")&& eType.equals("S")){
 	      ugraph = new UndirectedGraph<Double,String>();
 	      transV = new DoubleTransformer();
 	      transE = new StringTransformer();
-	    }else if(vType == "S" && eType =="B"){
+	    }else if(vType.equals("S")&& eType.equals("B")){
 	      ugraph = new UndirectedGraph<String, Boolean>();
 	      transV = new StringTransformer();
 	      transE = new BooleanTransformer();
-	    }else if(vType == "S" && eType =="D"){
+	    }else if(vType.equals("S") && eType.equals("D")){
 	      ugraph = new UndirectedGraph<String,Double>();
 	      transV = new StringTransformer();
 	      transE = new DoubleTransformer();
-	    }else if(vType == "S" && eType =="S"){
+	    }else if(vType.equals("S") && eType.equals("S")){
 	      ugraph = new UndirectedGraph<String,String>();
 	      transV = new StringTransformer();
 	      transE = new StringTransformer();
@@ -227,39 +228,40 @@ public class ClienteGrafo{
 	  public static void crearDigrafoVacio(String vType, String eType, DirectedGraph dgraph,
                                          Transformer transV, Transformer transE)
 	  throws IllegalArgumentException{
-	    if(vType == "B" && eType =="B"){
+	    if(vType.equals("B") && eType.equals("B")){
 	      dgraph = new DirectedGraph<Boolean,Boolean>();
 	      transV = new BooleanTransformer();
 	      transE = new BooleanTransformer();
-	    }else if(vType == "B" && eType =="D"){
+	    }else if(vType.equals("B")  && eType.equals("D")){ 
 	      dgraph = new DirectedGraph<Boolean, Double>();
 	      transV = new BooleanTransformer();
 	      transE = new DoubleTransformer();
-	    }else if(vType == "B" && eType =="S"){
+	    }else if(vType.equals("B")  && eType.equals("S")){
 	      dgraph = new DirectedGraph<Boolean,String>();
 	      transV = new BooleanTransformer();
 	      transE = new StringTransformer();
-	    }else if(vType == "D" && eType =="B"){
+	    }else if(vType.equals("D") && eType.equals("B")){
+	   	  System.out.println("Aqui tambien");
 	      dgraph = new DirectedGraph<Double,Boolean>();
 	      transV = new DoubleTransformer();
-	      transE = new BooleanTransformer();
-	    }else if(vType == "D" && eType =="D"){
+	      transE = new BooleanTransformer();	
+	    }else if(vType.equals("D") && eType.equals("D")){
 	      dgraph = new DirectedGraph<Double,Double>();
 	      transV = new DoubleTransformer();
 	      transE = new DoubleTransformer();
-	    }else if(vType == "D" && eType =="S"){
+	    }else if(vType.equals("D") && eType.equals("S")){
 	      dgraph = new DirectedGraph<Double,String> ();
 	      transV = new DoubleTransformer();
 	      transE = new StringTransformer();
-	    }else if(vType == "S" && eType =="B"){
+	    }else if(vType.equals("S") && eType.equals("B") ){
 	      dgraph = new DirectedGraph<String, Boolean>();
 	      transV = new StringTransformer();
 	      transE = new BooleanTransformer();
-	    }else if(vType == "S" && eType =="D"){
+	    }else if(vType.equals("S")&& eType.equals("D")){
 	      dgraph = new DirectedGraph<String,Double>();
 	      transV = new StringTransformer();
 	      transE = new DoubleTransformer();
-	    }else if(vType == "S" && eType =="S"){
+	    }else if(vType.equals("S")&& eType.equals("S")){
 	      dgraph = new DirectedGraph<String,String>();
 	      transV = new StringTransformer();
 	      transE = new StringTransformer();
@@ -501,7 +503,7 @@ public class ClienteGrafo{
 	    }else{
 	      System.out.println("Los nodos en el grafo son: ");
 	      for(int i=0; i<vertices.size(); i++){
-	        System.out.println(vertices.get(i).getId());
+	        System.out.println(vertices.get(i).toString());
 	      }
 	    }
 	  }
@@ -510,7 +512,7 @@ public class ClienteGrafo{
 	  * Imprime en pantalla los id de todos los lados del grafo
 	  */
 	  public static void imprimirLados(UndirectedGraph ugraph, DirectedGraph dgraph){
-	    ArrayList<Node> lados = new ArrayList<Node>();
+	    ArrayList<GraphEdges> lados = new ArrayList<GraphEdges>();
 	    if(type == 0){
 	        lados = dgraph.edgeList();
 	    }else if(type == 1){
@@ -521,7 +523,7 @@ public class ClienteGrafo{
 	    }else{
 	      System.out.println("Los lados en el grafo son: ");
 	      for(int i=0; i<lados.size(); i++){
-	        System.out.println(lados.get(i).getId());
+	        System.out.println(lados.get(i).toString());
 	      }
 	    }
 	  }
@@ -790,7 +792,7 @@ public class ClienteGrafo{
 	         break;
 	       }
 	     }catch(IllegalArgumentException | UnsupportedOperationException | IOException e){
-	       throw new IOException("Hubieron errores en ejecucion por argumentos invalidos");
+	       throw new IOException(e);
 
 	     }
 	  }
@@ -810,7 +812,7 @@ public class ClienteGrafo{
 		        while(true)
 		            menu(ugraph, dgraph, transV, transE);
 		    }catch(IllegalArgumentException | IOException e){
-		        System.out.println("Errores en la ejecucion: Saliendo...");
+		        System.out.println(e);
 		        System.exit(1);
 		    }
 		}

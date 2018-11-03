@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileReader;
 import java.util.*;
-
 /**
-* Implementacion de la clase grafo no dirigido
+* Clase que recrea grafos dirigidos
+* Implementa los metodos de la clase abstracta Graph
 **/
 public class UndirectedGraph<V,E> implements Graph{
 
@@ -15,9 +15,9 @@ public class UndirectedGraph<V,E> implements Graph{
 	public HashSet<UNode<V,E> > nodeSet; // Set de nodos
 	public HashSet<Edge<V,E>> edgeSet; // Set de aristas
 	private HashMap<String,UNode<V,E> > namesToNodes; // Mapa Identificadores -> Nodos
-	private HashMap<String,Edge<V,E>> namesToEdges; // Mapa Identificadores -> Aristas.
-	private Transformer<V> transV;
-	private Transformer<V> transE;
+	private HashMap<String,Edge<V,E>> namesToEdges; // Mapa Identificadores -> Aristas
+	private Transformer<V> transV; // Transformador de tipos genericos
+	private Transformer<V> transE; // Transformadosr de tipos genericos
 
 	/**
 	* Constructor de la clase
@@ -37,9 +37,9 @@ public class UndirectedGraph<V,E> implements Graph{
 	* @param fileName Archivo desde el que se desea cargar e grafo
 	*
 	* @throws IllegalArgumentException si el formato del archivo no es valido
-	*
+	* @throws IOException si ocurre un error al leer el archivo
 	* @throws UnsupportedOperationException si ocurre algun error parseando datos del archivo
-	*/
+	**/
 	public boolean loadGraph(String fileName)
       throws IllegalArgumentException, UnsupportedOperationException, IOException{
 		
@@ -55,6 +55,8 @@ public class UndirectedGraph<V,E> implements Graph{
 					vType = line.trim();
 				}else if(i==1){
 					eType = line.trim();
+				}else if(i==2){
+					continue; 
 				}else if(i==3){
 					n = Integer.parseInt(line.trim());
 				}else{
@@ -70,33 +72,33 @@ public class UndirectedGraph<V,E> implements Graph{
 		Transformer<V> transV = new StringTransformer();
 		Transformer<E> transE = new StringTransformer();
 		// Inicializacion de los transformadores
-		if(vType == "B" && eType =="B"){
-			transV = new BooleanTransformer();
-			transE = new BooleanTransformer();
-		}else if(vType == "B" && eType =="D"){
-			transV = new BooleanTransformer();
-			transE = new DoubleTransformer();
-		}else if(vType == "B" && eType =="S"){
-			transV = new BooleanTransformer();
-			transE = new StringTransformer();
-		}else if(vType == "D" && eType =="B"){
-			transV = new DoubleTransformer();
-			transE = new BooleanTransformer();
-		}else if(vType == "D" && eType =="D"){
-			transV = new DoubleTransformer();
-			transE = new DoubleTransformer();
-		}else if(vType == "D" && eType =="S"){
-			transV = new DoubleTransformer();
-			transE = new StringTransformer();
-		}else if(vType == "S" && eType =="B"){
-			transV = new StringTransformer();
-			transE = new BooleanTransformer();
-		}else if(vType == "S" && eType =="D"){
-			transV = new StringTransformer();
-			transE = new DoubleTransformer();
-		}else if(vType == "S" && eType =="S"){
-			transV = new StringTransformer();
-			transE = new StringTransformer();
+		if(vType.equals("B") && eType.equals("B")){
+			this.transV = new BooleanTransformer();
+			this.transE = new BooleanTransformer();
+		}else if(vType.equals("B") && eType.equals("D")){
+			this.transV = new BooleanTransformer();
+			this.transE = new DoubleTransformer();
+		}else if(vType.equals("B") && eType.equals("S")){
+			this.transV = new BooleanTransformer();
+			this.transE = new StringTransformer();
+		}else if(vType.equals("D") && eType.equals("B")){
+			this.transV = new DoubleTransformer();
+			this.transE = new BooleanTransformer();
+		}else if(vType.equals("D") && eType.equals("D")){
+			this.transV = new DoubleTransformer();
+			this.transE = new DoubleTransformer();
+		}else if(vType.equals("D") && eType.equals("S")){
+			this.transV = new DoubleTransformer();
+			this.transE = new StringTransformer();
+		}else if(vType.equals("S") && eType.equals("B")){
+			this.transV = new StringTransformer();
+			this.transE = new BooleanTransformer();
+		}else if(vType.equals("S") && eType.equals("D")){
+			this.transV = new StringTransformer();
+			this.transE = new DoubleTransformer();
+		}else if(vType.equals("S")&& eType.equals("S")){
+			this.transV = new StringTransformer();
+			this.transE = new StringTransformer();
 		}
 		// Lazo que agrega los nodos
 		for(int i=0;i<n;i++){
@@ -132,6 +134,7 @@ public class UndirectedGraph<V,E> implements Graph{
 
 	/**
 	* Metodo que devuelve el numero de aristas del grafo
+	* @return Numero de lados
 	**/
 	public int numOfEdges(){
 		return this.numOfEdges;
@@ -141,7 +144,6 @@ public class UndirectedGraph<V,E> implements Graph{
 	* Metodo que crea y agrega un nodo al set de nodos del grafo
 	*
 	* @return Un booleano que especifica si el nodo se agrego satisfactoriamente
-	*
 	* @param id Identificador del nuevo nodo
 	* @param data Dato que almacena el nuevo nodo
 	* @param weight Peso del nuevo nodo
@@ -149,64 +151,86 @@ public class UndirectedGraph<V,E> implements Graph{
 	**/
 	public boolean addNode(String id, V data, double weight){
 
+		// Se verifica si el nodo existia en el grafo
 		if(namesToNodes.get(id) != null)
 			return false;
 
-		UNode<V,E> node = new UNode(id,data,weight);
-		this.namesToNodes.put(id,node);
-		this.nodeSet.add(node);
-		this.numOfNodes++;
+		UNode<V,E> node = new UNode(id,data,weight); // Se crea un nuevo nodo
+		this.namesToNodes.put(id,node); // Se coloca el nodo en el mapa
+		this.nodeSet.add(node); // Se agrega el nodo al conjunto de nodos
+		this.numOfNodes++; // Se aumenta el contador de nodos
 		return true;
 
 	}
-	/**
-	* Metodo que agrega un nodo al set de nodos del grafo
-	*
-	* @return Un booleano que especifica si el nodo se agrego satisfactoriamente
-	*
-	* @param node El nodo a agregar
-	*
-	**/
 	
+	/** 
+	* Metodo que agrega un nodo al grafo
+	* @param node Nodo a agregar
+	* @return booleano que identifica si se agrego exitosamente
+	**/
 	public boolean addNode(UNode<V,E> node){
 
 		String id = node.getId();
-
+		// Verificamos si el nodo existe en el grafo
 		if(namesToNodes.get(id) != null)
 			return false;
 
-		this.namesToNodes.put(id,node);
-		this.nodeSet.add(node);
-		this.numOfNodes++;
+		this.namesToNodes.put(id,node); // Agregamos el nodo al mapa
+		this.nodeSet.add(node); // Agregamos el nodo al conjunto de nodos
+		this.numOfNodes++; // Aumentamos el contador de nodos
 		return true;
 	}
 
 	
-
+	/**
+	* Metodo utilizado para buscar un nodo en el grafo
+	* @return El nodo cuyo identificador es id
+	* @param id Identificador del nodo
+	* @throws RuntimeException si no existe tal nodo
+	**/
 	public UNode<V,E> getNode(String id) throws RuntimeException{
 
-		UNode<V,E>  node = namesToNodes.get(id);
+		UNode<V,E>  node = namesToNodes.get(id);  // Buscamos al nodo en el mapa
+		// Si no existe, se arroja una excepcion
 		if(node == null)
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-
+		// Se encontro, y se retorna
 		return node;
 
 	}
 
+	/**
+	* Metodo que dice si existe en el grafo un nodo con identificador id
+	* @param id Identificador a buscar
+	* @return Booleano que especifica si el nodo existe o no
+	**/
 	public boolean isNode(String id){
-		return (this.namesToNodes.get(id) == null);
+		return (this.namesToNodes.get(id) != null);
 	}
 
+	/**
+	* Metodo que dice si existe en el grafo una arista con identificador id
+	* @param id Identificador de la arista
+	* @return Booleano que especifica si la arista pertenece al grafo 
+	**/
 	public boolean isEdge(String id){
-		return (this.namesToEdges.get(id) == null);
+		return (this.namesToEdges.get(id) != null);
 	}
 
+	/**
+	* Metodo que dice si existe en el grafo una arista entre u y v
+	* @param u Identificador del primer nodo
+	* @param v Identificador del segundo nodo
+	* @return Booleano que especifica si el arco pertenece al grafo 
+	**/
 	public boolean isEdge(String u, String v){
 
+		// Verificamos que u y v pertenezcan al grafo
 		if(!this.isNode(u) || !this.isNode(v))
 			return false;
 
 		UNode<V,E> nodeU = getNode(u);
+		// Buscamos en las aristas incidentes a U
 		for( Edge<V,E> edge: nodeU.incEdges ){
 			if(edge.getFNode().getId().equals(v) || edge.getSNode().getId().equals(v))
 				return true;
@@ -215,27 +239,42 @@ public class UndirectedGraph<V,E> implements Graph{
 		return false;
 	}
 
+	/**
+	* Metodo utilizado para eliminar un nodo del grafo
+	* @param id Identificador del nodo a eliminar
+	* @return Booleano que especifica si se removio el nodo de manera exitosa
+	**/
 	public boolean removeNode(String id) {
 
+		// Verificamos si el nodo pertenece al grafo
 		if(!isNode(id))
 			return false;
 
+		// Buscamos el nodo con identificador id
 		UNode<V,E> nodeU = this.getNode(id);
 
+		// Para todos los adyacentes V del nodo U
 		for( UNode<V,E>  nodeV : nodeU.adjNodes ){
+			
 			if(nodeV.getId().equals(id))
 				continue;
+
+			// Eliminamos U de la lista de adyacentes de V
+			// Reducimos el degree de V
 			while(nodeV.adjNodes.contains(nodeU)){
 				nodeV.adjNodes.remove(nodeU);
 				nodeV.degree--;
 			}
 
+			// Agregamos las aristas que salen unen V y U a un stack
 			Stack<Edge<V,E>> toRemove = new Stack<>();
 			for(Edge<V,E> edge : nodeV.incEdges)
 				if(edge.getFNode().getId().equals(id)
 					|| edge.getSNode().getId().equals(id))
 						toRemove.push(edge);
 
+			// Eliminamos todas estas aristas del grafo y de la lista
+			// de arcos incidentes V
 			while(!toRemove.empty()){
 				Edge<V,E> e = toRemove.pop();
 				nodeV.incEdges.remove(e);
@@ -244,21 +283,26 @@ public class UndirectedGraph<V,E> implements Graph{
 			}
 		}
 
+		// Eliminamos del grafo todas las aristas incidentes a U
 		for(Edge<V,E> edge : nodeU.incEdges){
 			if(edge.getFNode().getId().equals(id)
 				|| edge.getSNode().getId().equals(id)){
-
 					this.edgeSet.remove(edge);
 					this.namesToEdges.remove(edge.getId());
 			}
 		}
 
+		// Eliminamos el nodo del conjunto de nodos del grafo
 		this.nodeSet.remove(nodeU);
-		this.numOfNodes--;
-		this.namesToNodes.remove(id);
+		this.numOfNodes--; // Se reduce el numero de nodos del grafo
+		this.namesToNodes.remove(id); // Se saca del mapa
 		return true;
 	}
 
+	/**
+	*  Metodo que busca los nodos de un grafo
+	*  @return devuelve una lista con los nodos del grafo  
+	**/
 	public ArrayList<UNode<V,E> > nodeList(){
 
 		ArrayList<UNode<V,E> > list = new ArrayList<UNode<V,E>>(numOfNodes);
@@ -267,6 +311,10 @@ public class UndirectedGraph<V,E> implements Graph{
 		return list;
 	}
 
+	/**
+	* Metodo que busca los lados de un grafo
+	* @return devuelve una lista con los lados del grafo
+	**/
 	public ArrayList<Edge<V,E> > edgeList(){
 
 		ArrayList <Edge<V,E> > list = new ArrayList<Edge<V,E>>(numOfEdges);
@@ -275,6 +323,11 @@ public class UndirectedGraph<V,E> implements Graph{
 		return list;
 	}
 
+	/**
+	* Metodo que calcula el grado de un nodo
+	* @return Grado del nodo
+	* @throws RuntimeException Si el nodo no existe
+	**/
 	public int degree(String id)  throws RuntimeException{
 
 		if(!isNode(id))
@@ -284,6 +337,11 @@ public class UndirectedGraph<V,E> implements Graph{
 		return v.degree;
 	}
 
+	/**
+	* Metodo que busca nodos adyacentes a un nodo con identificador id
+	* @return devuelve una lista de adyacentes del nodo
+	* @throws RuntimeException Si el nodo no existe
+	**/
 	public ArrayList<UNode<V,E> > adjacency(String id) throws RuntimeException{
 
 		if(!isNode(id))
@@ -296,6 +354,11 @@ public class UndirectedGraph<V,E> implements Graph{
 		return list;
 	}
 
+	/**
+	* Metodo que busca aristas incidentes a un nodo con identificador id
+	* @return devuelve una lista de lados incidentes al nodo
+	* @throws RuntimeException Si el nodo no existe
+	**/
 	public ArrayList<Edge<V,E> > incident(String id) throws RuntimeException{
 
 		if(!isNode(id))
@@ -307,6 +370,10 @@ public class UndirectedGraph<V,E> implements Graph{
 		return list;
 	}
 
+	/**
+	* Metodo utilizado para clonar el grafo
+	* @return Grafo clonado
+	**/
 	public UndirectedGraph<V,E> clone(){
 
 		UndirectedGraph<V,E> newGraph = new UndirectedGraph();
@@ -320,6 +387,10 @@ public class UndirectedGraph<V,E> implements Graph{
 
 	}
 
+	/**
+	* Metodo utilizado para crear un String con informacion del grafo
+	* @return String con informacion del grafo
+	**/
 	public String toString(){
 
 		String out = "Este es un grafo no dirigido.\n";
@@ -336,6 +407,11 @@ public class UndirectedGraph<V,E> implements Graph{
 		return out;
 	}
 
+	/** 
+	* Metodo para agregar una arista al grafo
+	* @param edge Arista a agregar
+	* @return booleano que especifica si se agrego satisfactoriamente
+	*//
 	public boolean addEdge(Edge<V,E> edge){
 
 		String id = edge.getId();

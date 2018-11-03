@@ -3,7 +3,7 @@
 */
 public class StringTransformer<V> implements Transformer<String>{
   /**
-  * Retorna el string dado
+  * @return El string dado
   *
   * @param dato es el string que se queria traducir
   */
