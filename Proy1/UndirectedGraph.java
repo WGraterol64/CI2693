@@ -41,15 +41,16 @@ public class UndirectedGraph<V,E> implements Graph{
 	* @throws UnsupportedOperationException si ocurre algun error parseando datos del archivo
 	*/
 	public boolean loadGraph(String fileName)
-      throws IllegalArgumentException, UnsupportedOperationException{
+      throws IllegalArgumentException, UnsupportedOperationException, IOException{
+		
 		BufferedReader read = new BufferedReader(new FileReader(fileName));
 		// Lazo que lee las primeros 5 lineas
-		String vType, eType, line;
-		int n,m;
+		String vType = "", eType = "", line;
+		int n = 0 ,m = 0;
 		boolean result;
 		for(int i=0; i<5; i++){
 			try{
-				line = read.readLine();
+				line = read.readLine();	
 				if(i==0){
 					vType = line.trim();
 				}else if(i==1){
@@ -61,11 +62,13 @@ public class UndirectedGraph<V,E> implements Graph{
 				}
 			}catch(NumberFormatException e){
 				throw new UnsupportedOperationException("Formato no valido");
-				return false;
+			}
+			catch(IOException e){
+				throw new UnsupportedOperationException("Formato no valido");
 			}
 		}
-		Transformer<V> transV;
-		Transformer<E> transE;
+		Transformer<V> transV = new StringTransformer();
+		Transformer<E> transE = new StringTransformer();
 		// Inicializacion de los transformadores
 		if(vType == "B" && eType =="B"){
 			transV = new BooleanTransformer();
@@ -104,7 +107,6 @@ public class UndirectedGraph<V,E> implements Graph{
 			Double.parseDouble(node[2]));
 			if(!result){
 				throw new IllegalArgumentException("Entrada no valida: No se pueden agregar nodos");
-				return false;
 			}
 		}
 		// Lazo que agrega los lados
@@ -115,7 +117,6 @@ public class UndirectedGraph<V,E> implements Graph{
 			Double.parseDouble(edge[2]), edge[3], edge[4]);
 			 if(!result){
 					throw new IllegalArgumentException("Entrada no valida: No se pueden agregar lados");
-					return false;
 			 }
 		}
 
@@ -255,11 +256,12 @@ public class UndirectedGraph<V,E> implements Graph{
 		this.nodeSet.remove(nodeU);
 		this.numOfNodes--;
 		this.namesToNodes.remove(id);
+		return true;
 	}
 
 	public ArrayList<UNode<V,E> > nodeList(){
 
-		ArrayList<UNode<V,E> > list = new ArrayList<>(numOfNodes);
+		ArrayList<UNode<V,E> > list = new ArrayList<UNode<V,E>>(numOfNodes);
 		for( UNode<V,E>  v : this.nodeSet)
 			list.add(v);
 		return list;
@@ -267,7 +269,7 @@ public class UndirectedGraph<V,E> implements Graph{
 
 	public ArrayList<Edge<V,E> > edgeList(){
 
-		ArrayList <Edge<V,E> > list = new ArrayList<>(numOfEdges);
+		ArrayList <Edge<V,E> > list = new ArrayList<Edge<V,E>>(numOfEdges);
 		for( Edge<V,E> e : this.edgeSet)
 			list.add(e);
 		return list;
@@ -288,7 +290,7 @@ public class UndirectedGraph<V,E> implements Graph{
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
 
 		UNode<V,E>  node  = this.namesToNodes.get(id);
-		ArrayList<UNode<V,E> > list = new ArrayList<>(node.degree);
+		ArrayList<UNode<V,E> > list = new ArrayList<UNode<V,E>>(node.degree);
 		for( UNode<V,E> v : node.adjNodes )
 			list.add(v);
 		return list;
@@ -299,7 +301,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
 		UNode<V,E>  node  = this.namesToNodes.get(id);
-		ArrayList<Edge<V,E>> list = new ArrayList<>();
+		ArrayList<Edge<V,E>> list = new ArrayList<Edge<V,E>>();
 		for( Edge<V,E> edge : node.incEdges )
 			list.add(edge);
 		return list;
@@ -320,18 +322,18 @@ public class UndirectedGraph<V,E> implements Graph{
 
 	public String toString(){
 
-		System.out.print("Este es un grafo no dirigido.\n");
-		System.out.print("Este grafo contiene "+numOfNodes+" nodos: \n");
+		String out = "Este es un grafo no dirigido.\n";
+		out += "Este grafo contiene "+numOfNodes+" nodos: \n";
 		for(UNode<V,E> node : this.nodeSet){
 			String s = node.toString();
-			System.out.print(s+"\n");
+			out += s;
 		}
 		System.out.print("Este grafo contiene "+numOfEdges+" aristas: \n");
 		for(Edge<V,E> edge : this.edgeSet){
 			String s = edge.toString();
-			System.out.print(s+"\n");
+			out += s;
 		}
-
+		return out;
 	}
 
 	public boolean addEdge(Edge<V,E> edge){

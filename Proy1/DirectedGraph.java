@@ -36,11 +36,11 @@ public class DirectedGraph<V,E> implements Graph{
 	* @throws UnsupportedOperationException si ocurre algun error parseando datos del archivo
 	**/
 	public boolean loadGraph(String fileName)
-      throws IllegalArgumentException, UnsupportedOperationException{
+      throws IllegalArgumentException, UnsupportedOperationException, IOException{
 		BufferedReader read = new BufferedReader(new FileReader(fileName));
     
-	String vType, eType, line;
-	int n,m;
+	String vType = "", eType = "", line;
+	int n = 0, m = 0;
 	boolean result;
 
     // Lazo que lee las primeros 5 lineas
@@ -59,7 +59,12 @@ public class DirectedGraph<V,E> implements Graph{
 			}catch(NumberFormatException e){
 				throw new UnsupportedOperationException("Formato no valido");
 			}
+			catch(IOException e){
+				throw new UnsupportedOperationException("Formato no valido");
+			}
 		}
+		Transformer<V> transV = new StringTransformer();;
+		Transformer<E> transE = new StringTransformer();;
 		// Inicializacion de los transformadores
 		if(vType == "B" && eType =="B"){
 			this.transV = new BooleanTransformer();
@@ -94,7 +99,7 @@ public class DirectedGraph<V,E> implements Graph{
 			line = read.readLine();
 			line = line.trim();
 			String[] node = line.split(" ");
-			result = this.addNode(node[0], this.transV.Transform(node[1]),
+			result = this.addNode(node[0], transV.Transform(node[1]),
 			Double.parseDouble(node[2]));
 			if(!result){
 				throw new IllegalArgumentException("Entrada no valida: No se pueden agregar nodos");
@@ -105,12 +110,14 @@ public class DirectedGraph<V,E> implements Graph{
 			line = read.readLine();
 			line = line.trim();
 			String[] edge = line.split(" ");
-			result = this.addArc(edge[0], this.transE.Transform(edge[1]),
+			result = this.addArc(edge[0], transE.Transform(edge[1]),
 						Double.parseDouble(edge[2]), edge[3], edge[4]);
 			 if(!result){
 					throw new IllegalArgumentException("Entrada no valida: No se pueden agregar lados");
 			 }
 		}
+
+		return true;
 	}
 
 
@@ -132,7 +139,7 @@ public class DirectedGraph<V,E> implements Graph{
 		this.namesToNodes.put(id,node);
 		this.nodeSet.add(node);
 		this.numOfNodes++;
-
+		return true;
 	}
 
 	public boolean addNode(String id, V data, double weight){
@@ -144,7 +151,7 @@ public class DirectedGraph<V,E> implements Graph{
 		this.namesToNodes.put(id,node);
 		this.nodeSet.add(node);
 		this.numOfNodes++;
-
+		return true;
 	}
 
 	public DNode<V,E> getNode(String id) throws RuntimeException{
@@ -217,12 +224,13 @@ public class DirectedGraph<V,E> implements Graph{
 		
 		this.nodeSet.remove(nodeU);
 		this.numOfNodes--;
-		this.namesToNodes.remove(id);	
+		this.namesToNodes.remove(id);
+		return true;	
 	}
 
 	public ArrayList<DNode<V,E> > nodeList(){
 		
-		ArrayList<DNode<V,E> > list = new ArrayList<>(numOfNodes);
+		ArrayList<DNode<V,E> > list = new ArrayList<DNode<V,E>>(numOfNodes);
 		for( DNode<V,E>  v : this.nodeSet)
 			list.add(v);
 		return list;
@@ -230,7 +238,7 @@ public class DirectedGraph<V,E> implements Graph{
 
 	public ArrayList<Arc<V,E> > edgeList(){
 		
-		ArrayList <Arc<V,E> > list = new ArrayList<>(numOfArcs);
+		ArrayList <Arc<V,E> > list = new ArrayList<Arc<V,E>>(numOfArcs);
 		for( Arc<V,E> a : this.arcSet)
 			list.add(a);
 		return list;
@@ -265,7 +273,7 @@ public class DirectedGraph<V,E> implements Graph{
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
 		DNode<V,E>  node  = this.namesToNodes.get(id);
-		ArrayList<Arc<V,E> > list = new ArrayList<>(degree(node.getId()));
+		ArrayList<Arc<V,E> > list = new ArrayList<Arc<V,E>>(degree(node.getId()));
 		for( Arc<V,E> arc : node.outEdges)
 			list.add(arc);
 		for( Arc<V,E> arc : node.inEdges)
@@ -289,17 +297,17 @@ public class DirectedGraph<V,E> implements Graph{
 
 	public String toString(){
 
-		System.out.print("Este es un grafo dirigido.\n");
-		System.out.print("Este grafo contiene "+numOfNodes+" nodos: \n");
+		String out = "Este es un grafo dirigido.\n";
+		out += "Este grafo contiene "+numOfNodes+" nodos: \n";
 		for(DNode<V,E> node : this.nodeSet){
-			String s = node.toString();
-			System.out.print(s+"\n");
+			out += node.toString();
 		}
-		System.out.print("Este grafo contiene "+numOfArcs+" arcos: \n");
+		out += "Este grafo contiene "+numOfArcs+" arcos: \n";
 		for(Arc<V,E> arc : this.arcSet){
-			String s = arc.toString();
-			System.out.print(s+"\n");
+			out += arc.toString();
 		}
+
+		return out;
 	}
 
 	public boolean addArc(Arc<V,E> arc){

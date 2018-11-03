@@ -1,0 +1,14 @@
+D
+B
+D
+5
+4
+uno 5 5
+dos 4 4
+tres 3 3
+cuatro 1 1
+cinco 2 2
+a true 1 uno dos
+b true 2 dos uno
+c true 2 dos uno
+d true 3 cuatro tres

@@ -22,8 +22,8 @@ public class DNode<V,E> extends Node{
 		this.weight = weight;
 		this.preNodes = new HashSet<DNode<V,E>>();
 		this.sucNodes = new HashSet<DNode<V,E>>();
-		this.inEdges = new ArrayList<>();
-		this.outEdges = new ArrayList<>();
+		this.inEdges = new ArrayList<Arc<V,E>>();
+		this.outEdges = new ArrayList<Arc<V,E>>();
 		this.indegree = 0;
 		this.outdegree = 0;
 	}

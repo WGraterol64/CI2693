@@ -8,15 +8,13 @@ import java.util.*;
 public interface Graph<V,E>{
 
 
-	public boolean loadGraph(String fileName);
+	public boolean loadGraph(String fileName) throws IllegalArgumentException, UnsupportedOperationException, IOException;
 
 	public int numOfNodes();
 
 	public int numOfEdges();
 
-	public boolean addNode(Node<V,E> node);
 
-	public boolean addNode(String id, V data, double weight);
 
 	public Node getNode(String id);
 

@@ -490,7 +490,7 @@ public class ClienteGrafo{
 	  */
 	  public static void imprimirVertices(UndirectedGraph ugraph, DirectedGraph dgraph){
 
-      ArrayList<Node> vertices = new ArrayList();
+      ArrayList<Node> vertices = new ArrayList<Node>();
 	    if(type == 0){
 	        vertices = dgraph.nodeList();
 	    }else if(type == 1){
@@ -510,7 +510,7 @@ public class ClienteGrafo{
 	  * Imprime en pantalla los id de todos los lados del grafo
 	  */
 	  public static void imprimirLados(UndirectedGraph ugraph, DirectedGraph dgraph){
-	    ArrayList<Node> lados = new ArrayList();
+	    ArrayList<Node> lados = new ArrayList<Node>();
 	    if(type == 0){
 	        lados = dgraph.edgeList();
 	    }else if(type == 1){
@@ -541,7 +541,7 @@ public class ClienteGrafo{
       }catch(IOException e){
         throw new IOException("Error de entrada");
       }
-	    ArrayList<Node> adj = new ArrayList();
+	    ArrayList<Node> adj = new ArrayList<Node>();
 	    try{
 	      if(type == 0){
 	            adj = dgraph.adjacency(id);
@@ -572,7 +572,7 @@ public class ClienteGrafo{
       }catch(IOException e){
         throw new IOException("Error de entrada");
       }
-	    ArrayList<GraphEdges> inc = new ArrayList();
+	    ArrayList<GraphEdges> inc = new ArrayList<GraphEdges>();
 	    try{
 	        if(type == 0){
 	            inc = dgraph.incident(id);

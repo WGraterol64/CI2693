@@ -19,7 +19,7 @@ public class UNode<V,E> extends Node{
 		this.data = data;
 		this.weight = weight;
 		this.adjNodes = new HashSet<UNode<V,E>>();
-		this.adjEdges = new ArrayList<>();
+		this.incEdges = new ArrayList<Edge<V,E>>();
 		this.degree = 0;
 	}
 
