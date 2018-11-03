@@ -16,7 +16,7 @@ public interface Graph<V,E>{
 
 	public boolean addNode(Node<V,E> node);
 
-	public boolean addNode(String id, V dato, double weight);
+	public boolean addNode(String id, V data, double weight);
 
 	public Node getNode(String id);
 

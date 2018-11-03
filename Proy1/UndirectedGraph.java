@@ -12,18 +12,20 @@ public class UndirectedGraph<V,E> implements Graph{
 
 	public int numOfNodes; // Numero de nodos
 	public int numOfEdges; // Numero de aristas
-	public Set<Node<V,E> > nodeSet; // Set de nodos
-	public Set<Edge<V,E>> edgeSet; // Set de aristas
-	private Map<String,Node<V,E> > namesToNodes; // Mapa Identificadores -> Nodos
-	private Map<String,Edge<V,E>> namesToEdges; // Mapa Identificadores -> Aristas
+	public HashSet<UNode<V,E> > nodeSet; // Set de nodos
+	public HashSet<Edge<V,E>> edgeSet; // Set de aristas
+	private HashMap<String,UNode<V,E> > namesToNodes; // Mapa Identificadores -> Nodos
+	private HashMap<String,Edge<V,E>> namesToEdges; // Mapa Identificadores -> Aristas.
+	private Transformer<V> transV;
+	private Transformer<V> transE;
 
 	/**
 	* Constructor de la clase
 	**/
 	public UndirectedGraph(){
-		this.namesToNodes = new HashMap<String,Node<V,E> > ();
+		this.namesToNodes = new HashMap<String,UNode<V,E> > ();
 		this.namesToEdges = new HashMap<String,Edge<V,E> >();
-		this.nodeSet = new HashSet<Node<V,E> >();
+		this.nodeSet = new HashSet<UNode<V,E> >();
 		this.edgeSet = new HashSet<Edge<V,E> >();
 		this.numOfNodes = 0;
 		this.numOfEdges = 0;
@@ -135,26 +137,6 @@ public class UndirectedGraph<V,E> implements Graph{
 	}
 
 	/**
-	* Metodo que agrega un nodo al set de nodos del grafo
-	*
-	* @return Un booleano que especifica si el nodo se agrego satisfactoriamente
-	*
-	* @param node El nodo a agregar
-	*
-	**/
-	public boolean addNode(Node<V,E> node){
-
-		String id = node.getId();
-
-		if(namesToNodes.get(id) != null)
-			return false;
-
-		this.namesToNodes.put(id,node);
-		this.nodeSet.add(node);
-		this.numOfNodes++;
-	}
-
-	/**
 	* Metodo que crea y agrega un nodo al set de nodos del grafo
 	*
 	* @return Un booleano que especifica si el nodo se agrego satisfactoriamente
@@ -169,16 +151,40 @@ public class UndirectedGraph<V,E> implements Graph{
 		if(namesToNodes.get(id) != null)
 			return false;
 
-		Node<V,E> node = new Node<V,E>(id,data,weight);
+		UNode<V,E> node = new UNode(id,data,weight);
 		this.namesToNodes.put(id,node);
 		this.nodeSet.add(node);
 		this.numOfNodes++;
+		return true;
 
 	}
+	/**
+	* Metodo que agrega un nodo al set de nodos del grafo
+	*
+	* @return Un booleano que especifica si el nodo se agrego satisfactoriamente
+	*
+	* @param node El nodo a agregar
+	*
+	**/
+	
+	public boolean addNode(UNode<V,E> node){
 
-	public Node<V,E> getNode(String id) throws RuntimeException{
+		String id = node.getId();
 
-		Node<V,E>  node = namesToNodes.get(id);
+		if(namesToNodes.get(id) != null)
+			return false;
+
+		this.namesToNodes.put(id,node);
+		this.nodeSet.add(node);
+		this.numOfNodes++;
+		return true;
+	}
+
+	
+
+	public UNode<V,E> getNode(String id) throws RuntimeException{
+
+		UNode<V,E>  node = namesToNodes.get(id);
 		if(node == null)
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
 
@@ -199,8 +205,8 @@ public class UndirectedGraph<V,E> implements Graph{
 		if(!this.isNode(u) || !this.isNode(v))
 			return false;
 
-		Node<V,E> nodeU = getNode(u);
-		for( Edge<V,E> edge: nodeU.outEdges ){
+		UNode<V,E> nodeU = getNode(u);
+		for( Edge<V,E> edge: nodeU.incEdges ){
 			if(edge.getFNode().getId().equals(v) || edge.getSNode().getId().equals(v))
 				return true;
 		}
@@ -213,36 +219,36 @@ public class UndirectedGraph<V,E> implements Graph{
 		if(!isNode(id))
 			return false;
 
-		Node<V,E> nodeU = this.getNode(id);
+		UNode<V,E> nodeU = this.getNode(id);
 
-		for( Node<V,E>  nodeV : nodeU.sucNodes ){
+		for( UNode<V,E>  nodeV : nodeU.adjNodes ){
 			if(nodeV.getId().equals(id))
 				continue;
-			while(nodeV.sucNodes.contains(nodeU)){
-				nodeV.sucNodes.remove(nodeU);
-				nodeV.outdegree--;
+			while(nodeV.adjNodes.contains(nodeU)){
+				nodeV.adjNodes.remove(nodeU);
+				nodeV.degree--;
 			}
 
-			Stack toRemove = new Stack<Edge<V,E> >();
-			for(Edge<V,E> edge : nodeV.outEdges)
+			Stack<Edge<V,E>> toRemove = new Stack<>();
+			for(Edge<V,E> edge : nodeV.incEdges)
 				if(edge.getFNode().getId().equals(id)
 					|| edge.getSNode().getId().equals(id))
 						toRemove.push(edge);
 
 			while(!toRemove.empty()){
 				Edge<V,E> e = toRemove.pop();
-				nodeV.outEdges.remove(e);
+				nodeV.incEdges.remove(e);
 				this.namesToEdges.remove(e.getId());
 				this.edgeSet.remove(e);
 			}
 		}
 
-		for(Edge<V,E> edge : nodeU.outEdges){
+		for(Edge<V,E> edge : nodeU.incEdges){
 			if(edge.getFNode().getId().equals(id)
 				|| edge.getSNode().getId().equals(id)){
 
 					this.edgeSet.remove(edge);
-					this.namesToEdges.remove(e.getId());
+					this.namesToEdges.remove(edge.getId());
 			}
 		}
 
@@ -251,17 +257,17 @@ public class UndirectedGraph<V,E> implements Graph{
 		this.namesToNodes.remove(id);
 	}
 
-	public ArrayList<Node<V,E> > nodeList(){
+	public ArrayList<UNode<V,E> > nodeList(){
 
-		List<Node<V,E> > list = new ArrayList<>(numOfNodes);
-		for( Node<V,E>  v : this.nodeSet)
+		ArrayList<UNode<V,E> > list = new ArrayList<>(numOfNodes);
+		for( UNode<V,E>  v : this.nodeSet)
 			list.add(v);
 		return list;
 	}
 
 	public ArrayList<Edge<V,E> > edgeList(){
 
-		List <Edge<V,E> > list = new ArrayList<>(numOfEdges);
+		ArrayList <Edge<V,E> > list = new ArrayList<>(numOfEdges);
 		for( Edge<V,E> e : this.edgeSet)
 			list.add(e);
 		return list;
@@ -272,18 +278,18 @@ public class UndirectedGraph<V,E> implements Graph{
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
 
-		Node<V,E>  v = namesToNodes.get(id);
-		return v.outdegree;
+		UNode<V,E>  v = namesToNodes.get(id);
+		return v.degree;
 	}
 
-	public ArrayList<Node<V,E> > adjacency(String id) throws RuntimeException{
+	public ArrayList<UNode<V,E> > adjacency(String id) throws RuntimeException{
 
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
 
-		Node<V,E>  node  = this.namesToNodes.get(id);
-		List<Node<V,E> > list = new ArrayList<Node<V,E> >(node.outegree);
-		for( Node<V,E> v : node.sucNodes )
+		UNode<V,E>  node  = this.namesToNodes.get(id);
+		ArrayList<UNode<V,E> > list = new ArrayList<>(node.degree);
+		for( UNode<V,E> v : node.adjNodes )
 			list.add(v);
 		return list;
 	}
@@ -292,19 +298,22 @@ public class UndirectedGraph<V,E> implements Graph{
 
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-		Node<V,E>  node  = this.namesToNodes.get(id);
-		return node.outEdges;
+		UNode<V,E>  node  = this.namesToNodes.get(id);
+		ArrayList<Edge<V,E>> list = new ArrayList<>();
+		for( Edge<V,E> edge : node.incEdges )
+			list.add(edge);
+		return list;
 	}
 
 	public UndirectedGraph<V,E> clone(){
 
-		Graph newGraph = new UndirectedGraph();
-		newGraph.numOfArcs = this.numOfArcs;
+		UndirectedGraph<V,E> newGraph = new UndirectedGraph();
+		newGraph.numOfEdges = this.numOfEdges;
 		newGraph.numOfNodes = this.numOfNodes;
-		newGraph.setOfNodes = (HashSet)this.setOfNodes.clone();
-		newGraph.namesToNodes = (HashMap)this.namesToNodes.clone();
-		newGraph.setOfArcs = (HashSet)this.setOfArcs.clone();
-		newGraph.namesToArcs = (HashMap)this.namesToArcs.clone();
+		newGraph.nodeSet.addAll(this.nodeSet);
+		newGraph.namesToNodes.putAll(this.namesToNodes);
+		newGraph.edgeSet.addAll(this.edgeSet);
+		newGraph.namesToEdges.putAll(this.namesToEdges);
 		return newGraph;
 
 	}
@@ -313,12 +322,12 @@ public class UndirectedGraph<V,E> implements Graph{
 
 		System.out.print("Este es un grafo no dirigido.\n");
 		System.out.print("Este grafo contiene "+numOfNodes+" nodos: \n");
-		for(Node<V,E> node : this.nodeSet){
+		for(UNode<V,E> node : this.nodeSet){
 			String s = node.toString();
 			System.out.print(s+"\n");
 		}
 		System.out.print("Este grafo contiene "+numOfEdges+" aristas: \n");
-		for(Edges<E> edge : this.edgeSet){
+		for(Edge<V,E> edge : this.edgeSet){
 			String s = edge.toString();
 			System.out.print(s+"\n");
 		}
@@ -333,35 +342,35 @@ public class UndirectedGraph<V,E> implements Graph{
 			return false;
 
 		edgeSet.add(edge);
-		namesToNodes.put(id,edge);
+		namesToEdges.put(id,edge);
 		numOfEdges++;
-		Node<V,E>  nodeA = edge.getFNode();
-		Node<V,E>  nodeB = edge.getSNode();
-		nodeA.sucNodes.add(nodeB);
-		nodeB.sucNodes.add(nodeA);
-		nodeA.outEdges.add(edge);
-		nodeB.outEdges.add(edge);
-		nodeA.outdegree++;
-		nodeB.outdegree++;
+		UNode<V,E>  nodeA = edge.getFNode();
+		UNode<V,E>  nodeB = edge.getSNode();
+		nodeA.adjNodes.add(nodeB);
+		nodeB.adjNodes.add(nodeA);
+		nodeA.incEdges.add(edge);
+		nodeB.incEdges.add(edge);
+		nodeA.degree++;
+		nodeB.degree++;
 		return true;
 	}
 
 	public boolean addEdge(String id, E data, double weight, String u, String v){
 
-		Node<V,E> nodeA = this.namesToNodes.get(u);
-		Node<V,E> nodeB = this.namesToNodes.get(v);
-		if(nodeA == null || nodeB == null || isEdge())
+		UNode<V,E> nodeA = this.namesToNodes.get(u);
+		UNode<V,E> nodeB = this.namesToNodes.get(v);
+		if(nodeA == null || nodeB == null || isEdge(id))
 			return false;
 
-		Edge<V,E> edge = new Edge<V,E>(id,data,weight,nodeA,nodeB);
+		Edge<V,E> edge = new Edge<>(id,data,weight,nodeA,nodeB);
 		edgeSet.add(edge);
-		namesToNodes.put(id,edge);
-		nodeA.sucNodes.add(nodeB);
-		nodeB.sucNodes.add(nodeA);
-		nodeA.outEdges.add(edge);
-		nodeB.outEdges.add(edge);
-		nodeA.indegree++;
-		nodeB.indegree++;
+		namesToEdges.put(id,edge);
+		nodeA.adjNodes.add(nodeB);
+		nodeB.adjNodes.add(nodeA);
+		nodeA.incEdges.add(edge);
+		nodeB.incEdges.add(edge);
+		nodeA.degree++;
+		nodeB.degree++;
 		numOfEdges++;
 		return true;
 	}
@@ -372,18 +381,18 @@ public class UndirectedGraph<V,E> implements Graph{
 			return false;
 
 		Edge<V,E> edge = getEdge(id);
-		Node<V,E> nodeA = edge.getFNode();
-		Node<V,E> nodeB = edge.getSNode();
+		UNode<V,E> nodeA = edge.getFNode();
+		UNode<V,E> nodeB = edge.getSNode();
 
-		edgeSet.remove(e);
+		edgeSet.remove(edge);
 		namesToEdges.remove(id);
 		numOfEdges--;
-		nodeA.sucNodes.remove(nodeB);
-		nodeB.sucNodes.remove(nodeA);
-		nodeA.outEdges.remove(edge);
-		nodeB.outEdges.remove(edge);
-		nodeA.indegree--;
-		nodeB.indegree--;
+		nodeA.adjNodes.remove(nodeB);
+		nodeB.adjNodes.remove(nodeA);
+		nodeA.incEdges.remove(edge);
+		nodeB.incEdges.remove(edge);
+		nodeA.degree--;
+		nodeB.degree--;
 		return true;
 
 	}

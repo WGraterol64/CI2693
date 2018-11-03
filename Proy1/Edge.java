@@ -14,10 +14,10 @@ public class Edge<V,E> extends GraphEdges{
 	private String id; 
 	private E data;
 	private double weight;
-	private Node<V,E> nodeA;
-	private Node<V,E> nodeB;
+	private UNode<V,E> nodeA;
+	private UNode<V,E> nodeB;
 
-	public Edge (String id, E data, double weight, Node<V,E> nodeA, Node<V,E> nodeB){
+	public Edge (String id, E data, double weight, UNode<V,E> nodeA, UNode<V,E> nodeB){
 		this.id = id;
 		this.data = data;
 		this.weight = weight;
@@ -49,11 +49,12 @@ public class Edge<V,E> extends GraphEdges{
 		return edge;
 	}
 
-	public Node<V,E> getFNode(){
+	public UNode<V,E> getFNode(){
 		return this.nodeA;
 	}
 
-	public Node<V,E> getSNode(){
+	public UNode<V,E> getSNode(){
 		return this.nodeB;
 	}
+
 }

@@ -8,13 +8,10 @@ import java.util.*;
 public class Arc<V,E> extends GraphEdges{
 
 
-	private String id; 
-	private E data;
-	private double weight;
-	private Node initNode;
-	private Node endNode;
+	private String id;  private E data; private double weight; private
+	DNode<V,E> initNode; private DNode<V,E> endNode;
 
-	public Arc(String id, E data, double weight, Node<V,E> initNode, Node<V,E> endNode){
+	public Arc(String id, E data, double weight, DNode<V,E> initNode, DNode<V,E> endNode){
 		this.id = id;
 		this.data = data;
 		this.weight = weight;
@@ -46,11 +43,12 @@ public class Arc<V,E> extends GraphEdges{
 		return edge;
 	}
 
-	public Node<V,E> getInitNode(){
+	public DNode<V,E> getInitNode(){
 		return this.initNode;
 	}
 
-	public Node<V,E> getEndNode(){
+	public DNode<V,E> getEndNode(){
 		return this.endNode;
 	}
+
 }

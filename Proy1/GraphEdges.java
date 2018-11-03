@@ -18,5 +18,4 @@ public abstract class GraphEdges<V,E>{
 	public abstract E getData();
 
 	public abstract String toString();
-
 }

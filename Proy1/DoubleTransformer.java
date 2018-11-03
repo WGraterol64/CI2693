@@ -16,7 +16,7 @@ public class DoubleTransformer<V> implements Transformer<Double>{
       return Double.parseDouble(dato);
     }catch(NumberFormatException e){
       throw new IllegalArgumentException("El dato dado no es un doble");
-      return;
+      return 0.0;
     }
 
   }

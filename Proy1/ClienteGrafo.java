@@ -42,12 +42,19 @@ public class ClienteGrafo{
 	*/
 	public static void cargarGrafo(String archivo, UndirectedGraph ugraph, DirectedGraph dgraph,
                                        Transformer transV, Transformer transE)
-	  throws IllegalArgumentException{
+	  throws IllegalArgumentException, IOException{
+      
       BufferedReader read = new BufferedReader(new FileReader(archivo));
-	    String vType = "";
+	  String vType = "";
       String eType = "";
+      String line;
 	    for(int i=0; i<5; i++){
-	        String line = read.readLine();
+	        try{
+	        	line = read.readLine();
+	        }catch(IOException e){
+	        	throw new IOException();
+	        }
+	        
 	        if(i==0){
 	            vType = line.trim();
 	        }else if(i==1){
@@ -534,7 +541,7 @@ public class ClienteGrafo{
       }catch(IOException e){
         throw new IOException("Error de entrada");
       }
-	    ArrayList<Node > adj = new ArrayList();
+	    ArrayList<Node> adj = new ArrayList();
 	    try{
 	      if(type == 0){
 	            adj = dgraph.adjacency(id);
@@ -565,7 +572,7 @@ public class ClienteGrafo{
       }catch(IOException e){
         throw new IOException("Error de entrada");
       }
-	    ArrayList<Edge> inc = new ArrayList();
+	    ArrayList<GraphEdges> inc = new ArrayList();
 	    try{
 	        if(type == 0){
 	            inc = dgraph.incident(id);
