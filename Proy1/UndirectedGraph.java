@@ -411,57 +411,79 @@ public class UndirectedGraph<V,E> implements Graph{
 	* Metodo para agregar una arista al grafo
 	* @param edge Arista a agregar
 	* @return booleano que especifica si se agrego satisfactoriamente
-	*//
+	**/
 	public boolean addEdge(Edge<V,E> edge){
 
+		// Obtenemos el id
 		String id = edge.getId();
 
+		// Si ya pertenece al grafo, no realizamos la operacion
 		if(isEdge(id))
 			return false;
 
-		edgeSet.add(edge);
-		namesToEdges.put(id,edge);
-		numOfEdges++;
+		edgeSet.add(edge); // Agregamos el edge al conjunto
+		namesToEdges.put(id,edge); // Agregamos la arista al mapa
+		numOfEdges++; // Aumentamos el numero de aristas
 		UNode<V,E>  nodeA = edge.getFNode();
 		UNode<V,E>  nodeB = edge.getSNode();
-		nodeA.adjNodes.add(nodeB);
-		nodeB.adjNodes.add(nodeA);
-		nodeA.incEdges.add(edge);
-		nodeB.incEdges.add(edge);
-		nodeA.degree++;
+		nodeA.adjNodes.add(nodeB);  // Agregamos B a los adyacentes de A
+		nodeB.adjNodes.add(nodeA); // Agregamos A a los adyacentes de B
+		nodeA.incEdges.add(edge); // Agregamos la arista a las incidentes a A
+		nodeB.incEdges.add(edge); // Agregamos la arista a las incidentes a B
+		nodeA.degree++; // Aumentamos el grado de los nodos
 		nodeB.degree++;
 		return true;
 	}
 
+	/** 
+	* Metodo para agregar una arista al grafo
+	* @param id Identificador de la arista
+	* @param data dato de la arista
+	* @param weight peso de la arista
+	* @param u Identificador del primer nodo
+	* @param v Identificador del segundo nodo
+	* @return booleano que especifica si se agrego satisfactoriamente
+	**/
 	public boolean addEdge(String id, E data, double weight, String u, String v){
 
+		// Extraemos los nodos extremos
 		UNode<V,E> nodeA = this.namesToNodes.get(u);
 		UNode<V,E> nodeB = this.namesToNodes.get(v);
+		// Revisamos si los nodos pertenecen al grafo, o si ya existia una
+		// arista con ese identificador
 		if(nodeA == null || nodeB == null || isEdge(id))
 			return false;
 
-		Edge<V,E> edge = new Edge<>(id,data,weight,nodeA,nodeB);
-		edgeSet.add(edge);
-		namesToEdges.put(id,edge);
-		nodeA.adjNodes.add(nodeB);
-		nodeB.adjNodes.add(nodeA);
-		nodeA.incEdges.add(edge);
-		nodeB.incEdges.add(edge);
+		// Creamos el nuevo edge
+		Edge<V,E> edge = new Edge<V,E>(id,data,weight,nodeA,nodeB);
+		edgeSet.add(edge); // Agregamos el edge al conjunto
+		namesToEdges.put(id,edge);  // Agregamos la arista al mapa
+		nodeA.adjNodes.add(nodeB); // Agregamos B a los adyacentes de A
+		nodeB.adjNodes.add(nodeA);  // Agregamos A a los adyacentes de B
+		nodeA.incEdges.add(edge); // Agregamos la arista a las incidentes a A
+		nodeB.incEdges.add(edge); // Agregamos la arista a las incidentes a B
+		// Aumentamos el grado de los nodos
 		nodeA.degree++;
 		nodeB.degree++;
 		numOfEdges++;
 		return true;
 	}
 
+	/** 
+	* Metodo para eliminar una arista del grafo
+	* @param id Identificador dla arista a eliminar
+	* @return booleano que especifica si se elimino satisfactoriamente
+	**/
 	public boolean removeEdge(String id){
 
+		// Verificamos si la arista pertenece al grafo
 		if(!isEdge(id))
 			return false;
 
 		Edge<V,E> edge = getEdge(id);
 		UNode<V,E> nodeA = edge.getFNode();
 		UNode<V,E> nodeB = edge.getSNode();
-
+		// Eliminamos todas las incidencias de la arista en el grafo
 		edgeSet.remove(edge);
 		namesToEdges.remove(id);
 		numOfEdges--;
@@ -475,6 +497,12 @@ public class UndirectedGraph<V,E> implements Graph{
 
 	}
 
+	/**
+	* Metodo utilizado para buscar una arista en el grafo
+	* @return Arista cuyo identificador es id
+	* @param id Identificador de la arista
+	* @throws RuntimeException si no existe tal nodo
+	**/
 	public Edge<V,E> getEdge(String id) throws RuntimeException{
 
 		Edge<V,E> edge = this.namesToEdges.get(id);

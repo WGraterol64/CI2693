@@ -413,7 +413,7 @@ public class DirectedGraph<V,E> implements Graph{
 	* Metodo para agregar un arco al grafo
 	* @param arc Arco a agregar
 	* @return booleano que especifica si se agrego satisfactoriamente
-	*//
+	**/
 	public boolean addArc(Arc<V,E> arc){
 		
 		String id = arc.getId();
@@ -443,7 +443,7 @@ public class DirectedGraph<V,E> implements Graph{
 	* @param u Identificador del nodo inicial
 	* @param v Identificador del nodo final
 	* @return booleano que especifica si se agrego satisfactoriamente
-	*//
+	**/
 	public boolean addArc(String id, E data, double weight, String u, String v){
 
 		DNode<V,E> nodeA = this.namesToNodes.get(u);
@@ -469,7 +469,7 @@ public class DirectedGraph<V,E> implements Graph{
 	* Metodo para eliminar un arco del grafo
 	* @param id Identificador del arco a eliminar
 	* @return booleano que especifica si se elimino satisfactoriamente
-	*//
+	**/
 	public boolean removeArc(String id){
 		// Verificamos si el arco pertenece al grafo
 		if(!isEdge(id))
