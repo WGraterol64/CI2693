@@ -22,8 +22,8 @@ public class DirectedGraph<V,E> implements Graph{
 	/**
 	* Constructor de la clase
 	**/
-	public DirectedGraph(){ 
-		
+	public DirectedGraph(){
+
 		this.namesToNodes = new HashMap<String,DNode<V,E>>();
 		this.namesToArcs = new HashMap<String,Arc<V,E>>();
 		this.nodeSet = new HashSet<DNode<V,E>>();
@@ -44,7 +44,7 @@ public class DirectedGraph<V,E> implements Graph{
 	public boolean loadGraph(String fileName)
       throws IllegalArgumentException, UnsupportedOperationException, IOException{
 		BufferedReader read = new BufferedReader(new FileReader(fileName));
-    
+
 	String vType = "", eType = "", line;
 	int n = 0, m = 0;
 	boolean result;
@@ -141,14 +141,14 @@ public class DirectedGraph<V,E> implements Graph{
 		return this.numOfArcs;
 	}
 
-	/** 
+	/**
 	* Metodo que agrega un nodo al grafo
 	* @param node Nodo a agregar
 	* @return booleano que identifica si se agrego exitosamente
 	**/
 	public boolean adNode(DNode<V,E> node){
 
-		String id = node.getId(); 
+		String id = node.getId();
 
 		// Verificamos si el nodo existe en el grafo
 		if(namesToNodes.get(id) != null)
@@ -161,7 +161,7 @@ public class DirectedGraph<V,E> implements Graph{
 		return true;
 	}
 
-	/** 
+	/**
 	* Metodo que agrega un nodo al grafo
 	* @param id Identificador del nodo a agregar
 	* @param data Dato del nodo a agregar
@@ -185,9 +185,9 @@ public class DirectedGraph<V,E> implements Graph{
 	* Metodo utilizado para buscar un nodo en el grafo
 	* @return El nodo cuyo identificador es id
 	* @param id Identificador del nodo
-	* @throws RuntimeException si no existe tal nodo
+	* @throws NoSuchElementException si no existe tal nodo
 	**/
-	public DNode<V,E> getNode(String id) throws RuntimeException{
+	public DNode<V,E> getNode(String id) throws NoSuchElementException{
 
 		DNode<V,E> node = namesToNodes.get(id); // Buscamos al nodo en el mapa
 		// Si no existe, se arroja una excepcion
@@ -210,7 +210,7 @@ public class DirectedGraph<V,E> implements Graph{
 	/**
 	* Metodo que dice si existe en el grafo un arco con identificador id
 	* @param id Identificador del arco
-	* @return Booleano que especifica si el arco pertenece al grafo 
+	* @return Booleano que especifica si el arco pertenece al grafo
 	**/
 	public boolean isEdge(String id){
 		return (this.namesToArcs.get(id) != null);
@@ -220,18 +220,18 @@ public class DirectedGraph<V,E> implements Graph{
 	* Metodo que dice si existe en el grafo un arco desde u hasta v
 	* @param u Identificador del nodo inicial del arco
 	* @param v Identificador del nodo final del arco
-	* @return Booleano que especifica si el arco pertenece al grafo 
+	* @return Booleano que especifica si el arco pertenece al grafo
 	**/
 	public boolean isEdge(String u, String v){
 
 		// Verificamos que u y v pertenezcan al grafo
-		if(!this.isNode(u) || !this.isNode(v)) 
+		if(!this.isNode(u) || !this.isNode(v))
 			return false;
 
-		DNode<V,E> nodeU = getNode(u); 
+		DNode<V,E> nodeU = getNode(u);
 		// Buscamos en los arcos que salen de u
 		for( Arc<V,E> arc: nodeU.outEdges ){
-			if(arc.getEndNode().getId().equals(v)) 
+			if(arc.getEndNode().getId().equals(v))
 				return true;
 		}
 
@@ -252,11 +252,11 @@ public class DirectedGraph<V,E> implements Graph{
 
 		// Buscamos el nodo con identificador id
 		DNode<V,E> nodeU = this.getNode(id);
-		
-		// Para todos los predecesores V del nodo U
-		for( DNode<V,E>  nodeV : nodeU.preNodes ){ 
 
-			if(nodeV.getId().equals(id)) 
+		// Para todos los predecesores V del nodo U
+		for( DNode<V,E>  nodeV : nodeU.preNodes ){
+
+			if(nodeV.getId().equals(id))
 				continue;
 
 			// Eliminamos U de la lista de sucesores de V
@@ -282,7 +282,7 @@ public class DirectedGraph<V,E> implements Graph{
 			}
 		}
 
-		// Eliminamos todos los arcos que salen de U y 
+		// Eliminamos todos los arcos que salen de U y
 		// reducimos el grado interno de los nodos terminales
 		for(Arc<V,E> arc : nodeU.outEdges){
 			DNode<V,E> nodeV = arc.getEndNode();
@@ -290,20 +290,20 @@ public class DirectedGraph<V,E> implements Graph{
 			this.arcSet.remove(arc);
 			this.namesToArcs.remove(arc.getId());
 		}
-		
+
 		// Eliminamos el nodo del conjunto de nodos del grafo
 		this.nodeSet.remove(nodeU);
 		this.numOfNodes--; // Se reduce el numero de nodos del grafo
 		this.namesToNodes.remove(id); // Se saca del mapa
-		return true;	
+		return true;
 	}
 
 	/**
 	*  Metodo que busca los nodos de un grafo
-	*  @return devuelve una lista con los nodos del grafo  
+	*  @return devuelve una lista con los nodos del grafo
 	**/
 	public ArrayList<DNode<V,E>> nodeList(){
-		
+
 		ArrayList<DNode<V,E> > list = new ArrayList<DNode<V,E>>(numOfNodes);
 		for( DNode<V,E>  v : this.nodeSet)
 			list.add(v);
@@ -315,7 +315,7 @@ public class DirectedGraph<V,E> implements Graph{
 	* @return devuelve una lista con los lados del grafo
 	**/
 	public ArrayList<Arc<V,E>> edgeList(){
-		
+
 		ArrayList <Arc<V,E> > list = new ArrayList<Arc<V,E>>(numOfArcs);
 		for( Arc<V,E> a : this.arcSet)
 			list.add(a);
@@ -325,27 +325,27 @@ public class DirectedGraph<V,E> implements Graph{
 	/**
 	* Metodo que calcula el grado de un nodo
 	* @return Grado del nodo
-	* @throws RuntimeException Si el nodo no existe
+	* @throws NoSuchElementException Si el nodo no existe
 	**/
-	public int degree(String id)  throws RuntimeException{
-		
+	public int degree(String id)  throws NoSuchElementException{
+
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-		
+
 		DNode<V,E> v = namesToNodes.get(id);
 		return v.indegree + v.outdegree;
-	}	
+	}
 
 	/**
 	* Metodo que busca nodos adyacentes a un nodo con identificador id
 	* @return devuelve una lista de adyacentes del nodo
-	* @throws RuntimeException Si el nodo no existe
+	* @throws NoSuchElementException Si el nodo no existe
 	**/
-	public ArrayList<DNode<V,E>> adjacency(String id) throws RuntimeException{
+	public ArrayList<DNode<V,E>> adjacency(String id) throws NoSuchElementException{
 
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-		
+
 		DNode<V,E>  node  = this.namesToNodes.get(id);
 		ArrayList<DNode<V,E> > list = new ArrayList<DNode<V,E> >(node.outdegree);
 		for( DNode<V,E> v : node.sucNodes )
@@ -358,9 +358,9 @@ public class DirectedGraph<V,E> implements Graph{
 	/**
 	* Metodo que busca arcos incidentes a un nodo con identificador id
 	* @return devuelve una lista de lados incidentes al nodo
-	* @throws RuntimeException Si el nodo no existe
+	* @throws NoSuchElementException Si el nodo no existe
 	**/
-	public ArrayList<Arc<V,E>> incident(String id) throws RuntimeException{
+	public ArrayList<Arc<V,E>> incident(String id) throws NoSuchElementException{
 
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
@@ -409,15 +409,15 @@ public class DirectedGraph<V,E> implements Graph{
 		return out;
 	}
 
-	/** 
+	/**
 	* Metodo para agregar un arco al grafo
 	* @param arc Arco a agregar
 	* @return booleano que especifica si se agrego satisfactoriamente
 	**/
 	public boolean addArc(Arc<V,E> arc){
-		
+
 		String id = arc.getId();
-		
+
 		// Verificamos si el arco pertenece al grafo
 		if(isEdge(id))
 			return false;
@@ -435,7 +435,7 @@ public class DirectedGraph<V,E> implements Graph{
 		nodeB.indegree++;
 		return true;
 	}
-	/** 
+	/**
 	* Metodo para agregar un arco al grafo
 	* @param id Identificador del arco
 	* @param data Dato del arco
@@ -465,7 +465,7 @@ public class DirectedGraph<V,E> implements Graph{
 		return true;
 	}
 
-	/** 
+	/**
 	* Metodo para eliminar un arco del grafo
 	* @param id Identificador del arco a eliminar
 	* @return booleano que especifica si se elimino satisfactoriamente
@@ -495,7 +495,7 @@ public class DirectedGraph<V,E> implements Graph{
 	* Metodo utilizado para buscar un arco en el grafo
 	* @return El arco cuyo identificador es id
 	* @param id Identificador del arco
-	* @throws RuntimeException si no existe tal nodo
+	* @throws NoSuchElementException si no existe tal nodo
 	**/
 	public Arc<V,E> getArc(String id){
 		Arc<V,E> arc = this.namesToArcs.get(id);
@@ -506,26 +506,28 @@ public class DirectedGraph<V,E> implements Graph{
 
 	/**
 	* Metodo que calcula el grado interno de un nodo
+	* @param id identificador del nodo
 	* @return Grado del interno nodo
-	* @throws RuntimeException Si el nodo no existe
+	* @throws NoSuchElementException Si el nodo no existe
 	**/
 	public int inDegree(String id){
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-		
+
 		DNode<V,E> v = namesToNodes.get(id);
 		return v.indegree;
 	}
 
 	/**
 	* Metodo que calcula el grado externo de un nodo
+	* @param id identificador del nodo
 	* @return Grado externo del nodo
-	* @throws RuntimeException Si el nodo no existe
+	* @throws NoSuchElementException Si el nodo no existe
 	**/
 	public int outDegree(String id){
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-		
+
 		DNode<V,E> v = namesToNodes.get(id);
 		return v.outdegree;
 	}
@@ -534,7 +536,7 @@ public class DirectedGraph<V,E> implements Graph{
 	* Metodo que busca nodos sucesores a un nodo con identificador id
 	* @param id Identificador del nodo
 	* @return devuelve una lista de sucesores del nodo
-	* @throws RuntimeException Si el nodo no existe
+	* @throws NoSuchElementException Si el nodo no existe
 	**/
 	public ArrayList<DNode<V,E>> successor(String id){
 		if(!isNode(id))
@@ -550,7 +552,7 @@ public class DirectedGraph<V,E> implements Graph{
 	* Metodo que busca nodos predecisers a un nodo con identificador id
 	* @param id Identificador del nodo
 	* @return devuelve una lista de predecesores del nodo
-	* @throws RuntimeException Si el nodo no existe
+	* @throws NoSuchElementException Si el nodo no existe
 	**/
 	public ArrayList<DNode<V,E>> predecessor(String id){
 		if(!isNode(id))

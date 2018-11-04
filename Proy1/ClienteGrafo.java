@@ -17,6 +17,16 @@ public class ClienteGrafo{
   	/**
   	* Inicializa la creacion de un grafo desde un archivo
   	* Le solicita al usuario el nombre del archivo donde esta el grafo.
+    *
+    * @param ugraph es el grafo no dirigido sobre el que se cargara el Archivo
+    *
+    * @param dgraph es el digrafo sobre el que se cargara el Archivo
+    *
+    * @param transV es el parseador para los datos de los vertices
+    *
+    * @param transE es el parseador para los datos de los lados
+    *
+    * @throws IOException si hay problemas leyendo datos por el terminal
   	*/
  	public static void crearGrafoArchivo(UndirectedGraph ugraph, DirectedGraph dgraph,
                                        Transformer transV, Transformer transE)
@@ -30,7 +40,11 @@ public class ClienteGrafo{
       throw new IOException(i);
       }
     	archivo = archivo.trim();
-    	cargarGrafo(archivo, ugraph, dgraph, transV, transE);
+      try{
+          cargarGrafo(archivo, ugraph, dgraph, transV, transE);
+      }catch(IllegalArgumentException | IOException e){
+        throw new IOException(" Hubo un error al cargar el archivo");
+      }
   	}
 
 	/**
@@ -38,23 +52,33 @@ public class ClienteGrafo{
 	*
 	* @param archivo es el archivo en el que se guarda la informacion del grafo
 	*
+  * @param ugraph es el grafo no dirigido sobre el que se cargara el Archivo
+  *
+  * @param dgraph es el digrafo sobre el que se cargara el Archivo
+  *
+  * @param transV es el parseador para los datos de los vertices
+  *
+  * @param transE es el parseador para los datos de los lados
+  *
+  * @throws IOException si hay problemas leyendo datos por el terminal
+  *
 	* @throws IllegalArgumentException si el formato del archivo no es valido
 	*/
 	public static void cargarGrafo(String archivo, UndirectedGraph ugraph, DirectedGraph dgraph,
                                        Transformer transV, Transformer transE)
 	  throws IllegalArgumentException, IOException{
-      
+
       BufferedReader read = new BufferedReader(new FileReader(archivo));
-	  String vType = "";
+	    String vType = "";
       String eType = "";
       String line;
 	    for(int i=0; i<5; i++){
 	        try{
 	        	line = read.readLine();
 	        }catch(IOException e){
-	        	throw new IOException();
+	        	throw new IOException("Entrada no valida");
 	        }
-	        
+
 	        if(i==0){
 	            vType = line.trim();
 	        }else if(i==1){
@@ -89,11 +113,18 @@ public class ClienteGrafo{
 	  }
 
 	  /**
-	  * Crea un grafo no dirigido vacio que se mantendra como el atributo ugraph
-	  * de la clase. El metodo recibe del usuario los datos necesarios para la creacion
-	  * del grafo.
+	  * Crea un grafo no dirigido vacio . El metodo recibe del usuario los datos
+	  * necesarios para la creacion del grafo.
 	  *
-	  * @throws IllegalArgumentException si los daros que da el usuario no son validos
+    * @param ugraph es la variable donde se guardara el grafo no dirigido que se creara
+    *
+    * @param transV es el parseador para los datos de los vertices del grafo nuevo
+    *
+    * @param transE es el parseador para los datos de los lados del grafo nuevo
+    *
+    * @throws IOException si hay problemas leyendo datos por el terminal
+    *
+	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
 	  */
 	  public static void crearGrafoNoDirigido(UndirectedGraph ugraph, Transformer transV,
                                             Transformer transE)
@@ -126,11 +157,17 @@ public class ClienteGrafo{
 	  }
 
 	  /**
-	  * Inicializa el grafo no dirigido de esta clase
+	  * Inicializa el grafo no dirigido
 	  *
 	  * @param vType es el tipo de dato de los vertices
 	  *
 	  * @param eType es el tipo de dato de los lados
+    *
+    * @param ugraph es el grafo no dirigido que se inicializara
+    *
+    * @param transV es el parseador para los datos de los vertices que se inicializara
+    *
+    * @param transE es el parseador para los datos de los lados que se inicializara
 	  *
 	  * @throws IllegalArgumentException si el formato de los argumentos no es el esperado
 	  */
@@ -179,11 +216,18 @@ public class ClienteGrafo{
 	    }
 	  }
 
-	  /**
-	  * Crea un grafo no dirigido vacio que se mantendra como el atributo ugraph
-	  * de la clase. El metodo recibe del usuario los datos necesarios para la creacion
-	  * del grafo.
+    /**
+	  * Crea un digrafo . El metodo recibe del usuario los datos
+	  * necesarios para la creacion del grafo.
 	  *
+    * @param dgraph es la variable donde se guardara el digrafo que se creara
+    *
+    * @param transV es el parseador para los datos de los vertices del grafo nuevo
+    *
+    * @param transE es el parseador para los datos de los lados del grafo nuevo
+    *
+    * @throws IOException si hay problemas leyendo datos por el terminal
+    *
 	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
 	  */
 	  public static void crearDigrafo(DirectedGraph dgraph, Transformer transV,
@@ -222,6 +266,12 @@ public class ClienteGrafo{
 	  * @param vType es el tipo de dato de los vertices
 	  *
 	  * @param eType es el tipo de dato de los lados
+    *
+    * @param dgraph es el digrafo que se inicializara
+    *
+    * @param transV es el parseador para los datos de los vertices que se inicializara
+    *
+    * @param transE es el parseador para los datos de los lados que se inicializara
 	  *
 	  * @throws IllegalArgumentException si el formato de los argumentos no es el esperado
 	  */
@@ -232,7 +282,7 @@ public class ClienteGrafo{
 	      dgraph = new DirectedGraph<Boolean,Boolean>();
 	      transV = new BooleanTransformer();
 	      transE = new BooleanTransformer();
-	    }else if(vType.equals("B")  && eType.equals("D")){ 
+	    }else if(vType.equals("B")  && eType.equals("D")){
 	      dgraph = new DirectedGraph<Boolean, Double>();
 	      transV = new BooleanTransformer();
 	      transE = new DoubleTransformer();
@@ -244,7 +294,7 @@ public class ClienteGrafo{
 	   	  System.out.println("Aqui tambien");
 	      dgraph = new DirectedGraph<Double,Boolean>();
 	      transV = new DoubleTransformer();
-	      transE = new BooleanTransformer();	
+	      transE = new BooleanTransformer();
 	    }else if(vType.equals("D") && eType.equals("D")){
 	      dgraph = new DirectedGraph<Double,Double>();
 	      transV = new DoubleTransformer();
@@ -274,11 +324,18 @@ public class ClienteGrafo{
 	  * Agrega un nodo en el grafo en el que se este usando. Todos los datos son
 	  * solicitados internamente al usuario.
 	  *
+    * @param ugraph es el grafo no dirigido en el que se agregaran los nodos
+    *
+    * @param dgraph es el digrafo en el que se agregaran los nodos
+    *
+    * @param transV es el parseador para los datos de los vertices
+    *
 	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
 	  *                                  o si hay algun vertice con el mismo id.
+    * @throws IOException si hay errores en la entrada por el terminal
 	  */
 	  public static void agregarNodo(UndirectedGraph ugraph, DirectedGraph dgraph,
-                                         Transformer transV, Transformer transE)
+                                         Transformer transV)
 	  throws IllegalArgumentException, IOException{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del vertice: ");
@@ -330,10 +387,18 @@ public class ClienteGrafo{
 	  * Agrega un lado en el grafo en el que se este usando. Todos los datos son
 	  * solicitados internamente al usuario.
 	  *
+    * @param ugraph es el grafo no dirigido en el que se agregaran los lados
+    *
+    * @param dgraph es el digrafo sobre el que se agregaran los lados
+    *
+    * @param transE es el parseador para los datos de los lados
+    *
 	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
+    *
+    * @throws IOException si hay errores en la entrada por el terminal
 	  */
 	  public static void agregarLado(UndirectedGraph ugraph, DirectedGraph dgraph,
-                                         Transformer transV, Transformer transE)
+                                         Transformer transE)
 	  throws IllegalArgumentException, IOException{
 	      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	      System.out.println("Introduzca el id del lado: ");
@@ -374,6 +439,10 @@ public class ClienteGrafo{
 	  /**
 	  * Imrpime en pantalla el numero de vertices que hay en el grafo. Le solicita
 	  * al usuario el id del nodo para poder realizar la operacion.
+    *
+    * @param ugraph es el grafo no dirigido del cual se quiere saber el numero de nodos
+    *
+    * @param dgraph es el digrafo del cual se quiere saber el numero de nodos
 	  */
 	  public static void obtenerNumVertices(UndirectedGraph ugraph, DirectedGraph dgraph){
 	    int n = 0;
@@ -389,6 +458,10 @@ public class ClienteGrafo{
 	  /**
 	  * Imrpime en pantalla el numero de lados que hay en el grafo. Le solicita
 	  * al usuario el id del lado para poder realizar la operacion.
+    *
+    * @param ugraph es el grafo no dirigido del cual se quiere el numero de lados
+    *
+    * @param dgraph es el digrafo del cual se quiere el numero de lados
 	  */
 	  public static void obtenerNumLados(UndirectedGraph ugraph, DirectedGraph dgraph){
 	    int n = 0;
@@ -404,6 +477,12 @@ public class ClienteGrafo{
 	  /**
 	  * Le solicita al usuario el id de un vertice e imprime en pantalla un mensaje
 	  * indicando si ya esta en el grafo o no
+    *
+    * @param ugraph es el grafo no dirigido sobre el cual esta el vertice a buscar
+    *
+    * @param dgraph es el digrafo sobre el cual esta el vertice a buscar
+    *
+    * @throws IOException si hay un error en la entrada de los datos por terminal
 	  */
 	  public static void buscarVertice(UndirectedGraph ugraph, DirectedGraph dgraph)
     throws IOException{
@@ -431,6 +510,12 @@ public class ClienteGrafo{
 	  /**
 	  * Le solicita al usuario el id de un lado e imprime en pantalla un mensaje
 	  * indicando si ya esta en el grafo o no
+    *
+    * @param ugraph es el grafo no dirigido sobre el cual esta el lado a buscar
+    *
+    * @param dgraph es el digrafo sobre el cual esta el lado a buscar
+    *
+    * @throws IOException si hay un error en la entrada de los datos por terminal
 	  */
 	  public static void buscarLado(UndirectedGraph ugraph, DirectedGraph dgraph)
     throws IOException{
@@ -459,6 +544,12 @@ public class ClienteGrafo{
 	  * Le solicita al usuario el id de un vertice y
 	  * Si esta, lo elimina e imprime un mensaje idicando que fue eliminado
 	  * Si no esta, imprime un mensaje indicando que no esta en el grafo
+    *
+    * @param ugraph es el grafo no dirigido sobre el cual esta el vertice a eliminar
+    *
+    * @param dgraph es el digrafo sobre el cual esta el vertice a eliminar
+    *
+    * @throws IOException si hay un error en la entrada de los datos por terminal
 	  */
 	  public static void eliminarVertice(UndirectedGraph ugraph, DirectedGraph dgraph)
     throws IOException{
@@ -486,9 +577,9 @@ public class ClienteGrafo{
 	  /**
 	  * Imprime en pantalla los id de todos los nodos del grafo
     *
-    * @param ugraph grafo no dirigido que se usara
+    * @param ugraph grafo no dirigido cuyos nodos se imprimiran
     *
-    * @param dgraph drafo dirigido que se usara
+    * @param dgraph drafo dirigido cuyos nodos se imprimiran
 	  */
 	  public static void imprimirVertices(UndirectedGraph ugraph, DirectedGraph dgraph){
 
@@ -510,6 +601,10 @@ public class ClienteGrafo{
 
 	  /**
 	  * Imprime en pantalla los id de todos los lados del grafo
+    *
+    * @param ugraph grafo no dirigido cuyos lados se imprimiran
+    *
+    * @param dgraph drafo dirigido cuyos lados se imprimiran
 	  */
 	  public static void imprimirLados(UndirectedGraph ugraph, DirectedGraph dgraph){
 	    ArrayList<GraphEdges> lados = new ArrayList<GraphEdges>();
@@ -531,6 +626,12 @@ public class ClienteGrafo{
 	  /**
 	  * Imprime en pantalla los id de todos los vertices adyacentes a un vertice.
 	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
+    *
+    * @param ugraph es el grafo no dirigido sobre el cual esta el vertice de interes
+    *
+    * @param dgraph es el digrafo sobre el cual esta el vertice de interes
+    *
+    * @throws IOException si hay un error en la entrada de los datos por terminal
 	  *
 	  */
 	  public static void imprimirAdyacentes(UndirectedGraph ugraph, DirectedGraph dgraph)
@@ -552,7 +653,7 @@ public class ClienteGrafo{
 	      }
 	    }catch(NoSuchElementException i){
 	      System.out.println("No se puede realizar la operacion");
-
+        return;
 	    }
 	    System.out.println("Los vertices adjacentes a " + id + "son: ");
 	    for(int i=0; i<adj.size(); i++){
@@ -563,6 +664,12 @@ public class ClienteGrafo{
 	  /**
 	  * Imprime en pantalla los id de todos los lados incidentes a un vertice.
 	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
+    *
+    * @param ugraph es el grafo no dirigido sobre el cual esta el vertice de interes
+    *
+    * @param dgraph es el digrafo sobre el cual esta el vertice de interes
+    *
+    * @throws IOException si hay un error en la entrada de los datos por terminal
 	  */
 	  public static void imprimirIncidentes(UndirectedGraph ugraph, DirectedGraph dgraph)
     throws IOException{
@@ -583,7 +690,7 @@ public class ClienteGrafo{
 	        }
 	        }catch(NoSuchElementException i){
 	            System.out.println("No se pudo realizar la operacion");
-
+              return;
 	        }
 	        System.out.println("Los lados incidentes a " + id + "son: ");
 	        for(int i=0; i<inc.size(); i++){
@@ -595,7 +702,7 @@ public class ClienteGrafo{
 	  * Imprime en pantalla todos los vertices y lados del grafo
     * @param ugraph grafo no dirigido que se imprimira
     *
-    * @param dgraph drafo dirigido que se imprimira
+    * @param dgraph digrafo dirigido que se imprimira
 	  */
 	  public static void imprimirGrafo(UndirectedGraph ugraph, DirectedGraph dgraph){
 	    imprimirVertices(ugraph, dgraph);
@@ -609,6 +716,8 @@ public class ClienteGrafo{
     * @param ugraph grafo no dirigido sobre el que estan los vertices
     *
     * @param dgraph drafo dirigido sobre el que estan los vertices
+    *
+    * @throws IOException si hay error en la entrada por consola
 	  */
 	  public static void grado(UndirectedGraph ugraph, DirectedGraph dgraph)
     throws IOException{
@@ -629,7 +738,7 @@ public class ClienteGrafo{
 	      }
 	    }catch(NoSuchElementException i){
 	      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
-
+        return;
 	    }
 	    System.out.print("El grado del vertice es: ");
 	    System.out.print(g);
@@ -640,9 +749,11 @@ public class ClienteGrafo{
 	  * Imprime en pantalla el grado interior de un vertice.
 	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
     *
-    * @param dgraph drafo dirigido sobre el que estan los nodos
+    * @param dgraph digrafo dirigido sobre el que estan los nodos
     *
 	  * @throws UnsupportedOperationException si se intenta aplicar sobre un grafo no dirigido
+    *
+    * @throws IOException si hay error en la entrada por consola
 	  */
 	  public static void gradoInterior(DirectedGraph dgraph)
 	  throws UnsupportedOperationException, IOException{
@@ -658,12 +769,12 @@ public class ClienteGrafo{
       }catch(IOException e){
         throw new IOException("Error de entrada");
       }
-	    int g = 0;
-	    try{
-	      g = dgraph.inDegree(id);
+      int g = 0;
+      try{
+	       g = dgraph.outDegree(id);
 	    }catch(NoSuchElementException i){
 	      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
-
+        return;
 	    }
 	    System.out.print("El grado interior del vertice es: ");
 	    System.out.print(g);
@@ -674,9 +785,11 @@ public class ClienteGrafo{
 	  * Imprime en pantalla el grado exterior de un vertice.
 	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
     *
-    * @param dgraph drafo dirigido sobre el que estan los nodos
+    * @param dgraph digrafo dirigido sobre el que estan los nodos
     *
 	  * @throws UnsupportedOperationException si se intenta aplicar sobre un grafo no dirigido
+    *
+    * @throws IOException si hay error en la entrada por consola
 	  */
 	  public static void gradoExterior( DirectedGraph dgraph)
 	  throws UnsupportedOperationException, IOException{
@@ -697,11 +810,84 @@ public class ClienteGrafo{
 	       g = dgraph.outDegree(id);
 	    }catch(NoSuchElementException i){
 	      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
-
+        return;
 	    }
 	    System.out.print("El grado exterior del vertice es: ");
 	    System.out.print(g);
 	    System.out.print("\n");
+	  }
+
+    /**
+	  * Imprime en pantalla una lista de sucesores de un vertice.
+	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
+    *
+    * @param dgraph digrafo dirigido sobre el que estan los nodos
+    *
+	  * @throws UnsupportedOperationException si se intenta aplicar sobre un grafo no dirigido
+    *
+    * @throws IOException si hay error en la entrada por consola
+	  */
+	  public static void imprimirSucesores( DirectedGraph dgraph)
+	  throws UnsupportedOperationException, IOException{
+	    if(type!=0){
+	      throw new UnsupportedOperationException("Sucesores no esta definido para grafos no dirigidos");
+	    }
+	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	    System.out.println("Introduzca el id del vertice: ");
+      String id = "";
+      try{
+        id = br.readLine().trim();
+      }catch(IOException e){
+        throw new IOException("Error de entrada");
+      }
+      ArrayList<DNode> suc = new ArrayList<DNode>();
+	    try{
+	      suc = dgraph.successor(id);
+	    }catch(NoSuchElementException i){
+	      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
+        return;
+      }
+
+	    System.out.print("Los sucesores del nodo son: ");
+      for(int i=0; i<suc.size(); i++){
+	      System.out.println(suc.get(i).getId());
+	    }
+	  }
+
+    /**
+	  * Imprime en pantalla una lista de predecesores de un vertice.
+	  * Para realizar la operacion, le solicita al usuario el id del vertice de interes.
+    *
+    * @param dgraph digrafo dirigido sobre el que estan los nodos
+    *
+	  * @throws UnsupportedOperationException si se intenta aplicar sobre un grafo no dirigido
+    *
+    * @throws IOException si hay error en la entrada por consola
+	  */
+	  public static void imprimirPredecesores( DirectedGraph dgraph)
+	  throws UnsupportedOperationException, IOException{
+	    if(type!=0){
+	      throw new UnsupportedOperationException("Predecesores no esta definido para grafos no dirigidos");
+	    }
+	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	    System.out.println("Introduzca el id del vertice: ");
+      String id = "";
+      try{
+        id = br.readLine().trim();
+      }catch(IOException e){
+        throw new IOException("Error de entrada");
+      }
+      ArrayList<DNode> pred = new ArrayList<DNode>();
+	    try{
+	      pred = dgraph.successor(id);
+	    }catch(NoSuchElementException i){
+	      System.out.println("No se puede realizar la operacion, el nodo no esta en el grafo");
+        return;
+      }
+	    System.out.print("Los predecesores del nodo son: ");
+      for(int i=0; i<pred.size(); i++){
+	      System.out.println(pred.get(i).getId());
+	    }
 	  }
 
 	  /**
@@ -716,6 +902,15 @@ public class ClienteGrafo{
 	  * Imprime en pantalla un menu que le da acceso al usuario a todas las operaciones del grafo.
 	  * Solo se le permite mantener un grafo a la vez.
 	  *
+    * @param ugraph es el grafo no dirigido que se utilizara a lo largo de la ejecucion
+    *               del programa
+    *
+    * @param dgraph es el digrafo que se utilizara a lo largo de la ejecucion del programa
+    *
+    * @param transV es el parseador para los datos que se utilizara a lo largo del programa
+    *
+    * @param transE es el parseador para los datos que se utilizara a lo largo del programa
+    *
 	  * @throws IOException si hubo algun error en la ejecucion de cualquiera de los subprogramas
 	  */
 	  public static void menu(UndirectedGraph ugraph, DirectedGraph dgraph,
@@ -740,6 +935,8 @@ public class ClienteGrafo{
 	                   .append("16.- Calcular grado de un vertice \n")
 	                   .append("17.- Calcular el grado interior de un vertice (solo para digrafos) \n")
 	                   .append("18.- Calcular el grado externo de un vertice (solo para digrafos) \n")
+                     .append("19.- Imprimir lista de sucesores de un vertice (solo para digrafos) \n")
+                     .append("20.- Imprimir lista de predecesores de un vertice (solo para digrafos) \n")
 	                   .append("0.- Salir \n")
 	                   .toString());
 
@@ -758,9 +955,9 @@ public class ClienteGrafo{
 	         break;
 	         case 3: crearDigrafo(dgraph, transV, transE);
 	         break;
-	         case 4: agregarNodo(ugraph, dgraph, transV, transE);
+	         case 4: agregarNodo(ugraph, dgraph, transV);
 	         break;
-	         case 5: agregarLado(ugraph, dgraph, transV, transE);
+	         case 5: agregarLado(ugraph, dgraph, transE);
 	         break;
 	         case 6: obtenerNumVertices(ugraph, dgraph);
 	         break;
@@ -788,18 +985,23 @@ public class ClienteGrafo{
 	         break;
 	         case 18: gradoExterior(dgraph);
 	         break;
+           case 19: imprimirSucesores(dgraph);
+	         break;
+           case 20: imprimirPredecesores(dgraph);
+	         break;
 	         case 0: salir();
 	         break;
 	       }
 	     }catch(IllegalArgumentException | UnsupportedOperationException | IOException e){
 	       throw new IOException(e);
-
 	     }
 	  }
 
 	  /**
 	  * Metodo principal de la clase.
 	  *
+    * @param args datos dados en la llamada al programa (no se hace nada con ellos)
+    *
 	  * @throws IOException si hubieron errores en la ejecucion y sale del programa
 	  */
 	  	public static void main(String[] args)

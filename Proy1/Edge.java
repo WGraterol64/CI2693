@@ -20,8 +20,8 @@ public class Edge<V,E> extends GraphEdges{
 	* @param id Identificador de la arista a crear
 	* @param data Dato almacenado la arista
 	* @param weight Peso de la arista
-	* @param initNode Nodo inicial de la arista
-	* @param endNode Nodo final de la arista
+	* @param nodeA Nodo inicial de la arista
+	* @param nodeB Nodo final de la arista
 	**/
 	public Edge (String id, E data, double weight, UNode<V,E> nodeA, UNode<V,E> nodeB){
 		this.id = id;
@@ -57,7 +57,7 @@ public class Edge<V,E> extends GraphEdges{
 	* sobre la arista
 	**/
 	public String toString(){
-		
+
 		String edge = " ";
 		edge += "Id de la arista: "+this.getId()+"\n";
 		edge += "Dato: "+String.valueOf(this.getData()) + "\n";

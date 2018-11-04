@@ -42,7 +42,7 @@ public class UndirectedGraph<V,E> implements Graph{
 	**/
 	public boolean loadGraph(String fileName)
       throws IllegalArgumentException, UnsupportedOperationException, IOException{
-		
+
 		BufferedReader read = new BufferedReader(new FileReader(fileName));
 		// Lazo que lee las primeros 5 lineas
 		String vType = "", eType = "", line;
@@ -50,13 +50,13 @@ public class UndirectedGraph<V,E> implements Graph{
 		boolean result;
 		for(int i=0; i<5; i++){
 			try{
-				line = read.readLine();	
+				line = read.readLine();
 				if(i==0){
 					vType = line.trim();
 				}else if(i==1){
 					eType = line.trim();
 				}else if(i==2){
-					continue; 
+					continue;
 				}else if(i==3){
 					n = Integer.parseInt(line.trim());
 				}else{
@@ -162,8 +162,8 @@ public class UndirectedGraph<V,E> implements Graph{
 		return true;
 
 	}
-	
-	/** 
+
+	/**
 	* Metodo que agrega un nodo al grafo
 	* @param node Nodo a agregar
 	* @return booleano que identifica si se agrego exitosamente
@@ -181,14 +181,14 @@ public class UndirectedGraph<V,E> implements Graph{
 		return true;
 	}
 
-	
+
 	/**
 	* Metodo utilizado para buscar un nodo en el grafo
 	* @return El nodo cuyo identificador es id
 	* @param id Identificador del nodo
-	* @throws RuntimeException si no existe tal nodo
+	* @throws NoSuchElementException si no existe tal nodo
 	**/
-	public UNode<V,E> getNode(String id) throws RuntimeException{
+	public UNode<V,E> getNode(String id) throws NoSuchElementException{
 
 		UNode<V,E>  node = namesToNodes.get(id);  // Buscamos al nodo en el mapa
 		// Si no existe, se arroja una excepcion
@@ -211,7 +211,7 @@ public class UndirectedGraph<V,E> implements Graph{
 	/**
 	* Metodo que dice si existe en el grafo una arista con identificador id
 	* @param id Identificador de la arista
-	* @return Booleano que especifica si la arista pertenece al grafo 
+	* @return Booleano que especifica si la arista pertenece al grafo
 	**/
 	public boolean isEdge(String id){
 		return (this.namesToEdges.get(id) != null);
@@ -221,7 +221,7 @@ public class UndirectedGraph<V,E> implements Graph{
 	* Metodo que dice si existe en el grafo una arista entre u y v
 	* @param u Identificador del primer nodo
 	* @param v Identificador del segundo nodo
-	* @return Booleano que especifica si el arco pertenece al grafo 
+	* @return Booleano que especifica si el arco pertenece al grafo
 	**/
 	public boolean isEdge(String u, String v){
 
@@ -255,7 +255,7 @@ public class UndirectedGraph<V,E> implements Graph{
 
 		// Para todos los adyacentes V del nodo U
 		for( UNode<V,E>  nodeV : nodeU.adjNodes ){
-			
+
 			if(nodeV.getId().equals(id))
 				continue;
 
@@ -301,7 +301,7 @@ public class UndirectedGraph<V,E> implements Graph{
 
 	/**
 	*  Metodo que busca los nodos de un grafo
-	*  @return devuelve una lista con los nodos del grafo  
+	*  @return devuelve una lista con los nodos del grafo
 	**/
 	public ArrayList<UNode<V,E> > nodeList(){
 
@@ -326,9 +326,9 @@ public class UndirectedGraph<V,E> implements Graph{
 	/**
 	* Metodo que calcula el grado de un nodo
 	* @return Grado del nodo
-	* @throws RuntimeException Si el nodo no existe
+	* @throws NoSuchElementException Si el nodo no existe
 	**/
-	public int degree(String id)  throws RuntimeException{
+	public int degree(String id)  throws NoSuchElementException{
 
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
@@ -340,9 +340,9 @@ public class UndirectedGraph<V,E> implements Graph{
 	/**
 	* Metodo que busca nodos adyacentes a un nodo con identificador id
 	* @return devuelve una lista de adyacentes del nodo
-	* @throws RuntimeException Si el nodo no existe
+	* @throws NoSuchElementException Si el nodo no existe
 	**/
-	public ArrayList<UNode<V,E> > adjacency(String id) throws RuntimeException{
+	public ArrayList<UNode<V,E> > adjacency(String id) throws NoSuchElementException{
 
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
@@ -357,9 +357,9 @@ public class UndirectedGraph<V,E> implements Graph{
 	/**
 	* Metodo que busca aristas incidentes a un nodo con identificador id
 	* @return devuelve una lista de lados incidentes al nodo
-	* @throws RuntimeException Si el nodo no existe
+	* @throws NoSuchElementException Si el nodo no existe
 	**/
-	public ArrayList<Edge<V,E> > incident(String id) throws RuntimeException{
+	public ArrayList<Edge<V,E> > incident(String id) throws NoSuchElementException{
 
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
@@ -407,7 +407,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		return out;
 	}
 
-	/** 
+	/**
 	* Metodo para agregar una arista al grafo
 	* @param edge Arista a agregar
 	* @return booleano que especifica si se agrego satisfactoriamente
@@ -435,7 +435,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		return true;
 	}
 
-	/** 
+	/**
 	* Metodo para agregar una arista al grafo
 	* @param id Identificador de la arista
 	* @param data dato de la arista
@@ -469,7 +469,7 @@ public class UndirectedGraph<V,E> implements Graph{
 		return true;
 	}
 
-	/** 
+	/**
 	* Metodo para eliminar una arista del grafo
 	* @param id Identificador dla arista a eliminar
 	* @return booleano que especifica si se elimino satisfactoriamente
@@ -501,9 +501,9 @@ public class UndirectedGraph<V,E> implements Graph{
 	* Metodo utilizado para buscar una arista en el grafo
 	* @return Arista cuyo identificador es id
 	* @param id Identificador de la arista
-	* @throws RuntimeException si no existe tal nodo
+	* @throws NoSuchElementException si no existe tal nodo
 	**/
-	public Edge<V,E> getEdge(String id) throws RuntimeException{
+	public Edge<V,E> getEdge(String id) throws NoSuchElementException{
 
 		Edge<V,E> edge = this.namesToEdges.get(id);
 		if(edge == null)
