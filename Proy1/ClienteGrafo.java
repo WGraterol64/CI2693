@@ -97,7 +97,6 @@ public class ClienteGrafo{
 	    try{
 	      if(type == 0){
 	        // Inizializacion si es un digrafo
-	        System.out.println("Entre aqui"+vType+eType);
 	        crearDigrafoVacio(vType, eType, dgraph, transV, transE);
 	        dgraph.loadGraph(archivo);
 	      }else if(type == 1){
@@ -291,7 +290,6 @@ public class ClienteGrafo{
 	      transV = new BooleanTransformer();
 	      transE = new StringTransformer();
 	    }else if(vType.equals("D") && eType.equals("B")){
-	   	  System.out.println("Aqui tambien");
 	      dgraph = new DirectedGraph<Double,Boolean>();
 	      transV = new DoubleTransformer();
 	      transE = new BooleanTransformer();
@@ -657,7 +655,7 @@ public class ClienteGrafo{
 	    }
 	    System.out.println("Los vertices adjacentes a " + id + "son: ");
 	    for(int i=0; i<adj.size(); i++){
-	      System.out.println(adj.get(i).getId());
+	      System.out.println(adj.get(i).toString());
 	    }
 	  }
 
@@ -692,9 +690,9 @@ public class ClienteGrafo{
 	            System.out.println("No se pudo realizar la operacion");
               return;
 	        }
-	        System.out.println("Los lados incidentes a " + id + "son: ");
+	        System.out.println("Los lados incidentes a " + id + " son: ");
 	        for(int i=0; i<inc.size(); i++){
-	            System.out.println(inc.get(i).getId());
+	            System.out.println(inc.get(i).toString());
 	        }
 	    }
 
@@ -850,7 +848,7 @@ public class ClienteGrafo{
 
 	    System.out.print("Los sucesores del nodo son: ");
       for(int i=0; i<suc.size(); i++){
-	      System.out.println(suc.get(i).getId());
+	      System.out.println(suc.get(i).toString());
 	    }
 	  }
 
@@ -886,7 +884,7 @@ public class ClienteGrafo{
       }
 	    System.out.print("Los predecesores del nodo son: ");
       for(int i=0; i<pred.size(); i++){
-	      System.out.println(pred.get(i).getId());
+	      System.out.println(pred.get(i).toString());
 	    }
 	  }
 
