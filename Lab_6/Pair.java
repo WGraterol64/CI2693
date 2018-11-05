@@ -1,3 +1,7 @@
+/**
+* Implementacion de la clase Pair.
+* Representa un par ordenado de enteros.
+**/
 class Pair{
 	
 	public int first;
