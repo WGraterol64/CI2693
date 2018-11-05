@@ -13,6 +13,8 @@ import java.util.*;
 public class ClienteGrafo{
 
   	private static int type; // El tipo del grafo sera 0 si es digrafo y sera 1 si es no dirigido
+    private static Transformer transV; // Parseador que nos permitira agregar datos genericos de vertices
+    private static Transformer transE; // Parseador que nos permitira agregar datos genericos de lados
 
   	/**
   	* Inicializa la creacion de un grafo desde un archivo
@@ -22,14 +24,9 @@ public class ClienteGrafo{
     *
     * @param dgraph es el digrafo sobre el que se cargara el Archivo
     *
-    * @param transV es el parseador para los datos de los vertices
-    *
-    * @param transE es el parseador para los datos de los lados
-    *
     * @throws IOException si hay problemas leyendo datos por el terminal
   	*/
- 	public static void crearGrafoArchivo(UndirectedGraph ugraph, DirectedGraph dgraph,
-                                       Transformer transV, Transformer transE)
+ 	public static void crearGrafoArchivo(UndirectedGraph ugraph, DirectedGraph dgraph)
     throws IOException{
      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
      System.out.println("Introduzca el nombre del archivo donde esta el grafo: ");
@@ -41,7 +38,7 @@ public class ClienteGrafo{
       }
     	archivo = archivo.trim();
       try{
-          cargarGrafo(archivo, ugraph, dgraph, transV, transE);
+          cargarGrafo(archivo, ugraph, dgraph);
       }catch(IllegalArgumentException | IOException e){
         throw new IOException(" Hubo un error al cargar el archivo");
       }
@@ -56,16 +53,11 @@ public class ClienteGrafo{
   *
   * @param dgraph es el digrafo sobre el que se cargara el Archivo
   *
-  * @param transV es el parseador para los datos de los vertices
-  *
-  * @param transE es el parseador para los datos de los lados
-  *
   * @throws IOException si hay problemas leyendo datos por el terminal
   *
 	* @throws IllegalArgumentException si el formato del archivo no es valido
 	*/
-	public static void cargarGrafo(String archivo, UndirectedGraph ugraph, DirectedGraph dgraph,
-                                       Transformer transV, Transformer transE)
+	public static void cargarGrafo(String archivo, UndirectedGraph ugraph, DirectedGraph dgraph)
 	  throws IllegalArgumentException, IOException{
 
       BufferedReader read = new BufferedReader(new FileReader(archivo));
@@ -97,11 +89,11 @@ public class ClienteGrafo{
 	    try{
 	      if(type == 0){
 	        // Inizializacion si es un digrafo
-	        crearDigrafoVacio(vType, eType, dgraph, transV, transE);
+	        crearDigrafoVacio(vType, eType, dgraph);
 	        dgraph.loadGraph(archivo);
 	      }else if(type == 1){
 	        // Inizializacion si es un grafo no dirigido
-	        crearGrafoNoDirigidoVacio(vType, eType, ugraph, transV, transE);
+	        crearGrafoNoDirigidoVacio(vType, eType, ugraph);
 	        ugraph.loadGraph(archivo);
 	      }
 	    }catch(IllegalArgumentException | UnsupportedOperationException e){
@@ -117,16 +109,11 @@ public class ClienteGrafo{
 	  *
     * @param ugraph es la variable donde se guardara el grafo no dirigido que se creara
     *
-    * @param transV es el parseador para los datos de los vertices del grafo nuevo
-    *
-    * @param transE es el parseador para los datos de los lados del grafo nuevo
-    *
     * @throws IOException si hay problemas leyendo datos por el terminal
     *
 	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
 	  */
-	  public static void crearGrafoNoDirigido(UndirectedGraph ugraph, Transformer transV,
-                                            Transformer transE)
+	  public static void crearGrafoNoDirigido(UndirectedGraph ugraph)
       throws IOException{
       type = 1;
       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -147,7 +134,7 @@ public class ClienteGrafo{
       }
       String eType = l.trim();
 	    try{
-	      crearGrafoNoDirigidoVacio(vType, eType, ugraph, transV, transE);
+	      crearGrafoNoDirigidoVacio(vType, eType, ugraph);
 	    }catch(IllegalArgumentException i){
 	      throw new IllegalArgumentException("No se creo el grafo no dirigido");
 	    }
@@ -164,14 +151,9 @@ public class ClienteGrafo{
     *
     * @param ugraph es el grafo no dirigido que se inicializara
     *
-    * @param transV es el parseador para los datos de los vertices que se inicializara
-    *
-    * @param transE es el parseador para los datos de los lados que se inicializara
-	  *
 	  * @throws IllegalArgumentException si el formato de los argumentos no es el esperado
 	  */
-	  public static void crearGrafoNoDirigidoVacio(String vType, String eType,UndirectedGraph ugraph,
-                                         Transformer transV, Transformer transE)
+	  public static void crearGrafoNoDirigidoVacio(String vType, String eType,UndirectedGraph ugraph)
 	  throws IllegalArgumentException{
 	    if(vType.equals("B") && eType.equals("B")){
 	      ugraph = new UndirectedGraph<Boolean,Boolean>();
@@ -221,16 +203,11 @@ public class ClienteGrafo{
 	  *
     * @param dgraph es la variable donde se guardara el digrafo que se creara
     *
-    * @param transV es el parseador para los datos de los vertices del grafo nuevo
-    *
-    * @param transE es el parseador para los datos de los lados del grafo nuevo
-    *
     * @throws IOException si hay problemas leyendo datos por el terminal
     *
 	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
 	  */
-	  public static void crearDigrafo(DirectedGraph dgraph, Transformer transV,
-                                    Transformer transE)
+	  public static void crearDigrafo(DirectedGraph dgraph)
 	    throws IllegalArgumentException, IOException{
 	    type = 0;
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -251,7 +228,7 @@ public class ClienteGrafo{
       }
       String eType = l.trim();
 	    try{
-	      crearDigrafoVacio(vType, eType, dgraph, transV, transE);
+	      crearDigrafoVacio(vType, eType, dgraph);
 	    }catch(IllegalArgumentException i){
 	      throw new IllegalArgumentException("No se creo el digrafo");
 	    }
@@ -267,15 +244,10 @@ public class ClienteGrafo{
 	  * @param eType es el tipo de dato de los lados
     *
     * @param dgraph es el digrafo que se inicializara
-    *
-    * @param transV es el parseador para los datos de los vertices que se inicializara
-    *
-    * @param transE es el parseador para los datos de los lados que se inicializara
 	  *
 	  * @throws IllegalArgumentException si el formato de los argumentos no es el esperado
 	  */
-	  public static void crearDigrafoVacio(String vType, String eType, DirectedGraph dgraph,
-                                         Transformer transV, Transformer transE)
+	  public static void crearDigrafoVacio(String vType, String eType, DirectedGraph dgraph)
 	  throws IllegalArgumentException{
 	    if(vType.equals("B") && eType.equals("B")){
 	      dgraph = new DirectedGraph<Boolean,Boolean>();
@@ -326,14 +298,11 @@ public class ClienteGrafo{
     *
     * @param dgraph es el digrafo en el que se agregaran los nodos
     *
-    * @param transV es el parseador para los datos de los vertices
-    *
 	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
 	  *                                  o si hay algun vertice con el mismo id.
     * @throws IOException si hay errores en la entrada por el terminal
 	  */
-	  public static void agregarNodo(UndirectedGraph ugraph, DirectedGraph dgraph,
-                                         Transformer transV)
+	  public static void agregarNodo(UndirectedGraph ugraph, DirectedGraph dgraph)
 	  throws IllegalArgumentException, IOException{
 	    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	    System.out.println("Introduzca el id del vertice: ");
@@ -389,14 +358,11 @@ public class ClienteGrafo{
     *
     * @param dgraph es el digrafo sobre el que se agregaran los lados
     *
-    * @param transE es el parseador para los datos de los lados
-    *
 	  * @throws IllegalArgumentException si los datos que da el usuario no son validos
     *
     * @throws IOException si hay errores en la entrada por el terminal
 	  */
-	  public static void agregarLado(UndirectedGraph ugraph, DirectedGraph dgraph,
-                                         Transformer transE)
+	  public static void agregarLado(UndirectedGraph ugraph, DirectedGraph dgraph)
 	  throws IllegalArgumentException, IOException{
 	      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	      System.out.println("Introduzca el id del lado: ");
@@ -905,14 +871,9 @@ public class ClienteGrafo{
     *
     * @param dgraph es el digrafo que se utilizara a lo largo de la ejecucion del programa
     *
-    * @param transV es el parseador para los datos que se utilizara a lo largo del programa
-    *
-    * @param transE es el parseador para los datos que se utilizara a lo largo del programa
-    *
 	  * @throws IOException si hubo algun error en la ejecucion de cualquiera de los subprogramas
 	  */
-	  public static void menu(UndirectedGraph ugraph, DirectedGraph dgraph,
-                                         Transformer transV, Transformer transE)
+	  public static void menu(UndirectedGraph ugraph, DirectedGraph dgraph)
 	  throws IOException{
 	    System.out.println(new StringBuilder("Introduzca la operacion que desee realizar: \n")
 	                   .append("1.- Crear Grafo desde archivo \n")
@@ -947,15 +908,15 @@ public class ClienteGrafo{
 	     }
 	     try{
 	       switch (n) {
-	         case 1: crearGrafoArchivo(ugraph, dgraph, transV, transE);
+	         case 1: crearGrafoArchivo(ugraph, dgraph);
 	         break;
-	         case 2: crearGrafoNoDirigido(ugraph, transV, transE);
+	         case 2: crearGrafoNoDirigido(ugraph);
 	         break;
-	         case 3: crearDigrafo(dgraph, transV, transE);
+	         case 3: crearDigrafo(dgraph);
 	         break;
-	         case 4: agregarNodo(ugraph, dgraph, transV);
+	         case 4: agregarNodo(ugraph, dgraph);
 	         break;
-	         case 5: agregarLado(ugraph, dgraph, transE);
+	         case 5: agregarLado(ugraph, dgraph);
 	         break;
 	         case 6: obtenerNumVertices(ugraph, dgraph);
 	         break;
@@ -1006,11 +967,11 @@ public class ClienteGrafo{
 	  	throws IOException{
         UndirectedGraph ugraph = new UndirectedGraph(); // Se utilza para implementar el grafo no dirigido
         DirectedGraph dgraph = new DirectedGraph();  // Se utilza para implementar el digrafo
-        Transformer transV = new StringTransformer(); // Parseador que nos permitira agregar datos genericos de vertices
-        Transformer transE = new StringTransformer(); // Parseador que nos permitira agregar datos genericos de lados
+        // Transformer transV = new StringTransformer(); // Parseador que nos permitira agregar datos genericos de vertices
+        // Transformer transE = new StringTransformer(); // Parseador que nos permitira agregar datos genericos de lados
 		    try{
 		        while(true)
-		            menu(ugraph, dgraph, transV, transE);
+		            menu(ugraph, dgraph);
 		    }catch(IllegalArgumentException | IOException e){
 		        System.out.println(e);
 		        System.exit(1);
