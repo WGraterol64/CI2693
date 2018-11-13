@@ -10,13 +10,13 @@ class Graph{
 	public int n; // Numero de vertices del grafo
 	public int[] predecessor; // Almacena el vertice predecesor a otro.
 	public double[] cost; // Almacena el costo de llegar desde la fuente a cada vertice
-	
+
 	/**
 	* Constructor de la clase
 	* @param n Numero de nodos del grafo
 	**/
 	public Graph(int n){
-		
+
 		this.n = n;
 		this.list = new ArrayList<Vertex>();
 		// Arreglo de predecesores
@@ -55,7 +55,7 @@ class Graph{
 	* Metodo utilizado para calcular el costo del lado entre dos vertices
 	* @param u posicion de uno de los vertices en la lista del grafo
 	* @param v posicion del otro vertice n la lista del grafo
-	*//
+	*/
 	public double getCost(Vertex u, Vertex v){
 		double x1 = (double) u.x;
 		double y1 = (double) u.y;
@@ -75,12 +75,15 @@ class Graph{
 	* Algoritmo de Dijkstra
 	* Utilizado para encontrar los caminos minimos desde la fuente s
 	* @param s Fuente desde la que inciara el algoritmo
+	* @throws IllegalArgumentException si s no esta en el grafo
 	**/
-	public void dijkstra(int s){
-
+	public void dijkstra(int s)
+	throws IllegalArgumentException{
+    if(s>=n)
+		    throw new IllegalArgumentException("El vertice no esta en el nodo");
 		cost[s] = 0; // El costo de llegar a la fuente es 0
 		predecessor[s] = s; // Condicion de parada, s es su propio predecesor
-		
+
 
 		// Inicializamos un comparador de pares, y una priority queue (Heap)
 		// que ordenara los elementos bajo este comparador.
@@ -92,7 +95,7 @@ class Graph{
 		pq.add(p);
 
 		while(!pq.isEmpty()){
-			
+
 			// Extraemos un par de la cola
 			Pair pp = pq.remove();
 			// Extraemos el identificador del vertice y el costo de llegar a el
@@ -104,7 +107,7 @@ class Graph{
 
 			// Para todos los vecinos de u
 			for( int v : this.list.get(u).adj){
-				
+
 				// Calculamos el costo del lado entre u y v
 				double costUV = getCost(list.get(u),list.get(v));
 				// Si el costo de llegar a u + el costo entre u y v es menor que el costo
@@ -120,5 +123,5 @@ class Graph{
 			}
 		}
 	}
-	
+
 }
