@@ -1,60 +1,124 @@
 import java.util.*;
+import java.lang.Math;
+import java.lang.Double;
+/*
+* Implementacion de la clase grafo
+*/
 class Graph{
 
-	public Vertex[] list; // Lista de vertices en el grafo
-	private int n; // Numero de vertices del grafo
-	private int[] predecessor; // Almacena el vertice predecesor a otro.
-	private int[] ordinal; // Almacena el tiempo de visita de cada nodo
-	private int[] cost;  // Almacena el costo de llegar a cada nodo
+	public ArrayList<Vertex> list; // Lista de vertices en el grafo
+	public int n; // Numero de vertices del grafo
+	public int[] predecessor; // Almacena el vertice predecesor a otro.
+	public double[] cost; // Almacena el costo de llegar desde la fuente a cada vertice
+	
 	/**
 	* Constructor de la clase
 	* @param n Numero de nodos del grafo
 	**/
 	public Graph(int n){
+		
 		this.n = n;
 		this.list = new ArrayList<Vertex>();
-		// Inicializacion de los vertices del grafo
-		for(int i=0; i<n; i++){
-			Vertex v = new Vertex(i);
-			this.list.add(v);
-		}
 		// Arreglo de predecesores
 		this.predecessor = new int[n];
 		Arrays.fill(predecessor,-1);
+		// Arreglo de costos
+		this.cost = new double[n];
+		Arrays.fill(cost,Double.POSITIVE_INFINITY);
 	}
 
-	//######################################################################################
-		public void dijkstra(int s){
-			predecessor.fillArray(-1);
-			cost.fillArray(-1);
-			cost[s] = 0;
-			predecessor[s] = s;
-			HashSet<Integer> Q = new HashSet();
-			while(Q.size()!=0){
-				int i = Q.poll();
-				Vertex w = this.list.get(i);
-				for(v=0; v< w.adj.size(); v++){
-					for(e=0; e<w.inc.size(); e++){
-						if(w.inc(e).nodeOne == v || w.inc(e).nodeTwo == v){
-							if(cost[v]>cost[w]+w.inc(e).weight || cost[v]==-1){
-								cost[v] = cost[w]+w.inc(e).weight;
-								predecessor[v] = w;
-							}
-						}
-					}
-				}
-			}
-		}
-	//######################################################################################
-  public Integer minimum(int[] A){
-		int x = A[0];
-		int j = 0;
-		for(i=0; i<A.size(); i++){
-			if(A[i]<x){
-				x = A[i];
-				j = i;
-			}
-		}
-		return j;
+	/**
+	* Metodo para inicializar y agregar un nuevo
+	* vertice a la lista del grafo
+	* @param x Coordenada x del nuevo vertice
+	* @param y COordenada y del nuevo vertice
+	**/
+	public void addVertex(int x, int y){
+
+		Vertex vert = new Vertex(x,y);
+		this.list.add(vert);
 	}
+
+	/**
+	* Metodo para inicializar agregar un lado
+	* entre dos nodos
+	* @param u posicion de uno de los vertices en la lista del grafo
+	* @param v posicion del otro vertice n la lista del grafo
+	**/
+	public void addEdge(int u, int v){
+
+		this.list.get(v).addAdj(u);
+		this.list.get(u).addAdj(v);
+	}
+
+	/**
+	* Metodo utilizado para calcular el costo del lado entre dos vertices
+	* @param u posicion de uno de los vertices en la lista del grafo
+	* @param v posicion del otro vertice n la lista del grafo
+	*//
+	public double getCost(Vertex u, Vertex v){
+		double x1 = (double) u.x;
+		double y1 = (double) u.y;
+		double x2 = (double) v.x;
+		double y2 = (double) v.y;
+
+		double x = (x1-x2);
+		double y = (y1-y2);
+		x *= x;
+		y *= y;
+
+		return Math.sqrt(x+y);
+
+	}
+
+	/**
+	* Algoritmo de Dijkstra
+	* Utilizado para encontrar los caminos minimos desde la fuente s
+	* @param s Fuente desde la que inciara el algoritmo
+	**/
+	public void dijkstra(int s){
+
+		cost[s] = 0; // El costo de llegar a la fuente es 0
+		predecessor[s] = s; // Condicion de parada, s es su propio predecesor
+		
+
+		// Inicializamos un comparador de pares, y una priority queue (Heap)
+		// que ordenara los elementos bajo este comparador.
+		Comparator<Pair> comparator = new PairComparator();
+		PriorityQueue<Pair> pq = new PriorityQueue<Pair>(this.n,comparator);
+
+		// Inicializamos un par <0,s> y lo agregamos a la cola
+		Pair p = new Pair(0,s);
+		pq.add(p);
+
+		while(!pq.isEmpty()){
+			
+			// Extraemos un par de la cola
+			Pair pp = pq.remove();
+			// Extraemos el identificador del vertice y el costo de llegar a el
+			int u = pp.vertex;
+			double costU = pp.cost;
+
+			if(cost[u] != costU) // Revisamos si nos encontramos en el estado optimo hasta ahora
+				continue;
+
+			// Para todos los vecinos de u
+			for( int v : this.list.get(u).adj){
+				
+				// Calculamos el costo del lado entre u y v
+				double costUV = getCost(list.get(u),list.get(v));
+				// Si el costo de llegar a u + el costo entre u y v es menor que el costo
+				// minimo actual de llegar a v, entonces actualizamos el costo de v y
+				// lo agregamos a la cola para ser analizado luego.
+				if(costU + costUV < cost[v]){
+					cost[v] = costU + costUV;
+					Pair pv = new Pair(cost[v],v);
+					predecessor[v] = u; // Marcamos a u como predecesor de v
+					pq.add(pv);
+				}
+
+			}
+		}
+	}
+	
 }
