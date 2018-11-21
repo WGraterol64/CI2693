@@ -5,7 +5,7 @@ import java.lang.RuntimeException;
 * Interfaz Grafo
 * Describe los metodos generales de un grafo
 **/
-public interface Graph<V,E>{
+public interface Graph{
 
 	/**
 	* Metodo que carga un grafo desde un archivo
@@ -63,13 +63,13 @@ public interface Graph<V,E>{
 	*  Metodo que busca los nodos de un grafo
 	*  @return devuelve una lista con los nodos del grafo
 	**/
-	public ArrayList<Node<V,E>> nodeList();
+	public ArrayList<Node> nodeList();
 
 	/**
 	* Metodo que busca los lados de un grafo
 	* @return devuelve una lista con los lados del grafo
 	**/
-	public ArrayList<Node<V,E>> edgeList();
+	public ArrayList<Node> edgeList();
 
 	/**
 	* Metodo que calcula el grado de un nodo
@@ -85,7 +85,7 @@ public interface Graph<V,E>{
 	* @return devuelve una lista de adyacentes del nodo
 	* @throws NoSuchElementException Si el nodo no existe
 	**/
-	public ArrayList<Node<V,E>> adjacency(String id) throws NoSuchElementException;
+	public ArrayList<Node> adjacency(String id) throws NoSuchElementException;
 
 	/**
 	* Metodo que busca lados incidentes a un nodo con identificador id
@@ -93,13 +93,13 @@ public interface Graph<V,E>{
 	* @return devuelve una lista de lados incidentes al nodo
 	* @throws NoSuchElementException Si el nodo no existe
 	**/
-	public ArrayList<Node<V,E>> incident(String id) throws NoSuchElementException;
+	public ArrayList<Node> incident(String id) throws NoSuchElementException;
 
 	/**
 	* Metodo utilizado para clonar el grafo
 	* @return clon del grafo
 	**/
-	public Graph<V,E> clone();
+	public Graph clone();
 
 	/**
 	* Metodo utilizado para crear un String con informacion del grafo

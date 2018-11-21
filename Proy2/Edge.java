@@ -6,26 +6,26 @@ import java.util.*;
 * Extiende la clase abstracta GraphEdges
 *
 **/
-public class Edge<V,E> extends GraphEdges{
+public class Edge extends GraphEdges{
 
 
 	private String id; // Identificador de la arista
-	private E data; // Dato de la arista
+	private int cap; // Dato de la arista
 	private double weight; // Peso de la arista
-	private UNode<V,E> nodeA; // Primer nodo de la arista
-	private UNode<V,E> nodeB; // Segundo de la arista
+	private UNode nodeA; // Primer nodo de la arista
+	private UNode  nodeB; // Segundo de la arista
 
 	/**
 	* Constructor de la clase
 	* @param id Identificador de la arista a crear
-	* @param data Dato almacenado la arista
+	* @param cap Capacidad de la arista
 	* @param weight Peso de la arista
 	* @param nodeA Nodo inicial de la arista
 	* @param nodeB Nodo final de la arista
 	**/
-	public Edge (String id, E data, double weight, UNode<V,E> nodeA, UNode<V,E> nodeB){
+	public Edge (String id, int cap, double weight, UNode nodeA, UNode nodeB){
 		this.id = id;
-		this.data = data;
+		this.cap = cap;
 		this.weight = weight;
 		this.nodeA = nodeA;
 		this.nodeB = nodeB;
@@ -46,33 +46,17 @@ public class Edge<V,E> extends GraphEdges{
 	}
 
 	/**
-	* Metodo utilizado para obtener el dato de la arista
+	* Metodo utilizado para obtener la capacidad de la arista
 	**/
-	public E getData(){
-		return this.data;
+	public int getCap(){
+		return this.cap;
 	}
-
-	/**
-	* Metodo utilizado para crear un String con informacion
-	* sobre la arista
-	**/
-	public String toString(){
-
-		String edge = " ";
-		edge += "Id de la arista: "+this.getId()+"\n";
-		edge += "Dato: "+String.valueOf(this.getData()) + "\n";
-		edge += "Peso: "+String.valueOf(this.getWeight()) + "\n";
-		edge += "Esta arista conecta los siguientes vertices:\n";
-		edge += this.getFNode().toString();
-		edge += this.getSNode().toString();
-		return edge;
-	}
-
+	
 	/**
 	* Metodo que devuelve el primer nodo de la arista
 	* @return Uno de los nodos de la arista
 	**/
-	public UNode<V,E> getFNode(){
+	public UNode getFNode(){
 		return this.nodeA;
 	}
 
@@ -80,11 +64,11 @@ public class Edge<V,E> extends GraphEdges{
 	* Metodo que devuelve el segundo nodo de la arista
 	* @return Uno de los nodos de la arista
 	**/
-	public UNode<V,E> getSNode(){
+	public UNode getSNode(){
 		return this.nodeB;
 	}
 
-	public void modData(Integer b){
-		this.data += b;
+	public void editCap(int n){
+		this.cap += b;
 	}
 }

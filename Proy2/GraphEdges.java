@@ -3,10 +3,10 @@
 * Clase abstacta que implementa los lados genericos de un grafo
 *
 **/
-public abstract class GraphEdges<V,E>{
+public abstract class GraphEdges{
 
 	private String id; // Identificador del lado
-	private E data; // Dato que almacena el lado
+	private int cap; // Capacidad del lado
 	private double weight; // Peso del lado
 
 	/**
@@ -28,13 +28,6 @@ public abstract class GraphEdges<V,E>{
 	*
 	* @return dato especial del lado
 	**/
-	public abstract E getData();
+	public abstract int getCap();
 
-	/**
-	* Metodo utilizado para crear un String con informacion
-	* sobre el lado
-	*
-	* @return string con la informacion del lado
-	**/
-	public abstract String toString();
 }

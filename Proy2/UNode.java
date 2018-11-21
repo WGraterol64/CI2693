@@ -3,11 +3,11 @@ import java.util.*;
 * Clase de Nodos para un grafo no dirigido
 * Extiende la clase abstacta Node
 **/
-public class UNode<V,E> extends Node{
+public class UNode extends Node{
 
 
 	private String id; // Identificador del nodo
-	private V data; // Dato del nodo
+	private boolean data; // Dato del nodo
 	private Integer weight; // Peso del nodo
 	public int degree; // Grado del nodo
 	public HashSet<UNode<V,E>> adjNodes; // Lista de los nodos adyacentes
@@ -19,7 +19,7 @@ public class UNode<V,E> extends Node{
 	* @param data Dato del nodo
 	* @param weight Peso del nodo
 	**/
-	public UNode(String id, V data, Integer weight){
+	public UNode(String id, boolean data, Integer weight){
 		this.id = id;
 		this.data = data;
 		this.weight = weight;
@@ -45,7 +45,7 @@ public class UNode<V,E> extends Node{
 	/**
 	* Metodo utilizado para obtener el dato del nodo
 	**/
-	public V getData(){
+	public boolean getData(){
 		return this.data;
 	}
 

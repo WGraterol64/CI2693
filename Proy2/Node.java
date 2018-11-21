@@ -2,12 +2,12 @@ import java.util.*;
 /**
 * Clase abstacta de nodos
 **/
-public abstract class Node<V,E>{
+public abstract class Node{
 
 
 	private String id; // Identificador del nodo
-	private V data; // Dato del nodo
-	private Integer weight; // Peso del nodo
+	private boolean data; // Dato del nodo
+	private int weight; // Peso del nodo
 
 	/**
 	* Metodo utilizado para obtener el peso del nodo
@@ -23,7 +23,7 @@ public abstract class Node<V,E>{
 	* Metodo utilizado para obtener el dato del nodo
 	* @return dato del nodo
 	**/
-	public abstract V getData();
+	public abstract int getData();
 	/**
 	* Metodo utilizado para obtener un string con informacion del nodo
 	* @return string con la informacion del nodo
