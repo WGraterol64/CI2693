@@ -41,7 +41,48 @@ public class UndirectedGraph implements Graph{
 	public boolean loadGraph(String fileName)
       throws IllegalArgumentException, UnsupportedOperationException, IOException{
 
-		
+			BufferedReader read = new BufferedReader(new FileReader(fileName));
+			// Lazo que lee las primeros 2 lineas
+			String line;
+			int n = 0 ,m = 0;
+			boolean result;
+			for(int i=0; i<2; i++){
+				try{
+					line = read.readLine();
+					if(i==0){
+						n = Integer.parseInt(line.trim());
+					}else if(i==1){
+						m = Integer.parseInt(line.trim());
+					}
+				}catch(NumberFormatException e){
+					throw new UnsupportedOperationException("Formato no valido");
+				}
+				catch(IOException e){
+					throw new UnsupportedOperationException("Formato no valido");
+				}
+			}
+			// Lazo que agrega los nodos
+			for(int i=0;i<n;i++){
+				line = read.readLine();
+				line = line.trim();
+				String[] node = line.split(" ");
+				result = this.addNode(node[0],Integer.parseInt(node[1]),
+				Integer.parseInt(node[2]));
+				if(!result){
+					throw new IllegalArgumentException("Entrada no valida: No se pueden agregar nodos");
+				}
+			}
+			// Lazo que agrega los lados
+			for(int i=0; i<m; i++){
+				line = read.readLine().trim();
+				String[] edge = line.split(" ");
+				result = this.addEdge(Integer.toString(i), Integer.parseInt(edge[2]),
+				Double.parseDouble(edge[3]), edge[0], edge[1]);
+				 if(!result){
+						throw new IllegalArgumentException("Entrada no valida: No se pueden agregar lados");
+				 }
+			}
+			return true;
 	}
 
 	/**
@@ -68,7 +109,7 @@ public class UndirectedGraph implements Graph{
 	* @param weight Peso del nuevo nodo
 	*
 	**/
-	public boolean addNode(String id, boolean data, Integer weight){
+	public boolean addNode(String id, Integer data, Integer weight){
 
 		// Se verifica si el nodo existia en el grafo
 		if(namesToNodes.get(id) != null)
@@ -294,10 +335,24 @@ public class UndirectedGraph implements Graph{
 	* @return Grafo clonado
 	**/
 	public UndirectedGraph clone(){
-
-	
-
+      	
+      	UndirectedGraph g = new UndirectedGraph();
+		
+			for(UNode v : this.nodeSet){
+			    UNode u = new UNode(v);
+				g.addNode(u);
+			}
+			
+			for(Edge e : this.edgeSet){
+		      	UNode u = g.getNode(e.getFNode().getId());
+				UNode v = g.getNode(e.getSNode().getId());
+				Edge f = new Edge(e, u, v);
+				g.addEdge(f);
+			}
+      
+      return g;
 	}
+
 	/**
 	* Metodo para agregar una arista al grafo
 	* @param edge Arista a agregar
@@ -449,15 +504,15 @@ public class UndirectedGraph implements Graph{
 
 	public void printPath(Stack<String> stack, int capacity, String dest, double distance){
 
-		System.out.println(capacity+" personas a"+dest);
+		System.out.println(capacity+" personas a "+dest);
 		System.out.print("\tRuta: ");
-		String building = stack.poll();
+		String building = stack.pop();
 		System.out.print(building);
 		while(!stack.isEmpty()){
 			System.out.print(" - ");
-			System.out.print(stack.poll());
+			System.out.print(stack.pop());
 		}
-		System.out.print(" ("+distance+")\n");
+		System.out.print(" ("+distance+" m)\n");
 
 	}
 	public void solve(String sId, int people){
@@ -482,7 +537,7 @@ public class UndirectedGraph implements Graph{
 			e = last.cameFrom;
 
 			Stack<String> stack = new Stack<String>();
-			stack.push(last.getId())
+			stack.push(last.getId());
 			
 			while(e != null){
 				
@@ -535,5 +590,10 @@ public class UndirectedGraph implements Graph{
 		
 		return;
 	}	
+
+	public void changeFloor(String id, Integer k){
+		  this.getNode(id).changeW(k);
+	}
+
 }
 

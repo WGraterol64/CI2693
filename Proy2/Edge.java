@@ -30,6 +30,13 @@ public class Edge extends GraphEdges{
 		this.nodeA = nodeA;
 		this.nodeB = nodeB;
 	}
+	public Edge(Edge e, UNode nodeA, UNode nodeB){
+		this.id = e.getId();
+		this.cap = e.getCap();
+		this.weight = e.getWeight();
+		this.nodeA = nodeA;
+		this.nodeB = nodeB;
+	}
 
 	/**
 	* Metodo utilizado para obtener el peso de la arista
@@ -51,7 +58,7 @@ public class Edge extends GraphEdges{
 	public int getCap(){
 		return this.cap;
 	}
-	
+
 	/**
 	* Metodo que devuelve el primer nodo de la arista
 	* @return Uno de los nodos de la arista

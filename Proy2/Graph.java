@@ -63,13 +63,13 @@ public interface Graph{
 	*  Metodo que busca los nodos de un grafo
 	*  @return devuelve una lista con los nodos del grafo
 	**/
-	public ArrayList<Node> nodeList();
+	public ArrayList<UNode> nodeList();
 
 	/**
 	* Metodo que busca los lados de un grafo
 	* @return devuelve una lista con los lados del grafo
 	**/
-	public ArrayList<Node> edgeList();
+	public ArrayList<Edge> edgeList();
 
 	/**
 	* Metodo que calcula el grado de un nodo
@@ -85,7 +85,7 @@ public interface Graph{
 	* @return devuelve una lista de adyacentes del nodo
 	* @throws NoSuchElementException Si el nodo no existe
 	**/
-	public ArrayList<Node> adjacency(String id) throws NoSuchElementException;
+	public ArrayList<UNode> adjacency(String id) throws NoSuchElementException;
 
 	/**
 	* Metodo que busca lados incidentes a un nodo con identificador id
@@ -93,7 +93,7 @@ public interface Graph{
 	* @return devuelve una lista de lados incidentes al nodo
 	* @throws NoSuchElementException Si el nodo no existe
 	**/
-	public ArrayList<Node> incident(String id) throws NoSuchElementException;
+	public ArrayList<Edge> incident(String id) throws NoSuchElementException;
 
 	/**
 	* Metodo utilizado para clonar el grafo

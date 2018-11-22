@@ -22,7 +22,8 @@ public class UNode extends Node{
 	* @param cap Capacidad del nodo
 	* @param weight Peso del nodo
 	**/
-	public UNode(String id, boolean cap, Integer weight){
+
+	public UNode(String id, int cap, Integer weight){
 		this.id = id;
 		this.cap = cap;
 		this.weight = weight;
@@ -31,10 +32,19 @@ public class UNode extends Node{
 		this.degree = 0;
 	}
 
+	public UNode(UNode v){
+		this.id = v.getId();
+		this.weight = v.getWeight();
+		this.cap = v.getCap();
+		this.adjNodes = new HashSet<UNode>();
+		this.incEdges = new ArrayList<Edge>();
+		this.degree = 0;
+	}
+
 	/**
 	* Metodo utilizado para obtener el peso del nodo
 	**/
-	public Integer getWeight(){
+	public int getWeight(){
 		return this.weight;
 	}
 
@@ -48,7 +58,8 @@ public class UNode extends Node{
 	/**
 	* Metodo utilizado para obtener la capacidad del nodo
 	**/
-	public boolean getCap(){
+
+	public int getCap(){
 		return this.cap;
 	}
 

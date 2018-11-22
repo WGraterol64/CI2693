@@ -13,21 +13,17 @@ public abstract class Node{
 	* Metodo utilizado para obtener el peso del nodo
 	* @return peso del nodo
 	**/
-	public abstract Integer getWeight();
+	public abstract int getWeight();
 	/**
 	* Metodo utilizado para obtener el identificador del nodo
 	* @return identificador del nodo
 	**/
 	public abstract String getId();
+	
 	/**
-	* Metodo utilizado para obtener el dato del nodo
-	* @return dato del nodo
+	* Metodo utilizado para obtener la capacidad del nodo
+	* @return capacidad del nodo
 	**/
 	public abstract int getCap();
-	/**
-	* Metodo utilizado para obtener un string con informacion del nodo
-	* @return string con la informacion del nodo
-	**/
-	public abstract String toString();
 
 }
