@@ -457,16 +457,24 @@ public class UndirectedGraph implements Graph{
 		return edge;
 	}
 
+	/**
+	* Implementacion del algoritmo de BellmanFord para encontrar caminos minimos
+	* @param s String identificador de la fuente
+	**/
 	public boolean BellmanFord(String s){
 
+		// Inicializamos los costos en Infinito
 		for( UNode v : this.nodeSet){
 			v.distanceToSource = Double.POSITIVE_INFINITY;
 			v.cameFrom = null;
 		}
 
+		// Buscamos el nodo fuente e inicializamos el costo
+		// de llegar a el en 0
 		UNode source = this.namesToNodes.get(s);
 		source.distanceToSource = 0.0;
 
+		// Variable util para romper el ciclo si no ocurren cambios
 		boolean change = true;
 		for(int i = 0; i < this.numOfNodes && change; i++){
 			change = false;
@@ -499,6 +507,7 @@ public class UndirectedGraph implements Graph{
 			}
 		}
 
+		// Si hubo un cambio en la ultima iteracion, hay ciclos de costos negativo
 		return !change;
 	}
 
@@ -517,20 +526,29 @@ public class UndirectedGraph implements Graph{
 	}
 	public void solve(String sId, int people){
 
+		// Extraemos el nodo fuente
 		UNode source = this.namesToNodes.get(sId);
+		// Extraemos el nodo sink, que representa
+		// los banos.
 		UNode sink = this.namesToNodes.get("sink");
 
 		while(people > 0){
 
-			this.BellmanFord(sId);
+			// Revisamos si existen ciclos de costo negativo
+			if(!BellmanFord){
+				System.out.prinln("Error, ciclos de costo negativo.");
+				break;
+			}
 
+			// Si un bano no puede ser alcanzado, el algoritmo termina
 			if(sink.distanceToSource == Double.POSITIVE_INFINITY)
 				break;
 			
-			Edge e = sink.cameFrom;
-			double distance = sink.distanceToSource;
-			int capacity = e.getCap();
-			UNode last = e.getFNode();
+			// Si podemos llegar al sink, entonces existe un camino a un bano
+			Edge e = sink.cameFrom; // Desde donde se llego al bano
+			double distance = sink.distanceToSource; // DIstancia minima para llegar a un bano
+			int capacity = e.getCap(); // Cantidad de gente que puede quedarse en este bano
+			UNode last = e.getFNode(); // Edificio donde hay un bano alcanzable
 			
 			String dest = last.getId();
 
@@ -541,13 +559,16 @@ public class UndirectedGraph implements Graph{
 			
 			while(e != null){
 				
+				// Encontramos el edge cuya capacidad sea minima, 
+				// este sera el numero maximo de personas que podremos enviar
+				// a traves de este camino
 				if(e.getCap()<capacity)
 					capacity = e.getCap();
 				
 				UNode nodeU = e.getFNode();
 				UNode nodeV = e.getSNode();
 
-
+				// Guardamos el recorrido en el stack
 				if(nodeU.getId().equals(last.getId())){
 					stack.push(nodeV.getId());
 					last = nodeV;
@@ -560,14 +581,17 @@ public class UndirectedGraph implements Graph{
 
 			}
 
+			// Revisamos tenemos suficientes personas para enviar
 			if(people<capacity)
 				capacity = people;
 
+			// Actualizamos el numero de personas que quedan por enviar
 			people -= capacity;
 
 			e = sink.cameFrom;
 			last = sink;
-					
+	
+			// Actualizamos las capacidades de todos los edges del camino					
 			while(e != null){
 				
 				e.changeCap(-capacity);
@@ -582,9 +606,11 @@ public class UndirectedGraph implements Graph{
 				e = last.cameFrom;
 			}
 
+			// Imprimimos el camino
 			printPath(stack,capacity,dest,distance);
 		}
 
+		// Verificamos si sobran personas
 		if(people>0)
 			System.out.println(people+" personas sin asignar");
 		

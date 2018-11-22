@@ -10,7 +10,7 @@ public class Edge extends GraphEdges{
 
 
 	private String id; // Identificador de la arista
-	private int cap; // Dato de la arista
+	private int cap; // Capacidad de la arista
 	private double weight; // Peso de la arista
 	private UNode nodeA; // Primer nodo de la arista
 	private UNode  nodeB; // Segundo de la arista
@@ -30,6 +30,13 @@ public class Edge extends GraphEdges{
 		this.nodeA = nodeA;
 		this.nodeB = nodeB;
 	}
+
+	/**
+	* Constructor de la clase utilizado para copiar un Edge
+	* @param e Edge a copiar
+	* @param nodeA nodo del nuevo Edge
+	* @param nodeB nodo del nuevo Edge
+	**/
 	public Edge(Edge e, UNode nodeA, UNode nodeB){
 		this.id = e.getId();
 		this.cap = e.getCap();
@@ -75,6 +82,10 @@ public class Edge extends GraphEdges{
 		return this.nodeB;
 	}
 
+	/**
+	* Metodo que se utiliza para actualizar la capacidad de un edge
+	* @param n Valor a sumar a la capacidad actual
+	**/
 	public void changeCap(int n){
 		this.cap += n;
 	}

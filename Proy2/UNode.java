@@ -13,8 +13,9 @@ public class UNode extends Node{
 	public HashSet<UNode> adjNodes; // Lista de los nodos adyacentes
 	public ArrayList<Edge> incEdges; // Lista de los lados incidentes
 
-	public double distanceToSource;
-	public Edge cameFrom;
+	// Parametros utiles para el algoritmo BellmanFord
+	public double distanceToSource; // Distancia desde el nodo a la fuente en el grafo
+	public Edge cameFrom; // Edge incidente a el nodo en el camino minimo desde la fuente hasta el
 
 	/**
 	* Constructor de la clase
@@ -22,7 +23,6 @@ public class UNode extends Node{
 	* @param cap Capacidad del nodo
 	* @param weight Peso del nodo
 	**/
-
 	public UNode(String id, int cap, Integer weight){
 		this.id = id;
 		this.cap = cap;
@@ -32,6 +32,11 @@ public class UNode extends Node{
 		this.degree = 0;
 	}
 
+	/**
+	* Constructor de la clase
+	* Util para copiar un nodo
+	* @param v nodo a copiar
+	**/
 	public UNode(UNode v){
 		this.id = v.getId();
 		this.weight = v.getWeight();
@@ -63,6 +68,10 @@ public class UNode extends Node{
 		return this.cap;
 	}
 
+	/**
+	* Metodo utilizado para modificar el peso de un nodo
+	* @param n Valor a agregar al peso
+	**/
 	public void changeW(int n){
 		this.weight += n;
 	}
