@@ -7,11 +7,11 @@ public class UNode extends Node{
 
 
 	private String id; // Identificador del nodo
-	private boolean data; // Dato del nodo
+	private Integer data; // Dato del nodo
 	private Integer weight; // Peso del nodo
 	public int degree; // Grado del nodo
-	public HashSet<UNode<V,E>> adjNodes; // Lista de los nodos adyacentes
-	public ArrayList<Edge<V,E>> incEdges; // Lista de los lados incidentes
+	public HashSet<UNode> adjNodes; // Lista de los nodos adyacentes
+	public ArrayList<Edge> incEdges; // Lista de los lados incidentes
 
 	/**
 	* Constructor de la clase
@@ -19,13 +19,22 @@ public class UNode extends Node{
 	* @param data Dato del nodo
 	* @param weight Peso del nodo
 	**/
-	public UNode(String id, boolean data, Integer weight){
+	public UNode(String id, Integer data, Integer weight){
 		this.id = id;
 		this.data = data;
 		this.weight = weight;
-		this.adjNodes = new HashSet<UNode<V,E>>();
-		this.incEdges = new ArrayList<Edge<V,E>>();
+		this.adjNodes = new HashSet<UNode>();
+		this.incEdges = new ArrayList<Edge>();
 		this.degree = 0;
+	}
+
+	public UNode(UNode v){
+		  this.id = v.getId();
+		  this.weight = v.getWeight();
+			this.data = v.getData();
+			this.adjNodes = new HashSet<UNode>();
+			this.incEdges = new ArrayList<Edge>();
+			this.degree = 0;
 	}
 
 	/**
@@ -45,7 +54,7 @@ public class UNode extends Node{
 	/**
 	* Metodo utilizado para obtener el dato del nodo
 	**/
-	public boolean getData(){
+	public Integer getData(){
 		return this.data;
 	}
 
@@ -59,6 +68,14 @@ public class UNode extends Node{
 		vertex += "Peso: "+String.valueOf(this.getWeight()) + "\n";
 
 		return vertex;
+	}
+
+	public void changeD(Integer k){
+		this.data += k;
+	}
+
+	public void changeW(Integer k){
+		this.data += k;
 	}
 
 }

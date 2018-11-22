@@ -23,7 +23,7 @@ public abstract class Node{
 	* Metodo utilizado para obtener el dato del nodo
 	* @return dato del nodo
 	**/
-	public abstract int getData();
+	public abstract Integer getData();
 	/**
 	* Metodo utilizado para obtener un string con informacion del nodo
 	* @return string con la informacion del nodo
