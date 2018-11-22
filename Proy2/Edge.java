@@ -68,7 +68,7 @@ public class Edge extends GraphEdges{
 		return this.nodeB;
 	}
 
-	public void editCap(int n){
-		this.cap += b;
+	public void changeCap(int n){
+		this.cap += n;
 	}
 }

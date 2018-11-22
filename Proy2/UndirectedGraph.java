@@ -402,4 +402,138 @@ public class UndirectedGraph implements Graph{
 		return edge;
 	}
 
+	public boolean BellmanFord(String s){
+
+		for( UNode v : this.nodeSet){
+			v.distanceToSource = Double.POSITIVE_INFINITY;
+			v.cameFrom = null;
+		}
+
+		UNode source = this.namesToNodes.get(s);
+		source.distanceToSource = 0.0;
+
+		boolean change = true;
+		for(int i = 0; i < this.numOfNodes && change; i++){
+			change = false;
+			for( Edge e : this.edgeSet ){
+				if(e.getCap() == 0) continue;
+				UNode nodeU = e.getFNode();
+				UNode nodeV = e.getSNode();
+				double dist = e.getWeight();
+
+				if(nodeV.getId().equals("sink")){
+					
+					if(nodeV.distanceToSource > nodeU.distanceToSource + dist){
+						change = true;
+						nodeV.distanceToSource = nodeU.distanceToSource + dist;
+						nodeV.cameFrom = e;
+					}
+					continue;
+				}
+				
+				if(nodeU.distanceToSource > nodeV.distanceToSource + dist){
+					change = true;
+					nodeU.distanceToSource = nodeV.distanceToSource + dist;
+					nodeU.cameFrom = e;
+				}
+				else if(nodeV.distanceToSource > nodeU.distanceToSource + dist){
+					change = true;
+					nodeV.distanceToSource = nodeU.distanceToSource + dist;
+					nodeV.cameFrom = e;
+				}
+			}
+		}
+
+		return !change;
+	}
+
+	public void printPath(Stack<String> stack, int capacity, String dest, double distance){
+
+		System.out.println(capacity+" personas a"+dest);
+		System.out.print("\tRuta: ");
+		String building = stack.poll();
+		System.out.print(building);
+		while(!stack.isEmpty()){
+			System.out.print(" - ");
+			System.out.print(stack.poll());
+		}
+		System.out.print(" ("+distance+")\n");
+
+	}
+	public void solve(String sId, int people){
+
+		UNode source = this.namesToNodes.get(sId);
+		UNode sink = this.namesToNodes.get("sink");
+
+		while(people > 0){
+
+			this.BellmanFord(sId);
+
+			if(sink.distanceToSource == Double.POSITIVE_INFINITY)
+				break;
+			
+			Edge e = sink.cameFrom;
+			double distance = sink.distanceToSource;
+			int capacity = e.getCap();
+			UNode last = e.getFNode();
+			
+			String dest = last.getId();
+
+			e = last.cameFrom;
+
+			Stack<String> stack = new Stack<String>();
+			stack.push(last.getId())
+			
+			while(e != null){
+				
+				if(e.getCap()<capacity)
+					capacity = e.getCap();
+				
+				UNode nodeU = e.getFNode();
+				UNode nodeV = e.getSNode();
+
+
+				if(nodeU.getId().equals(last.getId())){
+					stack.push(nodeV.getId());
+					last = nodeV;
+				}else{
+					stack.push(nodeU.getId());
+					last = nodeU;
+				}
+
+				e = last.cameFrom;
+
+			}
+
+			if(people<capacity)
+				capacity = people;
+
+			people -= capacity;
+
+			e = sink.cameFrom;
+			last = sink;
+					
+			while(e != null){
+				
+				e.changeCap(-capacity);
+				UNode nodeU = e.getFNode();
+				UNode nodeV = e.getSNode();
+
+				if(nodeU.getId().equals(last.getId()))
+					last = nodeV;
+				else
+					last = nodeU;
+			
+				e = last.cameFrom;
+			}
+
+			printPath(stack,capacity,dest,distance);
+		}
+
+		if(people>0)
+			System.out.println(people+" personas sin asignar");
+		
+		return;
+	}	
 }
+

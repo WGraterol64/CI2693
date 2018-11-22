@@ -7,24 +7,27 @@ public class UNode extends Node{
 
 
 	private String id; // Identificador del nodo
-	private boolean data; // Dato del nodo
-	private Integer weight; // Peso del nodo
+	private int cap; // Capacidad del nodo
+	private int weight; // Peso del nodo
 	public int degree; // Grado del nodo
-	public HashSet<UNode<V,E>> adjNodes; // Lista de los nodos adyacentes
-	public ArrayList<Edge<V,E>> incEdges; // Lista de los lados incidentes
+	public HashSet<UNode> adjNodes; // Lista de los nodos adyacentes
+	public ArrayList<Edge> incEdges; // Lista de los lados incidentes
+
+	public double distanceToSource;
+	public Edge cameFrom;
 
 	/**
 	* Constructor de la clase
 	* @param id Identificador del nodo
-	* @param data Dato del nodo
+	* @param cap Capacidad del nodo
 	* @param weight Peso del nodo
 	**/
-	public UNode(String id, boolean data, Integer weight){
+	public UNode(String id, boolean cap, Integer weight){
 		this.id = id;
-		this.data = data;
+		this.cap = cap;
 		this.weight = weight;
-		this.adjNodes = new HashSet<UNode<V,E>>();
-		this.incEdges = new ArrayList<Edge<V,E>>();
+		this.adjNodes = new HashSet<UNode>();
+		this.incEdges = new ArrayList<Edge>();
 		this.degree = 0;
 	}
 
@@ -43,22 +46,14 @@ public class UNode extends Node{
 	}
 
 	/**
-	* Metodo utilizado para obtener el dato del nodo
+	* Metodo utilizado para obtener la capacidad del nodo
 	**/
-	public boolean getData(){
-		return this.data;
+	public boolean getCap(){
+		return this.cap;
 	}
 
-	/**
-	* Metodo utilizado para obtener un string con informacion del nodo
-	**/
-	public String toString(){
-
-		String vertex = "Identificador: "+this.getId()+"\n";
-		vertex += "Dato: "+String.valueOf(this.getData()) + "\n";
-		vertex += "Peso: "+String.valueOf(this.getWeight()) + "\n";
-
-		return vertex;
+	public void changeW(int n){
+		this.weight += n;
 	}
 
 }
