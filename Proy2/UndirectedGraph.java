@@ -31,9 +31,7 @@ public class UndirectedGraph implements Graph{
 
 	/**
   	* Carga el grafo desde un archivo de texto.
-	*
 	* @param fileName Archivo desde el que se desea cargar e grafo
-	*
 	* @throws IllegalArgumentException si el formato del archivo no es valido
 	* @throws IOException si ocurre un error al leer el archivo
 	* @throws UnsupportedOperationException si ocurre algun error parseando datos del archivo
@@ -332,24 +330,24 @@ public class UndirectedGraph implements Graph{
 
 	/**
 	* Metodo utilizado para clonar el grafo
-	* @return Grafo clonado
+	* @return un grafo con los mismos nodos y aristas que este
 	**/
 	public UndirectedGraph clone(){
-      	
+
       	UndirectedGraph g = new UndirectedGraph();
-		
+
 			for(UNode v : this.nodeSet){
 			    UNode u = new UNode(v);
 				g.addNode(u);
 			}
-			
+
 			for(Edge e : this.edgeSet){
 		      	UNode u = g.getNode(e.getFNode().getId());
 				UNode v = g.getNode(e.getSNode().getId());
 				Edge f = new Edge(e, u, v);
 				g.addEdge(f);
 			}
-      
+
       return g;
 	}
 
@@ -477,7 +475,7 @@ public class UndirectedGraph implements Graph{
 				double dist = e.getWeight();
 
 				if(nodeV.getId().equals("sink")){
-					
+
 					if(nodeV.distanceToSource > nodeU.distanceToSource + dist){
 						change = true;
 						nodeV.distanceToSource = nodeU.distanceToSource + dist;
@@ -485,7 +483,7 @@ public class UndirectedGraph implements Graph{
 					}
 					continue;
 				}
-				
+
 				if(nodeU.distanceToSource > nodeV.distanceToSource + dist){
 					change = true;
 					nodeU.distanceToSource = nodeV.distanceToSource + dist;
@@ -526,24 +524,24 @@ public class UndirectedGraph implements Graph{
 
 			if(sink.distanceToSource == Double.POSITIVE_INFINITY)
 				break;
-			
+
 			Edge e = sink.cameFrom;
 			double distance = sink.distanceToSource;
 			int capacity = e.getCap();
 			UNode last = e.getFNode();
-			
+
 			String dest = last.getId();
 
 			e = last.cameFrom;
 
 			Stack<String> stack = new Stack<String>();
 			stack.push(last.getId());
-			
+
 			while(e != null){
-				
+
 				if(e.getCap()<capacity)
 					capacity = e.getCap();
-				
+
 				UNode nodeU = e.getFNode();
 				UNode nodeV = e.getSNode();
 
@@ -567,9 +565,9 @@ public class UndirectedGraph implements Graph{
 
 			e = sink.cameFrom;
 			last = sink;
-					
+
 			while(e != null){
-				
+
 				e.changeCap(-capacity);
 				UNode nodeU = e.getFNode();
 				UNode nodeV = e.getSNode();
@@ -578,7 +576,7 @@ public class UndirectedGraph implements Graph{
 					last = nodeV;
 				else
 					last = nodeU;
-			
+
 				e = last.cameFrom;
 			}
 
@@ -587,13 +585,12 @@ public class UndirectedGraph implements Graph{
 
 		if(people>0)
 			System.out.println(people+" personas sin asignar");
-		
+
 		return;
-	}	
+	}
 
 	public void changeFloor(String id, Integer k){
 		  this.getNode(id).changeW(k);
 	}
 
 }
-
