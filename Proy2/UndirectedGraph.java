@@ -31,9 +31,7 @@ public class UndirectedGraph implements Graph{
 
 	/**
   	* Carga el grafo desde un archivo de texto.
-	*
 	* @param fileName Archivo desde el que se desea cargar e grafo
-	*
 	* @throws IllegalArgumentException si el formato del archivo no es valido
 	* @throws IOException si ocurre un error al leer el archivo
 	* @throws UnsupportedOperationException si ocurre algun error parseando datos del archivo
@@ -62,26 +60,37 @@ public class UndirectedGraph implements Graph{
 				}
 			}
 			// Lazo que agrega los nodos
-			for(int i=0;i<n;i++){
-				line = read.readLine();
-				line = line.trim();
-				String[] node = line.split(" ");
-				result = this.addNode(node[0],Integer.parseInt(node[1]),
-				Integer.parseInt(node[2]));
-				if(!result){
-					throw new IllegalArgumentException("Entrada no valida: No se pueden agregar nodos");
+			try{
+				for(int i=0;i<n;i++){
+					line = read.readLine();
+					line = line.trim();
+					String[] node = line.split(" ");
+					result = this.addNode(node[0],Integer.parseInt(node[1]),
+					Integer.parseInt(node[2]));
+					if(!result){
+						throw new IllegalArgumentException("Entrada no valida: No se pueden agregar nodos");
+					}
 				}
-			}
+			}catch(NumberFormatException | IOException ee){
+            	throw new UnsupportedOperationException("Error, entrada no valida.");
+       		}
+
 			// Lazo que agrega los lados
-			for(int i=0; i<m; i++){
-				line = read.readLine().trim();
-				String[] edge = line.split(" ");
-				result = this.addEdge(Integer.toString(i), Integer.parseInt(edge[2]),
-				Double.parseDouble(edge[3]), edge[0], edge[1]);
-				 if(!result){
-						throw new IllegalArgumentException("Entrada no valida: No se pueden agregar lados");
-				 }
-			}
+			try{
+				for(int i=0; i<m; i++){
+					line = read.readLine().trim();
+					String[] edge = line.split(" ");
+					result = this.addEdge(Integer.toString(i), Integer.parseInt(edge[2]),
+					Double.parseDouble(edge[3]), edge[0], edge[1]);
+					 if(!result){
+							throw new IllegalArgumentException("Entrada no valida: No se pueden agregar lados");
+					 }
+				}
+			}catch(NumberFormatException | IOException ee){
+            		throw new UnsupportedOperationException("Error, entrada no valida.");
+       		}
+       		
+
 			return true;
 	}
 
@@ -332,24 +341,24 @@ public class UndirectedGraph implements Graph{
 
 	/**
 	* Metodo utilizado para clonar el grafo
-	* @return Grafo clonado
+	* @return un grafo con los mismos nodos y aristas que este
 	**/
 	public UndirectedGraph clone(){
-      	
+
       	UndirectedGraph g = new UndirectedGraph();
-		
+
 			for(UNode v : this.nodeSet){
 			    UNode u = new UNode(v);
 				g.addNode(u);
 			}
-			
+
 			for(Edge e : this.edgeSet){
 		      	UNode u = g.getNode(e.getFNode().getId());
 				UNode v = g.getNode(e.getSNode().getId());
 				Edge f = new Edge(e, u, v);
 				g.addEdge(f);
 			}
-      
+
       return g;
 	}
 
@@ -485,7 +494,7 @@ public class UndirectedGraph implements Graph{
 				double dist = e.getWeight();
 
 				if(nodeV.getId().equals("sink")){
-					
+
 					if(nodeV.distanceToSource > nodeU.distanceToSource + dist){
 						change = true;
 						nodeV.distanceToSource = nodeU.distanceToSource + dist;
@@ -493,7 +502,7 @@ public class UndirectedGraph implements Graph{
 					}
 					continue;
 				}
-				
+
 				if(nodeU.distanceToSource > nodeV.distanceToSource + dist){
 					change = true;
 					nodeU.distanceToSource = nodeV.distanceToSource + dist;
@@ -535,8 +544,8 @@ public class UndirectedGraph implements Graph{
 		while(people > 0){
 
 			// Revisamos si existen ciclos de costo negativo
-			if(!BellmanFord){
-				System.out.prinln("Error, ciclos de costo negativo.");
+			if(!BellmanFord(sId)){
+				System.out.println("Error, ciclos de costo negativo.");
 				break;
 			}
 
@@ -556,15 +565,16 @@ public class UndirectedGraph implements Graph{
 
 			Stack<String> stack = new Stack<String>();
 			stack.push(last.getId());
-			
+
 			while(e != null){
+
 				
 				// Encontramos el edge cuya capacidad sea minima, 
 				// este sera el numero maximo de personas que podremos enviar
 				// a traves de este camino
 				if(e.getCap()<capacity)
 					capacity = e.getCap();
-				
+
 				UNode nodeU = e.getFNode();
 				UNode nodeV = e.getSNode();
 
@@ -590,10 +600,11 @@ public class UndirectedGraph implements Graph{
 
 			e = sink.cameFrom;
 			last = sink;
+
 	
-			// Actualizamos las capacidades de todos los edges del camino					
+			// Actualizamos las capacidades de todos los edges del camino
 			while(e != null){
-				
+
 				e.changeCap(-capacity);
 				UNode nodeU = e.getFNode();
 				UNode nodeV = e.getSNode();
@@ -602,7 +613,7 @@ public class UndirectedGraph implements Graph{
 					last = nodeV;
 				else
 					last = nodeU;
-			
+
 				e = last.cameFrom;
 			}
 
@@ -613,13 +624,12 @@ public class UndirectedGraph implements Graph{
 		// Verificamos si sobran personas
 		if(people>0)
 			System.out.println(people+" personas sin asignar");
-		
+
 		return;
-	}	
+	}
 
 	public void changeFloor(String id, Integer k){
 		  this.getNode(id).changeW(k);
 	}
 
 }
-
