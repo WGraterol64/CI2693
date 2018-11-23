@@ -101,39 +101,70 @@ public class Redecorador{
     public static void printPathsAStar(Graph graph, int s, int n){
         long time = System.currentTimeMillis();
         for(int i=0; i<n; i++){
-          printPathsA(graph,s, i)
+          System.out.println("Vertice "+Integer.toString(i));
+          printPathsA(graph,s, i);
         }
         time = time-System.currentTimeMillis();
         time = time/1000;
         System.out.println("El tiempo de ejecucion total de A* fue:" + Long.toString(time));
       }
+
     public static void printPathsA(Graph graph, int s, int f){
+      long time = System.currentTimeMillis();
+      int[] results;
       try{
-          int [] results = graph.AStar(s,f);
+          results = graph.AStar(s,f);
       }catch(IllegalArgumentException e){
           throw e;
       }
+      time = time-System.currentTimeMillis();
+      time = time/1000;
+      time = System.currentTimeMillis();
+      System.out.println("El tiempo hallar el camino con A* fue: "+Long.toString(time));
       // Definimos el numero de cifras de significativas en el resultado
       DecimalFormat dformat = new DecimalFormat("0.00");
       // Pila que nos ayudara a recuperar los caminos
       Stack<Integer> stack = new Stack<Integer>();
       // String en el que guardaremos e imprimiremos el camino
-      String t;
+      String t = "Nodo " + String.valueOf(f) + " : " ;
+      t += String.valueOf(s);
+      int p = f;
+      while(p!=s){
+        // Agregamos el nodo a la pila y seguimos con el siguiente pred
+        stack.push(p);
+        p = graph.predecessor[p];
+      }
+      int numOfEdges = stack.size();
+      while(!stack.empty())
+          // Sacamos uno a uno los elementos de la pila y con ellos hacemos el camino
+          t += "->" + String.valueOf(stack.pop());
 
+      t +=  "		" + String.valueOf(numOfEdges) + " lados (Costo " + String.valueOf(dformat.format(graph.cost[f]))+ ")";
+      System.out.println(t);
+      time = time-System.currentTimeMillis();
+      time = time/1000;
+      System.out.println("El numero de caminos abiertos fue: "+Integer.toString(results[0]));
+      System.out.println("El numero de caminos cerrados fue: "+Integer.toString(results[1]));
+      System.out.println("El tiempo que tomo imprimir los caminos fue:" + Long.toString(time));
     }
     /**
     * Recupera los recorridos generados por Dijkstra y los imprime junto a sus costos
     * @param graph es el grafo al que se le haran los caminos de costo minimo
     * @param s es el vertice de inicio del recorrido
     */
-    public static void printPaths(Graph graph, int s){
+    public static void printPathsDijkstra(Graph graph, int s){
         long time = System.currentTimeMillis();
+        int[] results = new int[2];
         try{
           // Calculamos los caminos
-          graph.dijkstra(s);
+          results = graph.dijkstra(s);
         }catch(IllegalArgumentException e){
           throw e;
         }
+        time = time-System.currentTimeMillis();
+        time = time/1000;
+        time = System.currentTimeMillis();
+        System.out.println("El tiempo hallar todos los caminos con Dijkstra fue: "+Long.toString(time));
         // Definimos el numero de cifras de significativas en el resultado
         DecimalFormat dformat = new DecimalFormat("0.00");
         // Pila que nos ayudara a recuperar los caminos
@@ -162,7 +193,7 @@ public class Redecorador{
                     // Sacamos uno a uno los elementos de la pila y con ellos hacemos el camino
                     t += "->" + String.valueOf(stack.pop());
 
-                    t +=  "		" + String.valueOf(numOfEdges) + " lados (Costo " + String.valueOf(dformat.format(graph.cost[i]))+ ")";
+                t +=  "		" + String.valueOf(numOfEdges) + " lados (Costo " + String.valueOf(dformat.format(graph.cost[i]))+ ")";
             }
 
             // Si no es alcanzable
@@ -171,6 +202,11 @@ public class Redecorador{
 
             System.out.println(t);
         }
+        time = time-System.currentTimeMillis();
+        time = time/1000;
+        System.out.println("El numero de caminos abiertos fue: "+Integer.toString(results[0]));
+        System.out.println("El numero de caminos cerrados fue: "+Integer.toString(results[1]));
+        System.out.println("El tiempo que tomo imprimir los caminos fue:" + Long.toString(time));
     }
 
     /**
@@ -206,8 +242,15 @@ public class Redecorador{
         }
 
         try{
-          // Imprimir caminos
-          printPathsDijkstra(problemGraph,s, n);
+          System.out.println("Resolucion del problema con Dijkstra");
+          printPathsDijkstra(problemGraph,s);
+        }catch (IllegalArgumentException e) {
+          throw e;
+        }
+
+        try{
+          System.out.println("Resolucion del problema con A*");
+          printPathsAStar(problemGraph,s,problemGraph.n);
         }catch (IllegalArgumentException e) {
           throw e;
         }

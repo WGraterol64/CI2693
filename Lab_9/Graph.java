@@ -77,13 +77,13 @@ class Graph{
 	* @param s Fuente desde la que inciara el algoritmo
 	* @throws IllegalArgumentException si s no esta en el grafo
 	**/
-	public void dijkstra(int s)
+	public int[] dijkstra(int s)
 	throws IllegalArgumentException{
     if(s>=n)
 		    throw new IllegalArgumentException("El vertice no esta en el nodo");
+		int[] results = new int[2];
 		cost[s] = 0; // El costo de llegar a la fuente es 0
 		predecessor[s] = s; // Condicion de parada, s es su propio predecesor
-
 
 		// Inicializamos un comparador de pares, y una priority queue (Heap)
 		// que ordenara los elementos bajo este comparador.
@@ -102,7 +102,7 @@ class Graph{
 			// Extraemos un par de la cola
 			Pair pp = pq.remove();
 			// Aumentar el numero de caminos cerrados en el recorrido
-			int cerrados ++;
+			cerrados ++;
 			// Extraemos el identificador del vertice y el costo de llegar a el
 			int u = pp.vertex;
 
@@ -114,7 +114,7 @@ class Graph{
 			// Para todos los vecinos de u
 			for( int v : this.list.get(u).adj){
 				// Aumentar el numero de caminos abiertos
-        int abiertos ++;
+        abiertos ++;
 				// Calculamos el costo del lado entre u y v
 				double costUV = getCost(list.get(u),list.get(v));
 				// Si el costo de llegar a u + el costo entre u y v es menor que el costo
@@ -128,6 +128,9 @@ class Graph{
 				}
 			}
 		}
+		results[0] = abiertos;
+		results[1] = cerrados;
+		return results;
 	}
 
 	public int[] AStar(int s, int f)
@@ -154,7 +157,7 @@ class Graph{
 			// Extraemos un par de la cola
 			Pair pp = pq.remove();
 			// Aumentar el numero de caminos cerrados en el recorrido
-			int cerrados ++;
+			cerrados ++;
 			// Extraemos el identificador del vertice y el costo de llegar a el
 			int u = pp.vertex;
 			if(u == s)
@@ -171,7 +174,7 @@ class Graph{
 				// Calculamos el costo del lado entre u y v
 				double costUV = getCost(list.get(u),list.get(v));
 				// Aumentar el numero de caminos abiertos
-        int abiertos ++;
+        abiertos ++;
 				// Si el costo de llegar a u + el costo entre u y v es menor que el costo
 				// minimo actual de llegar a v, entonces actualizamos el costo de v y
 				// lo agregamos a la cola para ser analizado luego.
