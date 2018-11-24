@@ -79,9 +79,10 @@ class Graph{
 	**/
 	public int[] dijkstra(int s)
 	throws IllegalArgumentException{
-    if(s>=n)
+   		
+   		if(s>=n)
 		    throw new IllegalArgumentException("El vertice no esta en el nodo");
-		int[] results = new int[2];
+
 		cost[s] = 0; // El costo de llegar a la fuente es 0
 		predecessor[s] = s; // Condicion de parada, s es su propio predecesor
 
@@ -113,8 +114,6 @@ class Graph{
 
 			// Para todos los vecinos de u
 			for( int v : this.list.get(u).adj){
-				// Aumentar el numero de caminos abiertos
-        abiertos ++;
 				// Calculamos el costo del lado entre u y v
 				double costUV = getCost(list.get(u),list.get(v));
 				// Si el costo de llegar a u + el costo entre u y v es menor que el costo
@@ -122,12 +121,16 @@ class Graph{
 				// lo agregamos a la cola para ser analizado luego.
 				if(costU + costUV < cost[v]){
 					cost[v] = costU + costUV;
+					// Aumentar el numero de caminos abiertos
+        			abiertos ++;
 					Pair pv = new Pair(cost[v],v);
 					predecessor[v] = u; // Marcamos a u como predecesor de v
 					pq.add(pv);
 				}
 			}
 		}
+
+		int[] results = new int[2];
 		results[0] = abiertos;
 		results[1] = cerrados;
 		return results;
@@ -135,8 +138,10 @@ class Graph{
 
 	public int[] AStar(int s, int f)
 	throws IllegalArgumentException{
-    if(s>=n)
+   		
+   		if(s>=n)
 		    throw new IllegalArgumentException("El vertice no esta en el nodo");
+		
 		cost[s] = 0; // El costo de llegar a la fuente es 0
 		predecessor[s] = s; // Condicion de parada, s es su propio predecesor
 
@@ -173,19 +178,20 @@ class Graph{
 
 				// Calculamos el costo del lado entre u y v
 				double costUV = getCost(list.get(u),list.get(v));
-				// Aumentar el numero de caminos abiertos
-        abiertos ++;
 				// Si el costo de llegar a u + el costo entre u y v es menor que el costo
 				// minimo actual de llegar a v, entonces actualizamos el costo de v y
 				// lo agregamos a la cola para ser analizado luego.
 				if(costU + costUV < cost[v]){
 					cost[v] = costU + costUV;
+					// Aumentar el numero de caminos abiertos
+      				abiertos ++;
 					Pair pv = new Pair(cost[v]+getCost(list.get(v), list.get(s)),v);
 					predecessor[v] = u; // Marcamos a u como predecesor de v
 					pq.add(pv);
 				}
 			}
 		}
+
 		int[] results = new int[2];
 		results[0] = abiertos;
 		results[1] = cerrados;
