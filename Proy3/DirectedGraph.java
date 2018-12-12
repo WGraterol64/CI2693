@@ -36,13 +36,13 @@ public class DirectedGraph{
 	* @param calc arreglo donde estan los nodos
 	* @throws IllegalArgumentException si hay ciclo
 	**/
-  public void dfs_calc(DNode[][] calc)
+  	public void dfs_calc(DNode[][] calc)
 	throws IllegalArgumentException{
-		  for(DNode v : nodeSet){
-				  if(inDegree(v.getId()) == 0){
-						  dfs_rec_calc(calc, v);
-					}
+		for(DNode v : nodeSet){
+			if(inDegree(v.getId()) == 0){
+				dfs_rec_calc(calc, v);
 			}
+		}
 	}
 
 	/**
@@ -54,14 +54,17 @@ public class DirectedGraph{
 	*/
 	public void dfs_rec_calc(DNode[][] calc, DNode v)
 	throws IllegalArgumentException{
-		  v.color = 0;
+		v.color = 0;
 			for(DNode w : v.sucNodes){
-          if(w.color == 0)
-					    throw new IllegalArgumentException("Hay un ciclo entre " + v.getId() + " y " + w.getId());
-					if(w.color == -1)
-					    dfs_rec_calc(calc, v);
+        	
+        		if(w.color == 0)
+					throw new IllegalArgumentException("Hay un ciclo entre " + v.getId() + " y " + w.getId());
+		
+				if(w.color == -1)
+					dfs_rec_calc(calc, v);
 			}
-			v.setWeight(evaluacion(v.getData()));
+
+			v.setWeight(Evaluador.evaluate(v.getData()));
 			v.color = 1;
 	}
 
@@ -120,20 +123,7 @@ public class DirectedGraph{
 		return true;
 	}
 
-	/**
-  * Metodo para agregar un nodo previamente creado al grafo
-	*
-	* @param v Nodo a agregar
-	*/
-	public boolean addNode(DNode node){
-		// Se verifica si el nodo existia en el grafo
-		if(namesToNodes.get(node.getId()) != null)
-			  return false;
-		this.namesToNodes.put(node.getId(),node); // Se coloca el nodo en el mapa
-		this.nodeSet.add(node); // Se agrega el nodo al conjunto de nodos
-		this.numOfNodes++; // Se aumenta el contador de nodos
-		return true;
-	}
+
 	/**
 	* Metodo utilizado para buscar un nodo en el grafo
 	* @return El nodo cuyo identificador es id

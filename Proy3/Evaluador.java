@@ -72,13 +72,13 @@ public class Evaluador{
 		return;
 	}
 
-	private static String evaluateTree(DirectedGraph tree){
+	private static int evaluateTree(DirectedGraph tree){
 
-		String ret = "";
+		int ret = 0;
 		for( DNode v : tree.nodeSet)
 			if(tree.inDegree(v.getId()) == 0){ 
 				postOrder_evaluate(v,tree);
-				ret = String.valueOf(v.getWeight());
+				ret = v.getWeight();
 				break;
 			}
 		return ret;	
@@ -228,7 +228,7 @@ public class Evaluador{
 		return queue;
 	}
 
-	public static String evaluate(String input){
+	public static int evaluate(String input){
 
 		// Simplificamos la sintaxis de la expresion.
 		input = input.replaceAll("MAX","M"); // Cambiamos todas las ocurrencias de "MAX" por "M"
@@ -244,7 +244,7 @@ public class Evaluador{
 		DirectedGraph evaluationTree = buildTree(shuntingYard(input)); 
 
 		// Evaluamos la expresion y obtenemos el resultado.
-		String result = evaluateTree(evaluationTree);
+		int result = evaluateTree(evaluationTree);
 
 		return result;
 	}
@@ -264,7 +264,7 @@ public class Evaluador{
         while(true){
         	String line = reader.readLine();
         	
-        	if(line == null || line.)
+        	if(line == null)
         		break;
 
         	System.out.println(evaluate(line));

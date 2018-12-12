@@ -28,7 +28,7 @@ public class USBDataFlow{
     * @throws IllegalArgumentException si el archivo de entrada no existe o no es valido
     */
     public static void storeSheet(String file)
-    throws IllegalArgumentException{
+    throws IllegalArgumentException, IOException{
     BufferedReader reader;
         try{
            reader = new BufferedReader(new FileReader(file.trim()));
@@ -88,7 +88,7 @@ public class USBDataFlow{
                 System.out.print(ssheet[i][j].getWeight());
                 System.out.print(" ");
             }
-            System.out.println("");
+            System.out.print("\n");
         }
     }
 
