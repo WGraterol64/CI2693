@@ -85,7 +85,7 @@ public class Evaluador{
 	}
 
 	public static DirectedGraph buildTree(Queue<Character> expression){
-
+		
 		// Creamos el arbol
 		DirectedGraph tree = new DirectedGraph();
 		// Cola util para el algoritmo
@@ -231,9 +231,9 @@ public class Evaluador{
 	public static int evaluate(String input){
 
 		// Simplificamos la sintaxis de la expresion.
-		input = input.replaceAll("MAX","M"); // Cambiamos todas las ocurrencias de "MAX" por "M"
-		input = input.replaceAll("MIN","m"); // Cambiamos todas las ocurrencias de "MIN" por "m"
-		input = input.replaceAll("SUM","s"); // Cambiamos todas las ocurrencias de "SUM" por "s"
+		input = input.replaceAll("MAX\\(","M("); // Cambiamos todas las ocurrencias de "MAX" por "M"
+		input = input.replaceAll("MIN\\(","m("); // Cambiamos todas las ocurrencias de "MIN" por "m"
+		input = input.replaceAll("SUM\\(","s("); // Cambiamos todas las ocurrencias de "SUM" por "s"
 
 		// Hacemos distincion de los "-" unarios y binarios.
 		input = input.replaceAll("(?<=[0-9\\)])-","+-");

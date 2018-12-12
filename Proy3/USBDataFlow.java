@@ -14,10 +14,6 @@ public class USBDataFlow{
     public static int m,n; // Dimensiones de la hoja de calculo
     public static DirectedGraph graph; // Grafo de operaciones de la hoja de calculo
     public static DNode [][] ssheet; // Hoja de calculo
-    public static String[] letters = {"A","B","C","D","E","F","G","H",
-                                    "I","J","K","L","M","N","O","P",
-                                    "Q","R","S","T","U","V","X","W",
-                                    "Y","Z"}; // Arreglo para la asignacion de id's
 
     /**
     * Metodo que se encarga de crear los nodos del grafo y la hoja de calculo
@@ -47,11 +43,29 @@ public class USBDataFlow{
                 throw new IllegalArgumentException("El formato del archivo es invalido"); // Posiblemente tambien verificar columnas (?)
 
             for(int j=0; j<m; j++){
-                DNode node = new DNode(asignId(i,j), row[j], 0);
+
+                DNode node = new DNode(asignId(i,j), row[j].replace("\\=",""), 0);
                 boolean is = graph.addNode(node);
                 ssheet[i][j] = node;
             }
         }
+    }
+
+    /**
+    * 
+    **/
+    public static String getValues(DNode v){
+
+        String exp = v.getData().replaceAll("\\=","");
+        String id = v.getId();
+        ArrayList<DNode> predecessor = graph.predecessor(id);
+        for(DNode u : predecessor){
+            String uId = u.getId();
+            String regex = "(?<![A-Z])"+uId+"(?![0-9])";
+            exp = exp.replaceAll(regex,String.valueOf(u.getWeight()));
+        }
+        return exp;
+
     }
 
     /**
@@ -65,7 +79,7 @@ public class USBDataFlow{
       
         for(int i=0; i<n; i++){
             for(int j=0; j<m; j++){
-                String[] exp = ssheet[i][j].getData().split("[\\*\\+\\-,\\(\\)]|MAX|SUM|MIN|(?<![a-zA-Z])\\d+");
+                String[] exp = ssheet[i][j].getData().split("[\\*\\+\\-,\\(\\)\\=]|MAX|SUM|MIN|(?<![A-Z])\\d+");
                 for(String s : exp){
                     if(graph.isNode(s)){
                         String t = asignId(i, j);
@@ -74,8 +88,19 @@ public class USBDataFlow{
                 }
             }
         }
-        
-        graph.dfs_calc(ssheet);
+        Stack<DNode> order = graph.topoSort();
+        while(!order.isEmpty()){
+
+            DNode v = order.pop();
+            char c = v.getData().charAt(0);
+            if(c=='='){
+                String exp = getValues(v);
+                v.setWeight(Evaluador.evaluate(exp));
+            }else{
+                v.setWeight(Integer.parseInt(v.getData()));
+            }
+            
+        }
     }
 
     /**
@@ -101,21 +126,22 @@ public class USBDataFlow{
     * @return un id unico para el nodo en el formato de ojas de calculo
     */
     public static String asignId(int i, int j){
-        String id = "";
-        int col = j;
-        if(col == 0)
-            id += "A";
-        Stack<String> s = new Stack<String>();
-        while (col!=0){
-            s.push(letters[col%26]);
-            col /= 26;
+
+        Stack<String> stack = new Stack<String>();
+        j++;
+        while(j-- > 0){
+            stack.push(Character.toString((char)(65+j%26)));
+            j /= 26;
         }
-        
-        while(!s.isEmpty())
-            id += s.pop();
-        
-        id += String.valueOf(i+1);
-        return id;
+
+        String out = "";
+        while(!stack.isEmpty()){
+            out += stack.pop();
+        }
+
+        out += String.valueOf(i+1);
+
+        return out;
     }
 
     /**

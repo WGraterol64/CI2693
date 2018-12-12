@@ -33,39 +33,39 @@ public class DirectedGraph{
 	/**
 	* Metodo que corre dfs sobre cada uno de los nodos fuente del grafo de precedencias
 	*
-	* @param calc arreglo donde estan los nodos
 	* @throws IllegalArgumentException si hay ciclo
 	**/
-  	public void dfs_calc(DNode[][] calc)
+  	public Stack<DNode> topoSort()
 	throws IllegalArgumentException{
+
+		Stack<DNode> out = new Stack<DNode>();
 		for(DNode v : nodeSet){
-			if(inDegree(v.getId()) == 0){
-				dfs_rec_calc(calc, v);
-			}
+			if(v.color == -1)
+				topoSort_rec(v,out);
 		}
+		return out;
 	}
 
 	/**
 	* Metodo recursivo de dfs, calcula los resultados de cada nodo en base a sus sucesores
 	*
-	* @param calc arreglo donde estan los nodos
 	* @param v nodo sobre el que se esta corriendo el algoritmo
 	* @throws IllegalArgumentException si hay ciclo
 	*/
-	public void dfs_rec_calc(DNode[][] calc, DNode v)
+	public void topoSort_rec(DNode v, Stack<DNode> out)
 	throws IllegalArgumentException{
-		v.color = 0;
-			for(DNode w : v.sucNodes){
-        	
-        		if(w.color == 0)
-					throw new IllegalArgumentException("Hay un ciclo entre " + v.getId() + " y " + w.getId());
 		
-				if(w.color == -1)
-					dfs_rec_calc(calc, v);
-			}
+		v.color = 0;
+		for(DNode w : successor(v.getId())){
+       		if(w.color == 0)
+				throw new IllegalArgumentException("Hay un ciclo entre " + v.getId() + " y " + w.getId());
+		
+			if(w.color == -1)
+				topoSort_rec(w, out);
+		}
 
-			v.setWeight(Evaluador.evaluate(v.getData()));
-			v.color = 1;
+		out.push(v);
+		v.color = 1;
 	}
 
 
@@ -390,7 +390,7 @@ public class DirectedGraph{
 	public boolean addArc(String id, String data, double weight, String u, String v){
 
 		DNode nodeA = this.namesToNodes.get(u);
-		DNode nodeB = this.namesToNodes.get(v);;
+		DNode nodeB = this.namesToNodes.get(v);
 		// Verificamos si el arco pertenece, o si los nodos no existen
 		if(nodeA == null || nodeB == null || isEdge(id))
 			return false;
@@ -484,10 +484,13 @@ public class DirectedGraph{
 	public ArrayList<DNode> successor(String id){
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-		DNode  node  = this.namesToNodes.get(id);
-		ArrayList< DNode > list = new ArrayList<DNode>();
+		
+		DNode node = this.namesToNodes.get(id);
+		System.out.println(node.toString());
+		ArrayList<DNode> list = new ArrayList<DNode>();
 		for( DNode v : node.sucNodes)
 			list.add(v);
+		
 		return list;
 	}
 
@@ -500,7 +503,7 @@ public class DirectedGraph{
 	public ArrayList<DNode> predecessor(String id){
 		if(!isNode(id))
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
-		DNode  node  = this.namesToNodes.get(id);
+		DNode node = this.namesToNodes.get(id);
 		ArrayList< DNode > list = new ArrayList<DNode>();
 		for( DNode v : node.preNodes)
 			list.add(v);
