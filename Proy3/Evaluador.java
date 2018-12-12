@@ -1,3 +1,8 @@
+/*
+* Jesus De Aguiar 15-10360
+* Wilfredo Graterol 15-10639
+* Proyecto III - CI2693 Sep-Dic 2018
+*/
 import java.lang.Integer;
 import java.lang.Character;
 import java.lang.String;
