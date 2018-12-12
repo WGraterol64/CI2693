@@ -1,5 +1,3 @@
-import java.lang.StringBuilder;
-import java.util.*;
 /**
 *
 * Clase Arc, representa los arcos en un grafo dirigido.

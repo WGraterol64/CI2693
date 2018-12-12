@@ -3,8 +3,8 @@ import java.lang.RuntimeException;
 import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.*;
-
+import java.util.Stack;
+import java.util.ArrayList;
 /**
 * Clase principal del proyecto en su fase 2, se encarga de procesar la hoja de calculo
 *
@@ -25,43 +25,60 @@ public class USBDataFlow{
     */
     public static void storeSheet(String file)
     throws IllegalArgumentException, IOException{
+    // Declaramos un reader.
     BufferedReader reader;
         try{
            reader = new BufferedReader(new FileReader(file.trim()));
         }catch(FileNotFoundException e){
             throw new IllegalArgumentException("Archivo no encontrado");
         }
+        // Leemos el tamano de la hoja de calculo
         String line = reader.readLine().trim();
         String [] dim = line.split(" ");
         n = Integer.parseInt(dim[0]);
         m = Integer.parseInt(dim[1]);
+        // Creamos una matriz para almacenar la entrada
         ssheet = new DNode[n][m];
+        // Leemos los elementos de la hoja de calculo
         for(int i=0;i<n;i++){
+            // Tomamos una linea, convertimos todas las letras a mayusculas y separamos por espacios
             line = reader.readLine().trim().toUpperCase();
             String[] row = line.split(" ");
+            // Revisamos si el numero de casillas es m
             if(row.length!=m)
-                throw new IllegalArgumentException("El formato del archivo es invalido"); // Posiblemente tambien verificar columnas (?)
-
+                throw new IllegalArgumentException("El formato del archivo es invalido"); 
+            // Creamos los nodos con la informacion de cada casilla
             for(int j=0; j<m; j++){
-
+                // Creamos un nodo, lo agregamos al grafo y a la hoja de calculo
+                // El id del nodo sera su posicion letra-numero en la hoja de calculo,
+                // el dato sera el contenido de la casilla almacenado como un string,
+                // y el peso sera inicialmente 0
                 DNode node = new DNode(asignId(i,j), row[j].replace("\\=",""), 0);
-                boolean is = graph.addNode(node);
+                graph.addNode(node);
                 ssheet[i][j] = node;
             }
         }
     }
 
     /**
-    * 
+    * Metodo que, para cada casilla que contenga una formula, reemplaza
+    * los indicadores letra-numero de otras casillas por los valores previamente
+    * calculados de ellas. Por ejemplo, si la formula de una casilla es
+    * =A1+A2, el metodo busca los valores de A1 y A2 previamente calculados y los reemplaza
+    * @param v Nodo que representa la casilla
+    * @return El resultado de sustituir los valores en la formula
     **/
     public static String getValues(DNode v){
 
+        // Eliminamos el igual de la formula
         String exp = v.getData().replaceAll("\\=","");
         String id = v.getId();
-        ArrayList<DNode> predecessor = graph.predecessor(id);
+        ArrayList<DNode> predecessor = graph.predecessor(id); // Los predecesores de v son quienes estan en la formula
         for(DNode u : predecessor){
             String uId = u.getId();
+            // Construimos una expresion regular que encuentra todas las ocurrecias del identificador de un predecesor
             String regex = "(?<![A-Z])"+uId+"(?![0-9])";
+            // Reemplazamos estas ocurrencias por el valor calculado
             exp = exp.replaceAll(regex,String.valueOf(u.getWeight()));
         }
         return exp;
@@ -69,17 +86,24 @@ public class USBDataFlow{
     }
 
     /**
-    * Metodo que se encarga de agregar cada uno de los arcos al grafo para generar el
-    * grafo de precedencias y realiza las operaciones mediante durante un recorrido dfs.
+    * Metodo que se encarga de crear el grafo de precendencias, encontrar un orden topologica
+    * y evaluar las operaciones de la hoja de calculo
     *
     * @throws IllegalArgumentException si hay algun ciclo en el grafo
     */
-    public static void calcSheet()
+    public static void doTheMath()
         throws IllegalArgumentException{
-      
+        
+        // Armamos el grafo de precedencia entre las celdas de la hoja de calculo
+
+        // Recorremos todos los nodos de la hoja de calculo
         for(int i=0; i<n; i++){
             for(int j=0; j<m; j++){
+                // Esta expresion regular se utiliza para extraer las celdas de las que cada celda depende.
+                // Por ejemplo, la expresion =A1+3*MIN(A3,B2) se convierte en un arreglo [A1,A3,B2]
                 String[] exp = ssheet[i][j].getData().split("[\\*\\+\\-,\\(\\)\\=]|MAX|SUM|MIN|(?<![A-Z])\\d+");
+                // Para todas estas expresiones, agregamos un arco desde su nodo representante al nodo actual,
+                // ya que la casilla actual depende del resultado de esa celda.
                 for(String s : exp){
                     if(graph.isNode(s)){
                         String t = asignId(i, j);
@@ -88,15 +112,21 @@ public class USBDataFlow{
                 }
             }
         }
+        // Realizamos un orden topologico para determinar el orden en que se calcularan las casillas
+        // El resultado es retornado en un stack
         Stack<DNode> order = graph.topoSort();
+        // Evaluamos las expresiones en orden
         while(!order.isEmpty()){
 
-            DNode v = order.pop();
-            char c = v.getData().charAt(0);
-            if(c=='='){
+            DNode v = order.pop();                  // Extraemos un nodo
+            char c = v.getData().charAt(0);         // Revisamos si el primer caracter es un '='. Si es asi, es una formula
+            if(c=='='){                              // que se debe evaluar
+                // Reemplazamos cada Id de las celdas por su valor previamente calculado
                 String exp = getValues(v);
+                // Evaluamos la expresion
                 v.setWeight(Evaluador.evaluate(exp));
             }else{
+                // Si no es una formula, es simplemente un numero y no hace falta evaluar
                 v.setWeight(Integer.parseInt(v.getData()));
             }
             
@@ -107,7 +137,9 @@ public class USBDataFlow{
     * Metodo que se encarga de imprimir el resultado de la hoja de hojadecalculo
     *
     */
-    public static void printAns(){
+    public static void printAnswer(){
+
+        // Para todas las casillas, imprimimos el peso
         for(int i=0;i<n;i++){
             for(int j=0; j<m; j++){
                 System.out.print(ssheet[i][j].getWeight());
@@ -159,9 +191,9 @@ public class USBDataFlow{
   		}
         graph = new DirectedGraph();
         try{
-            storeSheet(args[0]);
-            calcSheet();
-            printAns();
+            storeSheet(args[0]); // Cargamos la hoja de calculo
+            doTheMath();         // Evaluamos las operaciones
+            printAnswer();        // Imprimimos la respuesta
         }catch(IllegalArgumentException | IOException e){
             System.out.println(e);
             System.exit(1);

@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.ArrayList;
 /**
 * Clase de Nodos para un grafo dirigido
 * Extiende la clase abstacta Node
@@ -45,6 +47,7 @@ public class DNode extends Node{
 
 	/**
 	* Metodo utilizado para poner el peso del nodo
+	* @param n Nuevo peso del nodo
 	**/
 	public void setWeight(int n){
 		this.weight = n;

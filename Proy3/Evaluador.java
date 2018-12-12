@@ -1,45 +1,71 @@
 import java.lang.Integer;
 import java.lang.Character;
 import java.lang.String;
+import java.lang.RuntimeException;
 import java.util.Stack;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.io.IOException;
-import java.lang.RuntimeException;
 import java.io.FileNotFoundException;
 import java.io.BufferedReader;
 import java.io.FileReader;
-
-
+/**
+* Clase Evaluador, utilizada para evaluar expresiones aritmeticas y retornar su resultado
+**/
 public class Evaluador{
 
+	/**
+	* Metodo que retorna el minimo entre dos enteros
+	* @param a Primer entero 
+	* @param b Segundo entero
+	* @return Variable entera, el minimo entre a y b
+	**/
 	private static int MIN(int a, int b){
 		return a<=b ? a : b;
 	}
-
+	/**
+	* Metodo que retorna el maximo entre dos enteros
+	* @param a Primer entero 
+	* @param b Segundo entero
+	* @return Variable entera, el maximo entre a y b
+	**/
 	private static int MAX(int a, int b){
 		return a>=b ? a : b;
 	}
-
+	/**
+	* Metodo que retorna el valor de la funcion SUM de la hoja de calculo
+	* @param n Entero a evaluar
+	* @return Valor de la funcion SUM de la hoja de calculo
+	**/
 	private static int SUM(int n){
 		return n>=0 ? (n*(n+1))/2 : (-n*(-n+1))/2;
 	}
 
+	/**
+	* Metodo que realiza un recorrido postOrder sobre el evaluation tree
+	* Sirve para realizar las operaciones sobre el evaluation tree y calcular
+	* el resultado de evaluar todas las expresiones aritmeticas
+	* @param v Nodo actual
+	* @param tree Arbol evaluador
+	**/
 	private static void postOrder_evaluate(DNode v,DirectedGraph tree){
 
+		// Extraemos el tipo de nodo
 		char type = v.getData().charAt(0);
-
+		// Si es un nodo que representa un digito, llegamos a una hoja y retornamos
 		if(type == 'd')
 			return;
 
-
+		// Estamos en un operador, revisamos los hijos
 		ArrayList<DNode> vSucessors = tree.successor(v.getId());
 		
+		// Extraemos el primer hijo y evaluamos recursivamente sobre el
 		DNode u = vSucessors.get(0);
 		postOrder_evaluate(u,tree);
 		int a = u.getWeight();
 
+		// Si el operador es unario, realizamos la evaluacion y retornamos
 		if(type == 's'){
 			v.setWeight(SUM(a));
 			return;
@@ -49,10 +75,11 @@ public class Evaluador{
 			return;
 		}
 
+		// El operador es binario, luego, extraemos el segundo nodo y evaluamos recursivamente sobre el
 		DNode w = vSucessors.get(1);
 		postOrder_evaluate(w,tree);
 		int b = w.getWeight();
-		
+		// Realizamos las evaluaciones de la operacion correspondiente y retornamos
 		if(type == '+'){
 			v.setWeight(a+b);
 			return;
@@ -72,10 +99,16 @@ public class Evaluador{
 		return;
 	}
 
+	/**
+	* Metodo principal para evaluar el evaluation tree
+	* @param tree Arbol a evaluar
+	* @return Entero que representa el resultado de la evaluacion
+	**/
 	private static int evaluateTree(DirectedGraph tree){
 
 		int ret = 0;
 		for( DNode v : tree.nodeSet)
+			// Buscamos la raiz y realizamos el recorrido desde ahi
 			if(tree.inDegree(v.getId()) == 0){ 
 				postOrder_evaluate(v,tree);
 				ret = v.getWeight();
@@ -84,6 +117,13 @@ public class Evaluador{
 		return ret;	
 	}
 
+	/**
+	* Metodo utilizado para construir un evaluation tree. Este es un arbol
+	* donde cada nodo representa o bien una operacion o un valor, que luego
+	* puede ser recorrido para evaluar. 
+	* @param expression Cola que contiene una expresion en notacion posfix
+	* @return el arbol creado
+	**/
 	public static DirectedGraph buildTree(Queue<Character> expression){
 		
 		// Creamos el arbol
@@ -150,16 +190,34 @@ public class Evaluador{
 		return tree;
 	}
 
+	/**
+	* Metodo auxiliar para evaluar si un caracter representa a un operador
+	* @param c Caracter a evaluar
+	* @return Booleano que evalua si el caracter representa a un operador
+	**/
 	private static boolean isOperator(char c){
 		return c == '+' || c == '-' || c == '*';
 	}
 
+	/**
+	* Metodo auxiliar para obtener la precedencia de un operador
+	* @param c Caracter a evaluar
+	* @return Entero que representa la precendencia del operador
+	**/
 	private static int getPrecedence(char c){
 		if(c == '+') return 0;
 		if(c == '*') return 1;
 		return 2; // c == '-'
 	}
 
+	/**
+	* Algoritmo se Shunting Yard. Este es un algoritmo propuesto
+	* por Dijkstra que transforma una expresion de notacion infix
+	* a notacion posfix. En internet puede encontrarse una mejor documentacion
+	* del algoritmo.
+	* @param s String que contiene la expresion
+	* @return Cola de caracteres que contiene la operacion en posfix notation
+	**/
 	public static Queue<Character> shuntingYard(String s){
 
 		// Stack util para el algoritmo
@@ -228,6 +286,12 @@ public class Evaluador{
 		return queue;
 	}
 
+	/**
+	* Metodo que recibe una expresion en un string y devuelve el resultado de evaluar la expresion
+	* en un entero
+	* @param input Expresion a evaluar
+	* @return Entero con el resultado de la evaluacion
+	**/
 	public static int evaluate(String input){
 
 		// Simplificamos la sintaxis de la expresion.
@@ -249,11 +313,18 @@ public class Evaluador{
 		return result;
 	}
 
+
+	/**
+	* Metodo principal de la clase utilizado para cargar un archivo que contenga una lista
+	* de expresiones y evaluar cada una de ellas.
+	* @param args Archivo a cargar
+	**/
 	public static void main(String[] args) throws IllegalArgumentException, IOException{
 
 		if(args.length < 1)
 			System.err.println("Error. Uso: Java Evaluador <archivo>");
 
+		// Cargamos el lector del archivo
 		BufferedReader reader;
         try{
             reader = new BufferedReader(new FileReader(args[0]));
@@ -261,12 +332,14 @@ public class Evaluador{
             throw new IllegalArgumentException("Archivo no encontrado");
         }
 
+
         while(true){
+        	// Leemos una linea
         	String line = reader.readLine();
-        	
+      		// Si esta vacia, terminamos
         	if(line == null)
         		break;
-
+        	// Si no, evaluamos la expresion
         	System.out.println(evaluate(line));
         }		
 	}

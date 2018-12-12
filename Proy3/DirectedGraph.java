@@ -3,7 +3,12 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Stack;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.NoSuchElementException;
+
 /**
 * Clase que recrea grafos dirigidos
 * Implementa los metodos de la clase abstracta Graph
@@ -31,14 +36,17 @@ public class DirectedGraph{
 	}
 
 	/**
-	* Metodo que corre dfs sobre cada uno de los nodos fuente del grafo de precedencias
+	* Metodo que realiza un ordenamiento sobre los nodos del grafo de precedencias
 	*
+	* @return Stack que contiene el ordenamiento
 	* @throws IllegalArgumentException si hay ciclo
 	**/
   	public Stack<DNode> topoSort()
 	throws IllegalArgumentException{
 
+		// Creamos un stack que tendra el ordenamiento
 		Stack<DNode> out = new Stack<DNode>();
+		// Visitamos todos los nodos y ordenamos 
 		for(DNode v : nodeSet){
 			if(v.color == -1)
 				topoSort_rec(v,out);
@@ -47,24 +55,66 @@ public class DirectedGraph{
 	}
 
 	/**
-	* Metodo recursivo de dfs, calcula los resultados de cada nodo en base a sus sucesores
+	* Metodo utilizado para imprimir un ciclo cuando este es detectado.
+	* @param w Nodo inicial de la cadena a imprimir
+	* @param v Nodo final de la cadena a imprimir
+	**/
+	public void print_cycle(DNode w, DNode v){
+
+		// Imprimimos el nodo
+		String wId = w.getId();
+		System.out.print(wId);
+		// Si llegamos al ultimo, salimos
+		if(wId.equals(v.getId())){
+			System.out.print("\n");
+			return;
+		}
+		// Si no, faltan por imprimir
+		System.out.print(" -> ");
+
+		// Imprimimos los nodos ya visitados
+		for(DNode u : successor(w.getId())){
+			if(u.color == 0){
+				print_cycle(u,v);
+			}
+		}
+	}
+
+	/**
+	* Metodo recursivo que utiliza dfs para calcular los resultados de cada nodo en base a sus sucesores
 	*
 	* @param v nodo sobre el que se esta corriendo el algoritmo
+	* @param our Stack donde se almacenara el ordenamiento
 	* @throws IllegalArgumentException si hay ciclo
 	*/
 	public void topoSort_rec(DNode v, Stack<DNode> out)
 	throws IllegalArgumentException{
 		
+		// Marcamos el nodo como gris
 		v.color = 0;
+		// Para todos los sucesores del nodo
 		for(DNode w : successor(v.getId())){
-       		if(w.color == 0)
-				throw new IllegalArgumentException("Hay un ciclo entre " + v.getId() + " y " + w.getId());
-		
+			// Si encontramos un nodo gris, hay un ciclo
+       		if(w.color == 0){
+       			System.err.println("Se detecto un ciclo en la hoja de calculo: ");
+       			// Si es un bucle, lo imprimimos
+       			if(w.getId().equals(v.getId())){
+       				System.out.println(w.getId()+" -> "+v.getId());
+       			}
+       			// Si no es un bucle, llamamos a la funcion que imprimira el ciclo
+       			else
+       				print_cycle(w,v);
+       			// Debido a que la entrada es incorrecta, salimos del programa.
+       			System.err.println("La entrada es incorrecta.");
+       			System.exit(1);
+       		}
+			// SI esta en blanco, no ha sido visitado, y lo visitamos
 			if(w.color == -1)
 				topoSort_rec(w, out);
 		}
-
+		// Agregamos el nodo a la salida
 		out.push(v);
+		// Coloreamos de negro
 		v.color = 1;
 	}
 
@@ -486,7 +536,6 @@ public class DirectedGraph{
 			throw new NoSuchElementException("No existe un nodo con identificador "+id);
 		
 		DNode node = this.namesToNodes.get(id);
-		System.out.println(node.toString());
 		ArrayList<DNode> list = new ArrayList<DNode>();
 		for( DNode v : node.sucNodes)
 			list.add(v);
