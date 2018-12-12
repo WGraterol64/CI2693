@@ -63,5 +63,11 @@ public class DNode extends Node{
 
 		return vertex;
 	}
-
+	
+	/**
+	* Metodo utilizado para modificar el peso del nodo
+	**/
+	public void setWeight(int w){
+		this.weight = w;
+	}
 }

@@ -52,7 +52,7 @@ public class DirectedGraph{
 	* @param node Nodo a agregar
 	* @return booleano que identifica si se agrego exitosamente
 	**/
-	public boolean adNode(DNode node){
+	public boolean addNode(DNode node){
 
 		String id = node.getId();
 
