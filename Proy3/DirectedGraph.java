@@ -72,7 +72,6 @@ public class DirectedGraph{
 		System.out.print(wId);
 		// Si llegamos al ultimo, salimos
 		if(wId.equals(v.getId())){
-			System.out.print("\n");
 			return;
 		}
 		// Si no, faltan por imprimir
@@ -103,13 +102,8 @@ public class DirectedGraph{
 			// Si encontramos un nodo gris, hay un ciclo
        		if(w.color == 0){
        			System.err.println("Se detecto un ciclo en la hoja de calculo: ");
-       			// Si es un bucle, lo imprimimos
-       			if(w.getId().equals(v.getId())){
-       				System.out.println(w.getId()+" -> "+v.getId());
-       			}
-       			// Si no es un bucle, llamamos a la funcion que imprimira el ciclo
-       			else
-       				print_cycle(w,v);
+       			print_cycle(w,v);
+       			System.out.print(" -> "+w.getId()+"\n");
        			// Debido a que la entrada es incorrecta, salimos del programa.
        			System.err.println("La entrada es incorrecta.");
        			System.exit(1);

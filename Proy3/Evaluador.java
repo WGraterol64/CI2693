@@ -44,7 +44,7 @@ public class Evaluador{
 	* @return Valor de la funcion SUM de la hoja de calculo
 	**/
 	private static int SUM(int n){
-		return n>=0 ? (n*(n+1))/2 : (-n*(-n+1))/2;
+		return n>=0 ? (n*(n+1))/2 : (n*(-n+1))/2;
 	}
 
 	/**
