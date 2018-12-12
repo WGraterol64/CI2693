@@ -30,6 +30,41 @@ public class DirectedGraph{
 		this.numOfArcs = 0;
 	}
 
+	/**
+	* Metodo que corre dfs sobre cada uno de los nodos fuente del grafo de precedencias
+	*
+	* @param calc arreglo donde estan los nodos
+	* @throws IllegalArgumentException si hay ciclo
+	**/
+  public void dfs_calc(DNode[][] calc)
+	throws IllegalArgumentException{
+		  for(DNode v : nodeSet){
+				  if(inDegree(v.getId()) == 0){
+						  dfs_rec_calc(calc, v);
+					}
+			}
+	}
+
+	/**
+	* Metodo recursivo de dfs, calcula los resultados de cada nodo en base a sus sucesores
+	*
+	* @param calc arreglo donde estan los nodos
+	* @param v nodo sobre el que se esta corriendo el algoritmo
+	* @throws IllegalArgumentException si hay ciclo
+	*/
+	public void dfs_rec_calc(DNode[][] calc, DNode v)
+	throws IllegalArgumentException{
+		  v.color = 0;
+			for(DNode w : v.sucNodes){
+          if(w.color == 0)
+					    throw new IllegalArgumentException("Hay un ciclo entre " + v.getId() + " y " + w.getId());
+					if(w.color == -1)
+					    dfs_rec_calc(calc, v);
+			}
+			v.setWeight(evaluacion(v.getData()));
+			v.color = 1;
+	}
+
 
 	/**
 	* Metodo utilizado para obtener el numero de nodos del grafo
@@ -59,8 +94,6 @@ public class DirectedGraph{
 		// Verificamos si el nodo existe en el grafo
 		if(namesToNodes.get(id) != null)
 			return false;
-
-
 		this.namesToNodes.put(id,node); // Agregamos el nodo al mapa
 		this.nodeSet.add(node); // Agregamos el nodo al conjunto de nodos
 		this.numOfNodes++; // Aumentamos el contador de nodos
@@ -87,6 +120,20 @@ public class DirectedGraph{
 		return true;
 	}
 
+	/**
+  * Metodo para agregar un nodo previamente creado al grafo
+	*
+	* @param v Nodo a agregar
+	*/
+	public boolean addNode(DNode node){
+		// Se verifica si el nodo existia en el grafo
+		if(namesToNodes.get(node.getId()) != null)
+			  return false;
+		this.namesToNodes.put(node.getId(),node); // Se coloca el nodo en el mapa
+		this.nodeSet.add(node); // Se agrega el nodo al conjunto de nodos
+		this.numOfNodes++; // Se aumenta el contador de nodos
+		return true;
+	}
 	/**
 	* Metodo utilizado para buscar un nodo en el grafo
 	* @return El nodo cuyo identificador es id

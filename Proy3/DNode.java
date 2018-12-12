@@ -11,6 +11,7 @@ public class DNode extends Node{
 	private int weight; // Peso del nodo
 	public int indegree; // Grado interno
 	public int outdegree; // Grado externo del nodo
+	public int color; // Dato utilizado para hacer el recorrido sobre el nodo
 	public HashSet<DNode> preNodes; // Lista de los predecesores de un nodo
 	public HashSet<DNode> sucNodes; // Lista de los sucesores de un nodo
 	public ArrayList<Arc> inEdges; // Lista de arcos que llegan al nodo
@@ -32,6 +33,7 @@ public class DNode extends Node{
 		this.outEdges = new ArrayList<Arc>();
 		this.indegree = 0;
 		this.outdegree = 0;
+		this.color = -1;
 	}
 
 	/**
@@ -39,6 +41,13 @@ public class DNode extends Node{
 	**/
 	public int getWeight(){
 		return this.weight;
+	}
+
+	/**
+	* Metodo utilizado para poner el peso del nodo
+	**/
+	public void setWeight(int n){
+		this.weight = n;
 	}
 	/**
 	* Metodo utilizado para obtener el identificador del nodo
