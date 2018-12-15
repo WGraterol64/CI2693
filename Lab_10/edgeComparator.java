@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.Comparator;
 /**
 * Comparador de aristas, util para nuestra implementacion de Kruskal
 **/
@@ -12,7 +12,6 @@ public class edgeComparator implements Comparator<Edge> {
 			return -1;
 		else if(e2.weight < e1.weight)
 			return 1;
-
 		return 0;
 	}
 }
